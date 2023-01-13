@@ -2,14 +2,21 @@ import { useEffect } from 'react'
 import "react-native-get-random-values";
 import "react-native-url-polyfill/auto";
 import nacl from "tweetnacl";
-import { decryptPayload } from "../services/phantomFunction";
+import { decryptPayload } from "../services/phantom/functions";
 import * as Linking from "expo-linking";
 import { PublicKey } from "@solana/web3.js";
 import bs58 from "bs58";
 import { atom, useAtom } from "jotai";
-import { atomDappKeyPair, atomSharedSecret, atomSession, atomPhantomWalletPublicKey } from "../global";
+import {
+   atomDappKeyPair, atomSharedSecret, atomSession, atomPhantomWalletPublicKey, atomTransacSuccess,
+   atomPic,
+   atomDisplay
+} from "../services/globals";
+import { atomSOCKET } from "../services/socket";
 import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
 import { Vibration } from 'react-native';
+import { firstLogin } from "../services/socket/function";
+import { socketConnection } from "../services/socket/connexion";
 
 const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
 
@@ -18,6 +25,10 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
    const [session, setSession] = useAtom(atomSession)
    const [phantomWalletPublicKey, setPhantomWalletPublicKey] = useAtom(atomPhantomWalletPublicKey)
    const navigation = useNavigation<NavigationProp<ParamListBase>>();
+   const [SOCKET] = useAtom(atomSOCKET);
+   const [transacSuccess, setTransacSuccess] = useAtom(atomTransacSuccess);
+   const [Pic, setPic] = useAtom(atomPic);
+   const [display, setDisplay] = useAtom(atomDisplay);
 
    // handle inbounds links
    useEffect(() => {
@@ -44,13 +55,36 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
          setSharedSecret(sharedSecretDapp);
          setSession(connectData.session);
          setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
-         console.log("connection successfull")
-         navigation.navigate("Credentials");
-         Vibration.vibrate(1);
+         socketConnection(connectData.public_key, SOCKET);
+         const getNewUserStatus = async () => {
+            const newUser = await firstLogin(SOCKET);
+            if (newUser) {
+               navigation.navigate("Credentials");
+            } else {
+               navigation.navigate("Home");
+            }
+         }
+         getNewUserStatus();
       }
+      else if (/onSignAndSendTransaction/.test(url.pathname)) {
+         const signAndSendTransactionData = decryptPayload(
+            params.get("data")!,
+            params.get("nonce")!,
+            sharedSecret as any
+         );
+         console.log('signAndSendTransactionData', signAndSendTransactionData)
+         setDisplay("Logs");
+         navigation.navigate("Notifications");
+         setTransacSuccess(true);
+      }
+      else if (/onDisconnect/.test(url.pathname)) {
+         navigation.navigate("Login");
+         console.log('disconnect', phantomWalletPublicKey)
+      }
+
    }, [deepLink]);
 
-   return null
-}
+   return null;
+};
 
-export default PhantomEffect
+export default PhantomEffect;

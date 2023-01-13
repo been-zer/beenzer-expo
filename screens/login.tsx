@@ -1,45 +1,38 @@
 import { Image, TouchableOpacity, View, SafeAreaView, Text, Vibration, Animated } from "react-native";
 import { useEffect, useLayoutEffect, useRef } from "react";
-import { connect } from "../services/phantomLogin";
+import { connect } from "../services/phantom/login"
 import * as Linking from "expo-linking";
 import { useAtom } from "jotai";
-import { atomDeepLink, atomDappKeyPair } from "../global";
-import PhantomEffect from "../screens/PhantomEffect";
+import { atomDeepLink, atomDappKeyPair } from "../services/globals";
+import PhantomEffect from "./PhantomEffect";
 import { useNavigation } from "@react-navigation/native";
-import { atomDarkmode, atomLightMode, useSwipe } from "../services/darkmode";
-import { fadeIn } from "../services/Functions";
+import { atomDarkModeOn, atomDarkMode, atomLightMode, atomPinkMode, useSwipe } from "../services/globals/darkmode";
+import { fadeIn } from "../services/globals/functions";
+import ColorMode from "../components/ColorMode";
 
 const Login = () => {
 
    const [deepLink, setDeepLink] = useAtom(atomDeepLink)
    const [dappKeyPair] = useAtom(atomDappKeyPair)
    const navigation = useNavigation();
-   const [darkMode, setDarkMode] = useAtom(atomDarkmode);
+   const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
+   const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
+   const [pinkMode, setPinkMode] = useAtom(atomPinkMode);
    const fadeAnim = useRef(new Animated.Value(0)).current;
    const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
 
+
    function onSwipeLeft() {
-      setDarkMode('bg-zinc-900')
-      setLightMode('white')
-      Vibration.vibrate(100);
+      setDarkModeOn(!darkModeOn)
    }
    function onSwipeRight() {
-      setDarkMode('white')
-      setLightMode('bg-zinc-900')
-      Vibration.vibrate();
+      setDarkModeOn(!darkModeOn)
    }
 
    const handleLogin = () => {
       connect(dappKeyPair);
-      Vibration.vibrate();
    };
-
-   useLayoutEffect(() => {
-      navigation.setOptions({
-         headerShown: false,
-      });
-   }, [navigation]);
 
    useEffect(() => {
       (async () => {
@@ -48,9 +41,9 @@ const Login = () => {
             setDeepLink(initialUrl);
          }
       })();
-      Linking.addEventListener("url", handleDeepLink);
+      const listener = Linking.addEventListener('url', handleDeepLink);
       return () => {
-         Linking.removeEventListener("url", handleDeepLink);
+         listener.remove();
       };
    }, []);
 
@@ -62,50 +55,60 @@ const Login = () => {
 
    return (
       <>
-         <SafeAreaView className={`flex-1 h-screen pt-8 ${darkMode}`}>
-            <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-               <View className="bottom-24 left-2">
-                  <Image
-                     className="absolute shadow-md mt-32 h-96 w-96 shadow-green-500 "
-                     source={require("../assets/New_Artwork_e.png")}
-                  />
+         <View onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`} flex-auto justify-evenly`}>
+            <View className=" flex-row ">
+               <View className='flex-1 justify-center items-center'>
+                  <ColorMode />
                </View>
-               <Animated.View style={{ opacity: fadeAnim }}>
-                  <Text
-                     style={{ fontFamily: "Avenir-Black" }}
-                     className="text-6xl uppercase top-72 text-green-500 font-extrabold text-center p-6"
-                  >
-                     Beenzer
-                  </Text>
-               </Animated.View>
-               <View>
-                  <Animated.View style={{ opacity: fadeAnim }}>
-                     <TouchableOpacity
-                        className={` border border-${lightMode} z-99 top-16 mx-16 mt-80 shadow-xl p-4 rounded-2xl`}
-                        onPress={handleLogin}>
-                        <Image
-                           className="absolute w-8 h-8 left-4 top-2"
-                           resizeMode="contain"
-                           source={require("../assets/phantom.png")}
-                        />
-
-                        <Text className={`font-semibold text-center ml-8 text-${lightMode}`}>
-                           {" "}
-                           Login with Phantom{" "}
-                        </Text>
-                     </TouchableOpacity>
-                  </Animated.View>
-               </View>
-               <Text
-                  style={{ fontFamily: "Avenir-Black" }}
-                  className="mt-12 mx-14 top-16 text-green-500 font-medium text-center"
-               >
-                  Welcome to BeenZer, the first fully decentralized social app where
-                  you OWN your content. Drop your stories in the map forever minting
-                  them and sell your NFTs in the marketplaces.
-               </Text>
             </View>
-         </SafeAreaView >
+            <View className="self-center">
+               <Image
+                  style={{ tintColor: darkModeOn ? `${lightMode}` : 'pink' }}
+                  className="h-36 w-36 shadow-green-500 "
+                  source={require("../assets/New_Artwork_e.png")}
+               />
+            </View>
+            <Animated.View style={{
+               opacity: fadeAnim,
+               display: 'flex',
+               justifyContent: 'center',
+               alignItems: 'center',
+            }}>
+               <Text
+                  className={`text-4xl font-extrabold ${darkModeOn ? `text-white` : `text-${darkMode}`}`}
+               >
+                  Beenzer
+               </Text>
+               <Text
+                  className={` ${darkModeOn ? `text-white` : `text-${darkMode}`}`}
+               >
+                  Done that
+               </Text>
+            </Animated.View>
+            <View className="items-center">
+               <Animated.View style={{ opacity: fadeAnim }}>
+                  <TouchableOpacity
+                     className={`border ${darkModeOn ? 'border-white' : `border-${darkMode}`} w-52 shadow-xl rounded-2xl flex-row justify-center items-center p-2`}
+                     onPress={handleLogin}>
+                     <Image
+                        className="h-10 w-10"
+                        style={{ tintColor: darkModeOn ? `${lightMode}` : "pink" }}
+                        resizeMode="contain"
+                        source={require("../assets/phantom.png")}
+                     />
+                     <Text className={`font-semibold text-center text-${darkModeOn ? lightMode : darkMode}`}>
+                        {'   '}Login with Phantom
+                     </Text>
+                  </TouchableOpacity>
+               </Animated.View>
+            </View>
+            <Text
+               style={{ fontFamily: "Avenir-Black" }}
+               className={`${darkModeOn ? `text-${lightMode}` : `${darkMode}`} font-medium text-justify ml-5 mr-5`}
+            >
+               Beenzer - the ultimate social app for true digital ownership. Share and mint your stories on the map, monetize your creations with NFT marketplaces. Take control of your online legacy
+            </Text>
+         </View>
          <PhantomEffect deepLink={deepLink} />
       </>
    );
