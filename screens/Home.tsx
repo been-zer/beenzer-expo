@@ -18,6 +18,7 @@ import { NavigationProp, ParamListBase, useNavigation, useIsFocused } from '@rea
 import { Ionicons } from '@expo/vector-icons';
 import DisplayButton from '../components/DisplayButton';
 import { } from "@react-navigation/native";
+import { atomDarkMode, atomDarkModeOn, atomLightMode } from '../services/globals/darkmode';
 
 
 const Home = () => {
@@ -32,6 +33,9 @@ const Home = () => {
    const [active, setActive] = useAtom(atomActiveScreen)
    const [display, setDisplay] = useState('Map')
    const isFocused = useIsFocused();
+   const [darkMode, setDarkMode] = useAtom(atomDarkMode);
+   const [lightMode, setLightMode] = useAtom(atomLightMode);
+   const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
 
    useEffect(() => {
       if (isFocused) {
@@ -78,21 +82,22 @@ const Home = () => {
    }
 
    return (
-      <SafeAreaView className='h-full bg-zinc-900 flex-1 ' style={StyleSheet.absoluteFillObject}>
+      <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`} h-full flex-1 `} style={StyleSheet.absoluteFillObject} >
          {/* {title} */}
-         <View className='flex-row justify-around'>
+         < View className='flex-row justify-around' >
             <TouchableOpacity className='justify-center items-center' onPress={() => navigation.navigate('Notifications')}>
-               <Ionicons name="notifications" size={24} color="white" />
+               <Ionicons name="notifications" size={24} color={`${darkModeOn ? 'white' : 'black'}`} />
             </TouchableOpacity>
             <Text style={{ alignSelf: 'flex-start' }} className='text-green-600 text-3xl font-bold'>Beenzer</Text>
             <View style={{ alignSelf: 'flex-end' }} >
                <ColorMode />
             </View>
-         </View>
+         </View >
          <TouchableOpacity className='justify-center items-center' onPress={() => (fetchData(), setRefreshLoc(false))}>
-            {userLocation && refreshLoc ? <View className='flex-row items-center justify-center mb-2'><Text className='text-gray-100 '>{userLocation.city}&nbsp;</Text>
-               <ArrowPathIcon size={10} color='white' /></View > :
-               <ActivityIndicator className=' bottom-1' color="white" />
+            {userLocation && refreshLoc ? <View className='flex-row items-center justify-center mb-2'>
+               <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`}`}>{userLocation.city}&nbsp;</Text>
+               <ArrowPathIcon size={10} color={`${darkModeOn ? lightMode : darkMode}`} /></View > :
+               <ActivityIndicator className=' bottom-1' color={`${darkModeOn ? lightMode : darkMode}`} />
             }
          </TouchableOpacity>
          {/* {tab bar} */}

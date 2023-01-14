@@ -5,11 +5,15 @@ import BeenzerMedia from "./BeenzerMedia";
 import { useAtom } from "jotai";
 import { atomActiveScreen } from '../services/globals';
 import { useEffect, useLayoutEffect } from 'react';
+import { atomDarkMode, atomDarkModeOn, atomLightMode } from '../services/globals/darkmode';
 
 const BeenzerMenu = () => {
 
    const [active, setActive] = useAtom(atomActiveScreen)
    const isFocused = useIsFocused();
+   const [darkMode, setDarkMode] = useAtom(atomDarkMode);
+   const [lightMode, setLightMode] = useAtom(atomLightMode);
+   const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
 
    useEffect(() => {
       if (isFocused) {
@@ -18,7 +22,7 @@ const BeenzerMenu = () => {
    }, [isFocused]);
 
    return (
-      <SafeAreaView className='h-full bg-zinc-900 flex-1 ' style={StyleSheet.absoluteFillObject}>
+      <SafeAreaView className={`h-full flex-1 ${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}`} style={StyleSheet.absoluteFillObject}>
          <ScrollView >
             <View className="flex-1 justify-evenly items-center my-20">
                <BeenzerMedia title='New Beenzer 🎤' menu="audio" />

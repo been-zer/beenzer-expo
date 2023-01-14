@@ -18,7 +18,6 @@ const Login = () => {
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
-   const [pinkMode, setPinkMode] = useAtom(atomPinkMode);
    const fadeAnim = useRef(new Animated.Value(0)).current;
    const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
 
@@ -63,7 +62,7 @@ const Login = () => {
             </View>
             <View className="self-center">
                <Image
-                  style={{ tintColor: darkModeOn ? `${lightMode}` : 'pink' }}
+                  style={{ tintColor: darkModeOn ? 'white' : 'black' }}
                   className="h-36 w-36 shadow-green-500 "
                   source={require("../assets/New_Artwork_e.png")}
                />
@@ -75,7 +74,7 @@ const Login = () => {
                alignItems: 'center',
             }}>
                <Text
-                  className={`text-4xl font-extrabold ${darkModeOn ? `text-white` : `text-${darkMode}`}`}
+                  className={`text-4xl font-extrabold text-green-500`}
                >
                   Beenzer
                </Text>
@@ -91,8 +90,8 @@ const Login = () => {
                      className={`border ${darkModeOn ? 'border-white' : `border-${darkMode}`} w-52 shadow-xl rounded-2xl flex-row justify-center items-center p-2`}
                      onPress={handleLogin}>
                      <Image
-                        className="h-10 w-10"
-                        style={{ tintColor: darkModeOn ? `${lightMode}` : "pink" }}
+                        className="h-10 w-10 "
+                        style={{ tintColor: darkModeOn ? `${lightMode}` : "black" }}
                         resizeMode="contain"
                         source={require("../assets/phantom.png")}
                      />

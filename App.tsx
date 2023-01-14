@@ -47,7 +47,7 @@ export default function App() {
               headerShown: true,
               headerTitle: 'Sign Up',
               headerTransparent: true,
-              headerTintColor: `${darkModeOn ? `${lightMode}` : `${darkMode}`}`,
+              headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
               headerBackTitle: 'Back',
               headerBackTitleVisible: false,
               animation: 'none',
@@ -58,10 +58,13 @@ export default function App() {
             animation: 'none',
           }} />
           <Stack.Screen name="BeenzerMenu" component={BeenzerMenu} options={{
+            headerTitleStyle: {
+              color: `${darkModeOn ? `${lightMode}` : "black"}`,
+            },
             headerShown: true,
             headerTitle: 'New Beenzer',
             headerTransparent: true,
-            headerTintColor: 'white',
+            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
             headerBackVisible: false,
             animation: 'none',
 
@@ -69,7 +72,7 @@ export default function App() {
           <Stack.Screen name="Picture" component={Picture} options={{
             headerTitle: '',
             headerTransparent: true,
-            headerTintColor: 'white',
+            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
             headerBackTitle: '',
             headerBackVisible: true,
             headerBackButtonMenuEnabled: true,
@@ -79,14 +82,14 @@ export default function App() {
             headerTitle: 'Logs',
             headerTransparent: true,
             headerBackVisible: false,
-            headerTintColor: 'white',
+            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
             animation: 'none',
           }} />
           <Stack.Screen name="Profile" component={Profile} options={{
             headerTitle: 'Profile',
             headerTransparent: true,
             headerBackVisible: false,
-            headerTintColor: 'white',
+            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
             headerRight: () => (<Logout />),
             animation: 'none',
           }} />
@@ -94,7 +97,7 @@ export default function App() {
             headerTitle: 'Edit Profile',
             headerTransparent: true,
             headerBackVisible: true,
-            headerTintColor: 'white',
+            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
             animation: 'none',
           }} />
           <Stack.Screen name="PostBeenzer" component={PostBeenzer} options={{ animation: 'none', }} />

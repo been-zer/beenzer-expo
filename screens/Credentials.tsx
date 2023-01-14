@@ -28,6 +28,7 @@ const Credentials = () => {
    const [phantomWalletPublicKey, setPhantomWalletPublicKey] = useAtom(atomPhantomWalletPublicKey);
 
    const handleUsername = (text: string) => {
+      text.toLowerCase();
       if (text.includes(' ')) {
          setErrorText("No spaces allowed 🥲");
          setButtonInactive(true);
@@ -58,6 +59,7 @@ const Credentials = () => {
    }
 
    const handleLogin = async (username: string) => {
+      username = username.toLowerCase();
       const usernameAvailable = await checkUsernameAvailability(username, SOCKET);
       if (usernameAvailable) {
          const userCreated = await handleNewUserCreated(SOCKET, phantomWalletPublicKey, username, true);
