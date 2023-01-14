@@ -5,11 +5,14 @@ import { atomProfile, atomFollowing } from '../services/globals'
 import { atomSOCKET } from '../services/socket'
 import { socketGetFollowing } from '../services/socket/function'
 import { IProfile } from '../Types'
+import { atomDarkModeOn, atomLightMode } from '../services/globals/darkmode'
 
 const FollowBlock = ({ data }: { show: string, data: IProfile[] }) => {
 
    const [profile, setProfile] = useAtom(atomProfile)
    const [SOCKET] = useAtom(atomSOCKET)
+   const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
+   const [lightMode, setLightMode] = useAtom(atomLightMode);
 
    return (
       <>
@@ -22,12 +25,12 @@ const FollowBlock = ({ data }: { show: string, data: IProfile[] }) => {
                            <View className='flex flex-row items-center mt-2'>
                               <View className='flex-row'>
                                  <Image source={item._pfp ? { uri: item._pfp } : require('../assets/newUser.png')} style={{ width: 50, height: 50, borderWidth: 1, borderColor: 'white', borderRadius: 50 }} />
-                                 <Text className='text-white font-bold text-lg ml-2 mb-1 self-center'>{item._username_}</Text>
+                                 <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} font-bold text-lg ml-2 mb-1 self-center`}>{item._username_}</Text>
                               </View>
                            </View>
                         </TouchableOpacity>
                      </View>
-                     <Text className='text-white mb-2'>{item.__pubkey__}</Text>
+                     <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} mb-2 ml-2`}>{item.__pubkey__}</Text>
                   </View>
                )
             })}

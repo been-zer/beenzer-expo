@@ -14,6 +14,7 @@ import Profile from './screens/Profile';
 import Logout from './screens/Logout';
 import EditProfile from './screens/EditProfile';
 import Notifications from './screens/Notifications';
+import ColorMode from './components/ColorMode';
 
 const Stack = createNativeStackNavigator();
 
@@ -91,6 +92,7 @@ export default function App() {
             headerBackVisible: false,
             headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
             headerRight: () => (<Logout />),
+            headerLeft: () => (<ColorMode />),
             animation: 'none',
           }} />
           <Stack.Screen name="EditProfile" component={EditProfile} options={{

@@ -6,6 +6,7 @@ import { checkUsernameAvailability } from '../services/socket/function'
 import { atomSOCKET } from '../services/socket'
 import { useAtom } from 'jotai'
 import { atomRegex, atomProfile } from '../services/globals/index'
+import { atomDarkModeOn, atomLightMode } from '../services/globals/darkmode'
 
 const EditInfos = ({
    userInfo,
@@ -25,6 +26,8 @@ const EditInfos = ({
    const [profile, setProfile] = useAtom(atomProfile)
    const [valueChanged, setValueChanged] = useState<boolean>(false)
    const [props, setProps] = useState<string | undefined>('')
+   const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
+   const [lightMode, setLightMode] = useAtom(atomLightMode);
 
    const handleChange = async (text: string) => {
       if (text.match(regex)) {
@@ -108,12 +111,13 @@ const EditInfos = ({
    return (
 
       <View className='p-2'>
-         <Text className='text-white'>{userInfo}</Text>
+         <Text className='text-green-500'>{userInfo}</Text>
          <View className='flex-row border-2 border-green-600 rounded-lg p-2 w-full h-16'>
             <TextInput
                value={valueToChange}
                className=' text-white flex-1'
                onChangeText={handleChange}
+               style={{ color: darkModeOn ? `${lightMode}` : 'black' }}
             />
             <View className=''>
                {

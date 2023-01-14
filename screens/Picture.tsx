@@ -36,7 +36,11 @@ export default function Picture() {
       // Camera permissions are not granted yet
       return (
          <View className={`flex-1 justify-center ${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}`}>
-            <Text style={{ textAlign: 'center', color: 'white' }}>We need your permission to show the camera</Text>
+            <Text style={{
+               textAlign: 'center', color:
+                  darkModeOn ? `${lightMode}` : 'black'
+            }}>
+               We need your permission to show the camera</Text>
             <Button onPress={requestPermission} title="grant permission" />
          </View >
       );

@@ -2,10 +2,14 @@ import { View, Text, Modal, SafeAreaView, TouchableOpacity, FlatList, Image } fr
 import { atomUserNFTs } from '../services/globals/'
 import { useAtom } from 'jotai'
 import { INFT } from '../Types'
+import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode'
 
 const EditProfilePic = ({ setModalVisible, setSelectedPicture, modalVisible, setButtonInactive, setUnsavedChanges }: any) => {
 
    const [userNFTs, setUserNFTs] = useAtom(atomUserNFTs)
+   const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
+   const [darkMode, setDarkMode] = useAtom(atomDarkMode);
+   const [lightMode, setLightMode] = useAtom(atomLightMode);
    const closePictureModal = () => {
       setModalVisible(false);
    }
@@ -24,7 +28,7 @@ const EditProfilePic = ({ setModalVisible, setSelectedPicture, modalVisible, set
          visible={modalVisible}
          onRequestClose={closePictureModal}
       >
-         <SafeAreaView className='bg-zinc-900 items-center flex-1'>
+         <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`} items-center flex-1`}>
             <TouchableOpacity onPress={closePictureModal}>
                <Text className='mb-5 text-red-600 font-extrabold text-xl'>Cancel</Text>
             </TouchableOpacity>
@@ -47,7 +51,7 @@ const EditProfilePic = ({ setModalVisible, setSelectedPicture, modalVisible, set
                   keyExtractor={item => item.__token__}
                />}
             {userNFTs.length === 0 &&
-               <Text className='text-white text-2xl mt-2 h-full'>No BEENZER yet</Text>
+               <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} text-2xl mt-2 h-full`}>No BEENZER yet</Text>
             }
          </SafeAreaView>
       </Modal>

@@ -18,6 +18,7 @@ import { NavigationProp, ParamListBase, useIsFocused, useNavigation } from '@rea
 import { socketUserInfo, socketUserNFTs } from '../services/socket/function'
 import { atomSOCKET } from '../services/socket'
 import { LogBox } from 'react-native';
+import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode'
 
 const Profile = () => {
 
@@ -30,6 +31,9 @@ const Profile = () => {
    const [SOCKET] = useAtom(atomSOCKET);
    const [userNFTs, setUserNFTs] = useAtom(atomUserNFTs);
    const [refreshing, setRefreshing] = useAtom(atomRefreshing);
+   const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
+   const [darkMode, setDarkMode] = useAtom(atomDarkMode);
+   const [lightMode, setLightMode] = useAtom(atomLightMode);
 
    useEffect(() => {
       if (isFocused) {
@@ -76,7 +80,8 @@ const Profile = () => {
    }
 
    return (
-      <SafeAreaView className="flex flex-col h-full bg-zinc-900">
+      <SafeAreaView className={`flex flex-col h-full ${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}
+      `}>
          <ScrollView
             contentContainerStyle={styles.contentContainer}
             refreshControl={
@@ -103,7 +108,7 @@ const Profile = () => {
                </TouchableOpacity>
             </View>
             <View className="flex flex-col items-center mb-3">
-               <Text className=" text-white text-6xl uppercase font-extrabold p-4">
+               <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} text-6xl uppercase font-extrabold p-4`}>
                   {profile[0]._username_}
                </Text>
                <GradientText text={profile[0]._description || "No description yet :("} className="uppercase font-extrabold mb-2" />

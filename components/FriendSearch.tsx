@@ -8,6 +8,7 @@ import { socketSeachFriends, socketAddFriend, socketDelFriend, socketGetFriends 
 import { atomProfile } from '../services/globals';
 import { atomUserFriends } from '../services/globals';
 import DisplayButton from './DisplayButton';
+import { atomDarkModeOn, atomLightMode } from '../services/globals/darkmode';
 
 const FriendSearch = () => {
    const [searchQuery, setSearchQuery] = useState('');
@@ -17,6 +18,8 @@ const FriendSearch = () => {
    const [userFriends, setUserFriends] = useAtom(atomUserFriends);
    const [friendsChanged, setFriendsChanged] = useState(false);
    const [display, setDisplay] = useState('Friends')
+   const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
+   const [lightMode, setLightMode] = useAtom(atomLightMode);
 
    useEffect(() => {
       const searchFriends = async (searchQuery: string) => {
@@ -74,7 +77,7 @@ const FriendSearch = () => {
                            <View className='flex flex-row items-center mt-2'>
                               <View className='flex-row'>
                                  <Image source={item._pfp ? { uri: item._pfp } : require('../assets/newUser.png')} style={{ width: 50, height: 50, borderWidth: 1, borderColor: 'white', borderRadius: 50 }} />
-                                 <Text className='text-white font-bold text-lg ml-2 mb-1 self-center'>{item._username_}</Text>
+                                 <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} font-bold text-lg ml-2 mb-1 self-center`}>{item._username_}</Text>
                               </View>
                            </View>
                         </TouchableOpacity>
@@ -87,7 +90,7 @@ const FriendSearch = () => {
                               }
                            </TouchableOpacity>}
                      </View>
-                     <Text className='text-white mb-2'>{item.__pubkey__}</Text>
+                     <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} ml-2 mb-2`}>{item.__pubkey__}</Text>
                   </View>
                )
             })}

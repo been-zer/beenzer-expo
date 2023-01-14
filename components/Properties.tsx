@@ -23,8 +23,6 @@ export default Properties
 
 const styles = StyleSheet.create({
    rectangle: {
-      borderColor: 'gray',
-      borderWidth: 1,
       padding: 10,
       margin: 1,
    },

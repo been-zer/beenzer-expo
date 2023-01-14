@@ -131,11 +131,12 @@ const PostBeenzer = () => {
                         {/* </Callout> */}
                      </Marker>
                   </MapView>
-                  <View className='mt-2 '>
+                  <View className='mt-2 items-center'>
                      <Text className='text-green-800 text-xl'>DESCRIPTION</Text>
                   </View>
                   <View className="w-full items-center">
                      <TextInput
+                        textAlign='center'
                         className={`${darkModeOn ? `text-${lightMode}` : `text-black`}`}
                         onFocus={scrollToBottom}
                         style={styles.input}
@@ -157,8 +158,8 @@ const PostBeenzer = () => {
                         </Text>
                      </TouchableOpacity>
                   </View>
-                  <View className='mt-2 '>
-                     <Text className='text-green-800 text-xl'>PROPERTIES</Text>
+                  <View className='mt-2 items-center'>
+                     <Text className='text-green-800 text-xl '>PROPERTIES</Text>
                   </View>
                   <View className='flex-row flex-wrap mt-2'>
                      <Properties props={pin.latitude} propsTitle={'LATITUDE'} />

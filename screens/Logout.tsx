@@ -7,12 +7,15 @@ import { ArrowRightOnRectangleIcon } from "react-native-heroicons/solid";
 import { disconnect } from "../services/phantom/disconnect";
 import { atomSession, atomDappKeyPair, atomSharedSecret } from "../services/globals";
 import { useAtom } from "jotai";
+import { atomDarkModeOn, atomLightMode } from "../services/globals/darkmode";
 
 const Logout = () => {
 
    const [session, setSession] = useAtom(atomSession)
    const [dappKeyPair, setDappKeyPair] = useAtom(atomDappKeyPair)
    const [sharedSecret, setSharedSecret] = useAtom(atomSharedSecret)
+   const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
+   const [lightMode, setLightMode] = useAtom(atomLightMode);
 
    const logout = () => {
       disconnect(session, dappKeyPair, sharedSecret);
@@ -25,7 +28,7 @@ const Logout = () => {
       >
          <ArrowRightOnRectangleIcon
             size={25}
-            color="#30a24f"
+            color={darkModeOn ? `${lightMode}` : 'black'}
             className="bg-sky-500/50 "
          />
       </TouchableOpacity>

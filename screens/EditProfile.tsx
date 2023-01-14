@@ -7,6 +7,7 @@ import { INFT, IUpdateUser } from '../Types'
 import EditProfilePic from '../components/EditProfilePic'
 import { updateUserProfile } from '../services/socket/function'
 import { atomSOCKET } from '../services/socket'
+import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode'
 
 const EditProfile = () => {
 
@@ -16,6 +17,9 @@ const EditProfile = () => {
    const [SOCKET] = useAtom(atomSOCKET)
    const [buttonInactive, setButtonInactive] = useState(true)
    const [unsavedChanges, setUnsavedChanges] = useState(false)
+   const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
+   const [darkMode, setDarkMode] = useAtom(atomDarkMode);
+   const [lightMode, setLightMode] = useAtom(atomLightMode);
    const [newData, setNewData] = useState<IUpdateUser>({
       _username_: profile[0]?._username_,
       _lastname: profile[0]?._lastname,
@@ -49,12 +53,12 @@ const EditProfile = () => {
    console.log(profile[0]._pfp)
 
    return (
-      <SafeAreaView className='bg-zinc-900 flex-1' >
+      <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`} flex-1`} >
          <ScrollView>
             <View className='items-center'>
                <TouchableOpacity onPress={openPictureModal} >
                   <Image className=" h-28 w-28 rounded-full"
-                     source={profile[0]._pfp ? { uri: profile[0]._pfp } : selectedPicture ? selectedPicture : require("../assets/newUser.png")}
+                     source={selectedPicture ? { uri: selectedPicture } : profile[0]._pfp ? { uri: profile[0]._pfp } : require("../assets/newUser.png")}
                   />
                   <Text className='text-white mt-1'>Edit profile picture</Text>
                </TouchableOpacity>
