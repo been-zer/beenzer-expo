@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.3",
+    "@react-native-community/slider": "4.2.4",
     "@react-native-masked-view/masked-view": "^0.2.8",
     "@react-navigation/native": "^6.1.1",
     "@react-navigation/native-stack": "^6.9.7",

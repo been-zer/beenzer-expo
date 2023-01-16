@@ -6,6 +6,7 @@ import { atomSOCKET } from '../services/socket'
 import { socketGetFollowing } from '../services/socket/function'
 import { IProfile } from '../Types'
 import { atomDarkModeOn, atomLightMode } from '../services/globals/darkmode'
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native'
 
 const FollowBlock = ({ data }: { show: string, data: IProfile[] }) => {
 
@@ -13,6 +14,7 @@ const FollowBlock = ({ data }: { show: string, data: IProfile[] }) => {
    const [SOCKET] = useAtom(atomSOCKET)
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
+   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
    return (
       <>
@@ -21,7 +23,7 @@ const FollowBlock = ({ data }: { show: string, data: IProfile[] }) => {
                return (
                   <View key={item.__pubkey__} >
                      <View className='mr-2 ml-2 flex-row justify-between' >
-                        <TouchableOpacity onPress={() => console.log('navigate to friend profile')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Profile', { pubkey: item.__pubkey__ })}>
                            <View className='flex flex-row items-center mt-2'>
                               <View className='flex-row'>
                                  <Image source={item._pfp ? { uri: item._pfp } : require('../assets/newUser.png')} style={{ width: 50, height: 50, borderWidth: 1, borderColor: 'white', borderRadius: 50 }} />
