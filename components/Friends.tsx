@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { atomSOCKET } from '../services/socket';
 import { useAtom } from 'jotai'
 import { socketGetFriends, socketGetFollowing, socketGetFollower } from '../services/socket/function';
-import { atomProfile, atomFollowing, atomFollower } from '../services/globals';
+import { atomProfile, atomFollowing, atomFollower, atomFriendsChanged } from '../services/globals';
 import { atomUserFriends } from '../services/globals';
 import DisplayButton from './DisplayButton';
 import FriendSearch from './FriendSearch';
@@ -14,7 +14,7 @@ const Friends = ({ dataPubkey, showSearch }: { dataPubkey: string, showSearch: b
    const [SOCKET] = useAtom(atomSOCKET);
    const [profile, setProfile] = useAtom(atomProfile)
    const [userFriends, setUserFriends] = useAtom(atomUserFriends);
-   const [friendsChanged, setFriendsChanged] = useState(false);
+   const [friendsChanged, setFriendsChanged] = useAtom(atomFriendsChanged);
    const [display, setDisplay] = useState('Friends')
    const [following, setFollowing] = useAtom(atomFollowing)
    const [follower, setFollower] = useAtom(atomFollower)
@@ -41,16 +41,15 @@ const Friends = ({ dataPubkey, showSearch }: { dataPubkey: string, showSearch: b
 
    return (
       <>
+         {showSearch && <FriendSearch />}
          <View className='flex-row justify-evenly mt-2'>
             <DisplayButton title='Friends' display={display} setDisplay={setDisplay} />
             <DisplayButton title='Followers' display={display} setDisplay={setDisplay} />
             <DisplayButton title='Following' display={display} setDisplay={setDisplay} />
-            {showSearch && <DisplayButton title='🔎 Search' display={display} setDisplay={setDisplay} />}
          </View>
-         {display === 'Friends' && <FollowBlock show={'friends'} data={userFriends} />}
-         {display === 'Followers' && <FollowBlock show={'followers'} data={follower} />}
-         {display === 'Following' && <FollowBlock show={'following'} data={following} />}
-         {display === '🔎 Search' && showSearch && <FriendSearch />}
+         {display === 'Friends' && <FollowBlock data={userFriends} direction={null} />}
+         {display === 'Followers' && <FollowBlock data={follower} direction={null} />}
+         {display === 'Following' && <FollowBlock data={following} direction={null} />}
          <View className='h-96'></View>
       </>
 

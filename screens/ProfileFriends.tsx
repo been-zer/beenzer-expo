@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, ScrollView, RefreshControl, Alert, StyleSheet } from 'react-native'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAtom } from 'jotai'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode'
 import ProfilePic from '../components/Profile.components/ProfilePic'
@@ -10,7 +10,10 @@ import ProfileMap from '../components/Profile.components/ProfileMap'
 import { INFT, IProfile } from '../Types'
 import Footer from './Footer'
 import Friends from '../components/Friends'
-import { atomRefreshing } from '../services/globals'
+import { atomActiveScreen, atomRefreshing } from '../services/globals'
+import { socketUserNFTs } from '../services/socket/function'
+import { atomSOCKET } from '../services/socket'
+import { useIsFocused } from '@react-navigation/native'
 
 const ProfileFriends = ({ friendPubkey }: { friendPubkey: IProfile }) => {
 
@@ -20,7 +23,39 @@ const ProfileFriends = ({ friendPubkey }: { friendPubkey: IProfile }) => {
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
    const [refreshing, setRefreshing] = useAtom(atomRefreshing);
+   const [friendsNFTs, setFriendsNFTs] = useState<INFT[]>([]);
+   const [SOCKET] = useAtom(atomSOCKET);
+   const isFocused = useIsFocused();
+   const [active, setActive] = useAtom(atomActiveScreen)
+   const [selectedTab, setSelectedTab] = useState<string>('Collection')
 
+
+
+   const getFriendsNFT = async () => {
+      try {
+         const friendsNFTs = await socketUserNFTs(SOCKET, friendPubkey.__pubkey__);
+         console.log('friendsNFTs: ', friendsNFTs)
+         setFriendsNFTs(friendsNFTs.reverse());
+      } catch (e) {
+         console.error(e);
+      }
+   }
+
+   useEffect(() => {
+      if (isFocused) {
+         setActive('Profile')
+         getFriendsNFT();
+      }
+   }, [isFocused]);
+
+   const onRefresh = () => {
+      setRefreshing(true);
+      getFriendsNFT();
+      setTimeout(() => {
+         setRefreshing(false);
+         console.log('refreshed')
+      }, 1000);
+   }
 
    return (
 
@@ -29,7 +64,7 @@ const ProfileFriends = ({ friendPubkey }: { friendPubkey: IProfile }) => {
          <ScrollView
             contentContainerStyle={styles.contentContainer}
             refreshControl={
-               <RefreshControl refreshing={refreshing} onRefresh={() => console.log('refreshing')}
+               <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
                   tintColor="white"
                   progressBackgroundColor="white"
                />
@@ -41,18 +76,18 @@ const ProfileFriends = ({ friendPubkey }: { friendPubkey: IProfile }) => {
             <View className='flex flex-row flex-wrap'>
             </View>
             <View className='flex flex-row justify-evenly'>
-               <ProfileTab title='📷' component={'Collection'} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
-               <ProfileTab title='🗺️' component={'ProfileMap'} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
-               <ProfileTab title='👥' component={'Friends'} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
+               <ProfileTab title='📷' component={'Collection'} selectedTab={selectedTab} setSelectedTab={setSelectedTab} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
+               <ProfileTab title='🗺️' component={'ProfileMap'} selectedTab={selectedTab} setSelectedTab={setSelectedTab} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
+               <ProfileTab title='👥' component={'Friends'} selectedTab={selectedTab} setSelectedTab={setSelectedTab} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
             </View>
             <View className='flex flex-col'>
                {showProfileTab === 'Collection' && (
                   <>
-                     <ProfileCollection setShowDetails={setShowDetails} showDetails={showDetails} dataNFT={[]} />
+                     <ProfileCollection setShowDetails={setShowDetails} showDetails={showDetails} dataNFT={friendsNFTs} />
                   </>
                )}
                {showProfileTab === 'ProfileMap' && (
-                  <ProfileMap uniqueNFTs={null} dataNFT={null} />
+                  <ProfileMap uniqueNFTs={null} dataNFT={friendsNFTs} />
                )}
                {showProfileTab === 'Friends' && (
                   <Friends dataPubkey={friendPubkey.__pubkey__} showSearch={false} />

@@ -8,7 +8,7 @@ import { IProfile } from '../../Types'
 import { atomDarkModeOn, atomLightMode } from '../../services/globals/darkmode'
 import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native'
 
-const FollowBlock = ({ data }: { show: string, data: IProfile[] }) => {
+const FollowBlock = ({ data, direction }: { data: IProfile[], direction: string | null }) => {
 
    const [profile, setProfile] = useAtom(atomProfile)
    const [friendPubkey, setFriendsPubkey] = useAtom(atomFriendPubkey)
@@ -18,8 +18,20 @@ const FollowBlock = ({ data }: { show: string, data: IProfile[] }) => {
    const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
    const handlePress = (item: IProfile) => {
-      setFriendsPubkey(item)
-      navigation.navigate('ProfileFriends')
+      if (direction) {
+         navigation.navigate(direction)
+         setFriendsPubkey(item)
+         return
+      }
+      if (item.__pubkey__ === profile[0].__pubkey__) {
+         navigation.navigate('Profile')
+         return
+      }
+      else {
+         console.log(direction)
+         setFriendsPubkey(item)
+         navigation.navigate('ProfileFriends')
+      }
    }
 
    return (

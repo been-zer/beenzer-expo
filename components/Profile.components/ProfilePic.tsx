@@ -7,9 +7,9 @@ const ProfilePic = ({ img, functionOnClick }: { img: string, functionOnClick: ()
       <View className="'flex flex-row justify-center items-end'">
          <TouchableOpacity onPress={functionOnClick}>
             <Image className=" h-28 w-28 rounded-full mb-2" source={
-               { img } ?
+               img ?
                   { uri: img } :
-                  require("../../assets/newUser.png")
+                  require("./../../assets/newUser.png")
             }
             />
          </TouchableOpacity>

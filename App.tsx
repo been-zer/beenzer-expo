@@ -17,6 +17,8 @@ import EditProfile from './screens/EditProfile';
 import Notifications from './screens/Notifications';
 import ColorMode from './components/ColorMode';
 import ProfileFriends from './screens/ProfileFriends';
+import Messages from './screens/Messages';
+import DirectMessages from './screens/DirectMessages';
 
 const Stack = createNativeStackNavigator();
 
@@ -109,10 +111,9 @@ export default function App() {
             options={{
               headerTitle: 'Friend Profile',
               headerTransparent: true,
-              headerBackVisible: false,
+              headerBackVisible: true,
+              headerBackTitle: '',
               headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
-              headerRight: () => (<Logout />),
-              headerLeft: () => (<ColorMode />),
               animation: 'none',
             }}>
             {(props) => <ProfileFriends {...props} friendPubkey={friendPubkey} />}
@@ -122,6 +123,25 @@ export default function App() {
             headerShown: false,
             animation: 'none',
           }} />
+          <Stack.Screen name="Messages" component={Messages} options={{
+            headerTitle: 'Messages',
+            headerTransparent: true,
+            headerBackVisible: false,
+            headerBackTitle: '',
+            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+            animation: 'none',
+          }} />
+          <Stack.Screen name="DirectMessages"
+            options={{
+              headerTransparent: true,
+              headerTitle: '',
+              headerBackVisible: true,
+              headerBackTitle: '',
+              headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+              animation: 'none',
+            }} >
+            {(props) => <DirectMessages {...props} friendPubkey={friendPubkey} />}
+          </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer >
     </View>

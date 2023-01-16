@@ -65,13 +65,15 @@ export const socketUserInfo = (Socket: Socket) => {
    })
 }
 
-export const socketUserNFTs = (Socket: Socket) => {
+export const socketUserNFTs = (Socket: Socket, pubkey: string) => {
+   Socket.emit('getUserNFTs', pubkey);
    return new Promise<INFT[]>((resolve) => {
       Socket.on('userNFTs', (receivedNfts: INFT[]) => {
          resolve(receivedNfts)
       });
    })
 }
+
 
 export const updateUserProfile = (Socket: Socket, pubkey: PublicKey | string, update: string, value: string) => {
    Socket.emit('updateUser', pubkey, update, value)
@@ -130,6 +132,16 @@ export const socketGetFollower = (Socket: Socket, pubkey: string) => {
       });
    });
 }
+
+export const socketGetMessages = (Socket: Socket, pubkey: string, pubkey2: string) => {
+   Socket.emit('getMessages', pubkey, pubkey2);
+   return new Promise((resolve) => {
+      Socket.on("getMessagesRes", (messages: any) => {
+         resolve(messages);
+      });
+   });
+}
+
 
 
 

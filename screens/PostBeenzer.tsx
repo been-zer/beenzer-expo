@@ -174,7 +174,7 @@ const PostBeenzer = () => {
                      onValueChange={(value) => setDistance(value)}
                   />
                   <View className='mt-2 items-center'>
-                     <Text className='text-green-800 text-xl'>NUMBERS OF NFT TO MINT : {supply}</Text>
+                     <Text className='text-green-800 text-xl'>SUPPLY : {supply}</Text>
                   </View>
                   <Slider
                      className="mt-2"

@@ -1,12 +1,12 @@
-import { View, Text, KeyboardAvoidingView, ScrollView, SafeAreaView, Platform, TouchableOpacity, FlatList, Image } from 'react-native'
+import { View, Text, Button, KeyboardAvoidingView, ScrollView, SafeAreaView, Platform, TouchableOpacity, FlatList, Image } from 'react-native'
 import { Searchbar } from 'react-native-paper';
 import React, { useState, useEffect } from 'react'
 import { atomSOCKET } from '../services/socket';
 import { useAtom } from 'jotai'
 import { IProfile } from '../Types';
 import { socketSeachFriends, socketAddFriend, socketDelFriend, socketGetFriends } from '../services/socket/function';
-import { atomProfile } from '../services/globals';
-import { atomUserFriends } from '../services/globals';
+import { atomFollowing, atomProfile } from '../services/globals';
+import { atomUserFriends, atomFriendsChanged } from '../services/globals';
 import DisplayButton from './DisplayButton';
 import { atomDarkModeOn, atomLightMode } from '../services/globals/darkmode';
 
@@ -16,10 +16,12 @@ const FriendSearch = () => {
    const [SOCKET] = useAtom(atomSOCKET);
    const [profile, setProfile] = useAtom(atomProfile)
    const [userFriends, setUserFriends] = useAtom(atomUserFriends);
-   const [friendsChanged, setFriendsChanged] = useState(false);
    const [display, setDisplay] = useState('Friends')
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
+   const [following, setFollowing] = useAtom(atomFollowing)
+   const [friendsChanged, setFriendsChanged] = useAtom(atomFriendsChanged);
+
 
    useEffect(() => {
       const searchFriends = async (searchQuery: string) => {
@@ -33,7 +35,6 @@ const FriendSearch = () => {
       const getFriends = async (pubkey: string) => {
          const res = await socketGetFriends(SOCKET, pubkey)
          setUserFriends(res)
-         console.log('res', res)
       }
       getFriends(profile[0].__pubkey__)
    }, [friendsChanged])
@@ -48,9 +49,9 @@ const FriendSearch = () => {
    }
 
    const handleFriendAction = (pubkeyFriends: string) => {
-      if (!userFriends) { addFriends(pubkeyFriends) }
+      if (!following) { addFriends(pubkeyFriends) }
       else {
-         const isFriend = userFriends.find((item) => item.__pubkey__ === pubkeyFriends)
+         const isFriend = following.find((item) => item.__pubkey__ === pubkeyFriends)
          if (isFriend) {
             deleteFriends(pubkeyFriends)
          } else {
@@ -58,6 +59,12 @@ const FriendSearch = () => {
          }
       }
       setFriendsChanged(!friendsChanged)
+
+   }
+
+   const hideSearch = () => {
+      setSearchQuery('')
+      setUsersFound([])
    }
 
    return (
@@ -68,6 +75,7 @@ const FriendSearch = () => {
             value={searchQuery}
             className="mt-2 mr-2 ml-2"
          />
+         {usersFound && searchQuery && <Button title='Hide results' onPress={hideSearch} />}
          {
             usersFound.map((item, index) => {
                return (
@@ -78,12 +86,14 @@ const FriendSearch = () => {
                               <View className='flex-row'>
                                  <Image source={item._pfp ? { uri: item._pfp } : require('../assets/newUser.png')} style={{ width: 50, height: 50, borderWidth: 1, borderColor: 'white', borderRadius: 50 }} />
                                  <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} font-bold text-lg ml-2 mb-1 self-center`}>{item._username_}</Text>
+                                 {userFriends && userFriends.find((friends) => friends.__pubkey__ === item.__pubkey__) &&
+                                    <Text className='text-green-500 font-bold ml-2 mb-1 self-center'>🫂</Text>}
                               </View>
                            </View>
                         </TouchableOpacity>
                         {item.__pubkey__ !== profile[0].__pubkey__ &&
                            <TouchableOpacity onPress={() => handleFriendAction(item.__pubkey__)} className='self-center'>
-                              {userFriends && userFriends.find((friends) => friends.__pubkey__ === item.__pubkey__) ? <View className='ml-2 flex items-center justify-center'>
+                              {following && following.find((friends) => friends.__pubkey__ === item.__pubkey__) ? <View className='ml-2 flex items-center justify-center'>
                                  <Text className='text-blue-500  font-bold'>Unfollow</Text>
                               </View> :
                                  <Text className='text-green-500  font-bold'>Follow</Text>

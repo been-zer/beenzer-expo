@@ -36,6 +36,7 @@ const Profile = () => {
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
+   const [selectedTab, setSelectedTab] = useState<string>('Collection')
 
    useEffect(() => {
       if (isFocused) {
@@ -74,7 +75,7 @@ const Profile = () => {
 
    const getInfoNft = async () => {
       try {
-         const profileNFTs = await socketUserNFTs(SOCKET);
+         const profileNFTs = await socketUserNFTs(SOCKET, profile[0].__pubkey__);
          setUserNFTs(profileNFTs.reverse());
       } catch (e) {
          console.error(e);
@@ -105,9 +106,9 @@ const Profile = () => {
             <View className='flex flex-row flex-wrap'>
             </View>
             <View className='flex flex-row justify-evenly'>
-               <ProfileTab title='📷' component={'Collection'} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
-               <ProfileTab title='🗺️' component={'ProfileMap'} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
-               <ProfileTab title='👥' component={'Friends'} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
+               <ProfileTab title='📷' component={'Collection'} selectedTab={selectedTab} setSelectedTab={setSelectedTab} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
+               <ProfileTab title='🗺️' component={'ProfileMap'} selectedTab={selectedTab} setSelectedTab={setSelectedTab} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
+               <ProfileTab title='👥' component={'Friends'} selectedTab={selectedTab} setSelectedTab={setSelectedTab} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
             </View>
             <View className='flex flex-col'>
                {showProfileTab === 'Collection' && (

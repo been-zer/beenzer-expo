@@ -61,7 +61,9 @@ const ProfileCollection = ({ setShowDetails, showDetails, dataNFT }: {
             </View>
          }
          {dataNFT.length == 0 &&
-            <Text className='text-white text-2xl mt-2'>No BEENZER yet</Text>}
+            <View className='flex justify-center items-center'>
+               <Text className='text-white text center text-2xl mt-2'>Empty :(</Text>
+            </View>}
          {showDetails &&
             <>
                <View className="flex justify-center align-center ">

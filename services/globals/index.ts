@@ -32,6 +32,7 @@ export const atomFollower = atom<IProfile[]>([]);
 export const atomDistance = atom<number>(1000)
 export const atomSupply = atom<number>(1)
 export const atomFriendPubkey = atom<IProfile>({} as IProfile);
+export const atomFriendsChanged = atom<boolean>(false);
 
 export const mapStyleLight = [
    {
