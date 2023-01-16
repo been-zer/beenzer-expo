@@ -102,6 +102,15 @@ export default function App() {
             headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
             animation: 'none',
           }} />
+          <Stack.Screen name="ProfileFriends" component={Profile} options={{
+            headerTitle: 'Profile',
+            headerTransparent: true,
+            headerBackVisible: false,
+            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+            headerRight: () => (<Logout />),
+            headerLeft: () => (<ColorMode />),
+            animation: 'none',
+          }} />
           <Stack.Screen name="PostBeenzer" component={PostBeenzer} options={{ animation: 'none', }} />
           <Stack.Screen name="Notifications" component={Notifications} options={{
             headerShown: false,

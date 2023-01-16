@@ -3,15 +3,14 @@ import { Searchbar } from 'react-native-paper';
 import React, { useState, useEffect } from 'react'
 import { atomSOCKET } from '../services/socket';
 import { useAtom } from 'jotai'
-import { IProfile } from '../Types';
 import { socketGetFriends, socketGetFollowing, socketGetFollower } from '../services/socket/function';
 import { atomProfile, atomFollowing, atomFollower } from '../services/globals';
 import { atomUserFriends } from '../services/globals';
 import DisplayButton from './DisplayButton';
 import FriendSearch from './FriendSearch';
-import FollowBlock from './FollowBlock';
+import FollowBlock from './Profile.components/FollowBlock';
 
-const ProfileFriends = () => {
+const Friends = ({ dataPubkey }: { dataPubkey: string }) => {
    const [SOCKET] = useAtom(atomSOCKET);
    const [profile, setProfile] = useAtom(atomProfile)
    const [userFriends, setUserFriends] = useAtom(atomUserFriends);
@@ -33,9 +32,9 @@ const ProfileFriends = () => {
          const res = await socketGetFollower(SOCKET, pubkey)
          setFollower(res)
       }
-      getFriends(profile[0].__pubkey__)
-      getUserFollowing(profile[0].__pubkey__)
-      getUserFollowers(profile[0].__pubkey__)
+      getFriends(dataPubkey)
+      getUserFollowing(dataPubkey)
+      getUserFollowers(dataPubkey)
 
    }, [friendsChanged])
 
@@ -58,4 +57,4 @@ const ProfileFriends = () => {
    )
 }
 
-export default ProfileFriends
+export default Friends

@@ -1,18 +1,19 @@
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native'
 import { useEffect, useState } from 'react'
 import { useAtom } from 'jotai'
-import { atomUserNFTs, atomProfile } from '../services/globals'
-import { INFT } from '../Types'
-import Properties from './Properties'
+import { atomUserNFTs, atomProfile } from '../../services/globals'
+import { INFT } from '../../Types'
+import Properties from '../Properties'
 import ProfileMap from './ProfileMap'
 import { ActivityIndicator } from 'react-native-paper'
-import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode'
+import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../../services/globals/darkmode'
 
-const ProfileCollection = ({ setShowDetails, showDetails }: { showDetails: boolean, setShowDetails: any }) => {
-   const [userNFTs, setUserNFTs] = useAtom(atomUserNFTs);
+const ProfileCollection = ({ setShowDetails, showDetails, dataNFT }: {
+   showDetails: boolean, setShowDetails: any,
+   dataNFT: INFT[]
+}) => {
    const [profile, setProfile] = useAtom(atomProfile);
    const [NFTselected, setNFTselected] = useState<INFT | null>(null);
-   const [userNFTsReverse, setUserNFTsReverse] = useState<INFT[]>([]);
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
@@ -26,17 +27,13 @@ const ProfileCollection = ({ setShowDetails, showDetails }: { showDetails: boole
       console.log(link);
    }
 
-   useEffect(() => {
-      setUserNFTsReverse(userNFTs.reverse());
-   }, [userNFTs])
-
    return (
       <>
-         {!showDetails && userNFTs.length > 0 &&
+         {!showDetails && dataNFT.length > 0 &&
             <View className="flex flex-col items-center">
                <FlatList
                   className='mt-2'
-                  data={userNFTsReverse}
+                  data={dataNFT}
                   numColumns={2}
                   renderItem={({ item }) => {
                      const borderColor = item._creator === profile[0].__pubkey__ ? 'black' : 'green';
@@ -63,7 +60,7 @@ const ProfileCollection = ({ setShowDetails, showDetails }: { showDetails: boole
                />
             </View>
          }
-         {userNFTs.length == 0 &&
+         {dataNFT.length == 0 &&
             <Text className='text-white text-2xl mt-2'>No BEENZER yet</Text>}
          {showDetails &&
             <>
@@ -89,7 +86,7 @@ const ProfileCollection = ({ setShowDetails, showDetails }: { showDetails: boole
                   <Properties props={NFTselected?._username} propsTitle={'USERNAME'} />
                   <Properties props={NFTselected?._creator} propsTitle={'CREATOR'} />
                </View>
-               <ProfileMap uniqueNFTs={NFTselected} />
+               <ProfileMap uniqueNFTs={NFTselected} dataNFT={null} />
             </>
          }
       </>

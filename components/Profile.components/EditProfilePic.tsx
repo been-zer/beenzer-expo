@@ -1,8 +1,8 @@
 import { View, Text, Modal, SafeAreaView, TouchableOpacity, FlatList, Image } from 'react-native'
-import { atomUserNFTs } from '../services/globals/'
+import { atomUserNFTs } from '../../services/globals'
 import { useAtom } from 'jotai'
-import { INFT } from '../Types'
-import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode'
+import { INFT } from '../../Types'
+import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../../services/globals/darkmode'
 
 const EditProfilePic = ({ setModalVisible, setSelectedPicture, modalVisible, setButtonInactive, setUnsavedChanges }: any) => {
 

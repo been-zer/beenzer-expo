@@ -1,11 +1,11 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { useEffect, useState } from 'react'
 import { useAtom } from 'jotai'
-import { atomProfile, atomFollowing } from '../services/globals'
-import { atomSOCKET } from '../services/socket'
-import { socketGetFollowing } from '../services/socket/function'
-import { IProfile } from '../Types'
-import { atomDarkModeOn, atomLightMode } from '../services/globals/darkmode'
+import { atomProfile, atomFollowing } from '../../services/globals'
+import { atomSOCKET } from '../../services/socket'
+import { socketGetFollowing } from '../../services/socket/function'
+import { IProfile } from '../../Types'
+import { atomDarkModeOn, atomLightMode } from '../../services/globals/darkmode'
 import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native'
 
 const FollowBlock = ({ data }: { show: string, data: IProfile[] }) => {
@@ -23,10 +23,10 @@ const FollowBlock = ({ data }: { show: string, data: IProfile[] }) => {
                return (
                   <View key={item.__pubkey__} >
                      <View className='mr-2 ml-2 flex-row justify-between' >
-                        <TouchableOpacity onPress={() => navigation.navigate('Profile', { pubkey: item.__pubkey__ })}>
+                        <TouchableOpacity onPress={() => navigation.navigate('ProfileFriends')}>
                            <View className='flex flex-row items-center mt-2'>
                               <View className='flex-row'>
-                                 <Image source={item._pfp ? { uri: item._pfp } : require('../assets/newUser.png')} style={{ width: 50, height: 50, borderWidth: 1, borderColor: 'white', borderRadius: 50 }} />
+                                 <Image source={item._pfp ? { uri: item._pfp } : require('../../assets/newUser.png')} style={{ width: 50, height: 50, borderWidth: 1, borderColor: 'white', borderRadius: 50 }} />
                                  <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} font-bold text-lg ml-2 mb-1 self-center`}>{item._username_}</Text>
                               </View>
                            </View>

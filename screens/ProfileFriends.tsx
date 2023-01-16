@@ -19,10 +19,8 @@ import { socketUserInfo, socketUserNFTs } from '../services/socket/function'
 import { atomSOCKET } from '../services/socket'
 import { LogBox } from 'react-native';
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode'
-import ProfilePic from '../components/Profile.components/ProfilePic'
-import ProfileBio from '../components/Profile.components/ProfileBio'
 
-const Profile = () => {
+const ProfileFriends = () => {
 
    const [profile, setProfile] = useAtom(atomProfile)
    const [showProfileTab, setShowProfileTab] = useState<string>('Profile')
@@ -75,7 +73,7 @@ const Profile = () => {
    const getInfoNft = async () => {
       try {
          const profileNFTs = await socketUserNFTs(SOCKET);
-         setUserNFTs(profileNFTs.reverse());
+         setUserNFTs(profileNFTs);
       } catch (e) {
          console.error(e);
       }
@@ -93,7 +91,15 @@ const Profile = () => {
                />
             }>
             <View className='flex flex-row justify-center items-end'>
-               <ProfilePic img={profile[0]._pfp} functionOnClick={editProfile} />
+               <View className="'flex flex-row justify-center items-end'">
+                  <TouchableOpacity onPress={editProfile}><Image className=" h-28 w-28 rounded-full mb-2" source={
+                     profile[0]._pfp ?
+                        { uri: profile[0]._pfp } :
+                        require("../assets/newUser.png")
+                  }
+                  />
+                  </TouchableOpacity>
+               </View>
                <TouchableOpacity
                   className="  "
                   onPress={editProfile}
@@ -101,25 +107,30 @@ const Profile = () => {
                   <PencilSquareIcon size={18} color="#30a24f" />
                </TouchableOpacity>
             </View>
-            <ProfileBio name={profile[0]._username_} description={profile[0]._description} />
+            <View className="flex flex-col items-center mb-3">
+               <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} text-6xl uppercase font-extrabold p-4`}>
+                  {profile[0]._username_}
+               </Text>
+               <GradientText text={profile[0]._description || "No description yet :("} className="uppercase font-extrabold mb-2" />
+            </View>
             <View className='flex flex-row flex-wrap'>
             </View>
             <View className='flex flex-row justify-evenly'>
                <ProfileTab title='📷' component={'Collection'} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
                <ProfileTab title='🗺️' component={'ProfileMap'} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
-               <ProfileTab title='👥' component={'Friends'} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
+               <ProfileTab title='👥' component={'ProfileFriends'} setShowProfileTab={setShowProfileTab} setShowDetails={setShowDetails} />
             </View>
             <View className='flex flex-col'>
                {showProfileTab === 'Collection' && (
                   <>
-                     <ProfileCollection setShowDetails={setShowDetails} showDetails={showDetails} dataNFT={userNFTs} />
+                     <ProfileCollection setShowDetails={setShowDetails} showDetails={showDetails} />
                   </>
                )}
                {showProfileTab === 'ProfileMap' && (
-                  <ProfileMap uniqueNFTs={null} dataNFT={userNFTs} />
+                  <ProfileMap uniqueNFTs={null} />
                )}
-               {showProfileTab === 'Friends' && (
-                  <Friends dataPubkey={profile[0].__pubkey__} />
+               {showProfileTab === 'ProfileFriends' && (
+                  <ProfileFriends />
                )}
             </View>
          </ScrollView>
@@ -128,7 +139,7 @@ const Profile = () => {
    )
 }
 
-export default Profile
+export default ProfileFriends
 
 const styles = StyleSheet.create({
    picture: {

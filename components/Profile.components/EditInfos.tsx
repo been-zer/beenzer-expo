@@ -1,12 +1,12 @@
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
 import { Dispatch, useEffect, useState } from 'react'
-import { IUpdateUser } from '../Types'
+import { IUpdateUser } from '../../Types'
 import { CheckCircleIcon, XCircleIcon } from 'react-native-heroicons/outline'
-import { checkUsernameAvailability } from '../services/socket/function'
-import { atomSOCKET } from '../services/socket'
+import { checkUsernameAvailability } from '../../services/socket/function'
+import { atomSOCKET } from '../../services/socket'
 import { useAtom } from 'jotai'
-import { atomRegex, atomProfile } from '../services/globals/index'
-import { atomDarkModeOn, atomLightMode } from '../services/globals/darkmode'
+import { atomRegex, atomProfile } from '../../services/globals/index'
+import { atomDarkModeOn, atomLightMode } from '../../services/globals/darkmode'
 
 const EditInfos = ({
    userInfo,

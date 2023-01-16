@@ -75,7 +75,7 @@ const Home = () => {
    const getInfoNft = async () => {
       try {
          const profileNFTs = await socketUserNFTs(SOCKET);
-         setUserNFTs(profileNFTs);
+         setUserNFTs(profileNFTs.reverse());
       } catch (e) {
          console.error(e);
       }

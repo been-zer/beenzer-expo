@@ -1,15 +1,14 @@
 import { View, Text, ActivityIndicator, StyleSheet, ImageBackground } from 'react-native'
 import React from 'react'
 import MapView, { Marker, Callout } from 'react-native-maps'
-import { mapStyle, mapStyleLight } from '../services/globals'
-import { atomUserLocation, atomUserNFTs } from '../services/globals'
+import { mapStyle, mapStyleLight } from '../../services/globals'
+import { atomUserLocation, atomUserNFTs } from '../../services/globals'
 import { useAtom } from 'jotai'
-import { INFT } from '../Types'
-import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode'
+import { INFT } from '../../Types'
+import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../../services/globals/darkmode'
 
-const ProfileMap = ({ uniqueNFTs }: { uniqueNFTs: INFT | null }) => {
+const ProfileMap = ({ uniqueNFTs, dataNFT }: { uniqueNFTs: INFT | null, dataNFT: INFT[] | null }) => {
    const [userLocation, setUserLocation] = useAtom(atomUserLocation);
-   const [userNFTs, setUserNFTs] = useAtom(atomUserNFTs);
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
@@ -30,7 +29,7 @@ const ProfileMap = ({ uniqueNFTs }: { uniqueNFTs: INFT | null }) => {
 
                }}>
                <>
-                  {userNFTs.map((nft, index) => {
+                  {dataNFT && dataNFT.map((nft, index) => {
                      return <Marker coordinate={{ latitude: nft._latitude, longitude: nft._longitude }} pinColor="green"
                         key={index} title={nft._description}
                      >
