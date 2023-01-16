@@ -10,7 +10,7 @@ import DisplayButton from './DisplayButton';
 import FriendSearch from './FriendSearch';
 import FollowBlock from './Profile.components/FollowBlock';
 
-const Friends = ({ dataPubkey }: { dataPubkey: string }) => {
+const Friends = ({ dataPubkey, showSearch }: { dataPubkey: string, showSearch: boolean }) => {
    const [SOCKET] = useAtom(atomSOCKET);
    const [profile, setProfile] = useAtom(atomProfile)
    const [userFriends, setUserFriends] = useAtom(atomUserFriends);
@@ -45,12 +45,12 @@ const Friends = ({ dataPubkey }: { dataPubkey: string }) => {
             <DisplayButton title='Friends' display={display} setDisplay={setDisplay} />
             <DisplayButton title='Followers' display={display} setDisplay={setDisplay} />
             <DisplayButton title='Following' display={display} setDisplay={setDisplay} />
-            <DisplayButton title='🔎 Search' display={display} setDisplay={setDisplay} />
+            {showSearch && <DisplayButton title='🔎 Search' display={display} setDisplay={setDisplay} />}
          </View>
          {display === 'Friends' && <FollowBlock show={'friends'} data={userFriends} />}
          {display === 'Followers' && <FollowBlock show={'followers'} data={follower} />}
          {display === 'Following' && <FollowBlock show={'following'} data={following} />}
-         {display === '🔎 Search' && <FriendSearch />}
+         {display === '🔎 Search' && showSearch && <FriendSearch />}
          <View className='h-96'></View>
       </>
 

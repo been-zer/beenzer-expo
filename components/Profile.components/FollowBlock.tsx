@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { useEffect, useState } from 'react'
 import { useAtom } from 'jotai'
-import { atomProfile, atomFollowing } from '../../services/globals'
+import { atomProfile, atomFriendPubkey } from '../../services/globals'
 import { atomSOCKET } from '../../services/socket'
 import { socketGetFollowing } from '../../services/socket/function'
 import { IProfile } from '../../Types'
@@ -11,10 +11,16 @@ import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/
 const FollowBlock = ({ data }: { show: string, data: IProfile[] }) => {
 
    const [profile, setProfile] = useAtom(atomProfile)
+   const [friendPubkey, setFriendsPubkey] = useAtom(atomFriendPubkey)
    const [SOCKET] = useAtom(atomSOCKET)
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
    const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+   const handlePress = (item: IProfile) => {
+      setFriendsPubkey(item)
+      navigation.navigate('ProfileFriends')
+   }
 
    return (
       <>
@@ -23,7 +29,7 @@ const FollowBlock = ({ data }: { show: string, data: IProfile[] }) => {
                return (
                   <View key={item.__pubkey__} >
                      <View className='mr-2 ml-2 flex-row justify-between' >
-                        <TouchableOpacity onPress={() => navigation.navigate('ProfileFriends')}>
+                        <TouchableOpacity onPress={() => { handlePress(item) }}>
                            <View className='flex flex-row items-center mt-2'>
                               <View className='flex-row'>
                                  <Image source={item._pfp ? { uri: item._pfp } : require('../../assets/newUser.png')} style={{ width: 50, height: 50, borderWidth: 1, borderColor: 'white', borderRadius: 50 }} />

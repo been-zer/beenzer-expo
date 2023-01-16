@@ -7,6 +7,7 @@ import Credentials from './screens/Credentials';
 import BeenzerMenu from './screens/BeenzerMenu';
 import PostBeenzer from './screens/PostBeenzer';
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from './services/globals/darkmode';
+import { atomFriendPubkey } from './services/globals';
 import { useAtom } from 'jotai';
 import Picture from './screens/Picture';
 import Logs from './screens/Logs';
@@ -15,6 +16,7 @@ import Logout from './screens/Logout';
 import EditProfile from './screens/EditProfile';
 import Notifications from './screens/Notifications';
 import ColorMode from './components/ColorMode';
+import ProfileFriends from './screens/ProfileFriends';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +32,7 @@ export default function App() {
   const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
   const [darkMode, setDarkMode] = useAtom(atomDarkMode);
   const [lightMode, setLightMode] = useAtom(atomLightMode);
+  const [friendPubkey, setFriendPubkey] = useAtom(atomFriendPubkey);
 
   return (
     <View className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`} flex-1`}>
@@ -102,15 +105,18 @@ export default function App() {
             headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
             animation: 'none',
           }} />
-          <Stack.Screen name="ProfileFriends" component={Profile} options={{
-            headerTitle: 'Profile',
-            headerTransparent: true,
-            headerBackVisible: false,
-            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
-            headerRight: () => (<Logout />),
-            headerLeft: () => (<ColorMode />),
-            animation: 'none',
-          }} />
+          <Stack.Screen name="ProfileFriends"
+            options={{
+              headerTitle: 'Friend Profile',
+              headerTransparent: true,
+              headerBackVisible: false,
+              headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+              headerRight: () => (<Logout />),
+              headerLeft: () => (<ColorMode />),
+              animation: 'none',
+            }}>
+            {(props) => <ProfileFriends {...props} friendPubkey={friendPubkey} />}
+          </Stack.Screen>
           <Stack.Screen name="PostBeenzer" component={PostBeenzer} options={{ animation: 'none', }} />
           <Stack.Screen name="Notifications" component={Notifications} options={{
             headerShown: false,

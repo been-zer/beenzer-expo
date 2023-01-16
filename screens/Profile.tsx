@@ -119,7 +119,7 @@ const Profile = () => {
                   <ProfileMap uniqueNFTs={null} dataNFT={userNFTs} />
                )}
                {showProfileTab === 'Friends' && (
-                  <Friends dataPubkey={profile[0].__pubkey__} />
+                  <Friends dataPubkey={profile[0].__pubkey__} showSearch={true} />
                )}
             </View>
          </ScrollView>
