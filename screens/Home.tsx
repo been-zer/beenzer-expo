@@ -68,7 +68,7 @@ const Home = () => {
       try {
          console.log('userLocation', latitude, longitude)
          const mapNFTs = await socketGetMapNFTs(SOCKET, latitude, longitude);
-         console.log('res', mapNFTs);
+         console.log('mapNFTs', mapNFTs)
       } catch (e) {
          console.error(e);
       }

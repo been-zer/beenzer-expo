@@ -1,6 +1,5 @@
 import { Camera, CameraCapturedPicture, CameraType, FlashMode } from 'expo-camera';
-import * as ScreenOrientation from 'expo';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button, Dimensions, Text, TouchableOpacity, View, ImageBackground, Image, ScrollView, SafeAreaView, Platform } from 'react-native';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { atomPic, atomDataPic, atomKeepPic } from '../services/globals';
@@ -9,7 +8,7 @@ import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/
 import { } from 'react-native-paper'
 import { BoltIcon, BoltSlashIcon, ArrowPathRoundedSquareIcon } from "react-native-heroicons/solid";
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
-
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 export default function Picture() {
    const [type, setType] = useState(CameraType.back);
@@ -87,31 +86,35 @@ export default function Picture() {
             {pic ?
                (
                   <>
-                     <SafeAreaView className={`flex-1 justify-center items-center ${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}`}>
-                        <ImageBackground
-                           source={{ uri: pic }}
-                           resizeMode="contain"
-                           className='bg-zinc-800 rounded-2xl'
-                           style={
-                              Platform.OS === 'ios'
-                                 ? { transform: [{ rotate: portrait ? '0deg' : '90deg' }], flex: 1, width: '100%' }
-                                 : { flex: 1, width: '100%' }
-                           }
-                        >
-                           {/* width: portrait ? Dimensions.get('window').width : Dimensions.get('window').height,  */}
-                           {/* height: portrait ? Dimensions.get('window').height : Dimensions.get('window').width,  */}
-                        </ImageBackground>
-                        <View className='flex-row mt-2'>
-                           <TouchableOpacity className="mr-1 w-1/4 border border-red-600  p-4 rounded-2xl" onPress={() => (
-                              setPic(""), setClicked(true)
-                           )} >
-                              <Text className="font-semibold text-red-600 text-center" >Cancel</Text>
-                           </TouchableOpacity>
-                           <TouchableOpacity className="ml-1 w-1/4 border border-green-600  p-4 rounded-2xl" onPress={handleSave} >
-                              <Text className="font-semibold text-green-500 text-center" >Keep</Text>
-                           </TouchableOpacity>
+                     <ImageBackground
+                        source={{ uri: pic }}
+                        resizeMode="contain"
+                        className='bg-zinc-800 rounded-2xl z-0'
+                        style={
+                           Platform.OS === 'ios'
+                              ? {
+                                 transform: [{ rotate: portrait ? '0deg' : '90deg' }],
+                                 width: '100%',
+                                 height: '100%',
+                              }
+                              : {
+                                 width: portrait ? Dimensions.get('window').width : Dimensions.get('window').height,
+                                 height: portrait ? Dimensions.get('window').height : Dimensions.get('window').width,
+                              }
+                        }>
+                        <View className='flex-1 justify-end mb-4 z-1'>
+                           <View className='flex-row mt-2 self-center'>
+                              <TouchableOpacity className="mr-1 w-1/4 border border-red-600  p-4 rounded-2xl" onPress={() => (
+                                 setPic(""), setClicked(true)
+                              )} >
+                                 <Text className="font-semibold text-red-600 text-center" >Cancel</Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity className="ml-1 w-1/4 border border-green-600  p-4 rounded-2xl" onPress={handleSave} >
+                                 <Text className="font-semibold text-green-500 text-center" >Keep</Text>
+                              </TouchableOpacity>
+                           </View>
                         </View>
-                     </SafeAreaView>
+                     </ImageBackground>
                   </>
                ) :
 
