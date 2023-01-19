@@ -1,18 +1,23 @@
 import { PublicKey } from '@solana/web3.js'
 import { Socket } from "socket.io-client";
-import { INFT, IProfile } from "../../Types";
+import { IMessage, INFT, IProfile } from "../../Types";
 
 export const socketMint = (
    Socket: Socket,
    buffer: Buffer,
-   type: String,
-   creator: String,
-   supply: Number = 1,
-   username: String,
-   description: String,
-   city: String,
-   latitude: Number,
-   longitude: Number
+   type: string,
+   creator: string,
+   supply: number = 1,
+   username: string,
+   description: string,
+   city: string,
+   latitude: number,
+   longitude: number,
+   distance: string,
+   maxLat: string,
+   minLat: string,
+   maxLong: string,
+   minLong: string,
 ) => {
    Socket.emit(
       "newMint",
@@ -24,7 +29,12 @@ export const socketMint = (
       description,
       city,
       latitude,
-      longitude
+      longitude,
+      distance,
+      maxLat,
+      minLat,
+      maxLong,
+      minLong,
    );
    return true
 };
@@ -135,99 +145,38 @@ export const socketGetFollower = (Socket: Socket, pubkey: string) => {
 
 export const socketGetMessages = (Socket: Socket, pubkey: string, pubkey2: string) => {
    Socket.emit('getMessages', pubkey, pubkey2);
-   return new Promise((resolve) => {
-      Socket.on("getMessagesRes", (messages: any) => {
+   return new Promise<IMessage[]>((resolve) => {
+      Socket.on("getMessagesRes", (messages: IMessage[]) => {
          resolve(messages);
       });
    });
 }
 
+export const socketSendMessages = (Socket: Socket, receiver: string, sender: string, message: string) => {
+   Socket.emit('newMessage', receiver, sender, message);
+   return new Promise<boolean>((resolve) => {
+      Socket.on("newMessageRes", (res: boolean) => {
+         resolve(res);
+      });
+   });
+}
 
+export const socketLikeMessage = (Socket: Socket, pubkey1: string, pubkey2: string, timestamp: number) => {
+   Socket.emit('likeMessage', pubkey1, pubkey2, timestamp);
+   return new Promise((resolve) => {
+      Socket.on("likeMessageRes", (res: boolean) => {
+         resolve(res);
+      }
+      );
+   });
+}
 
-
-
-
-// export const socketUserNFTs = async () => {
-//    SOCKET.on("userNFTs", (nfts: Array<any>) => {
-//       console.log('userNFTs', nfts);
-//       return nfts;
-//    });
-// };
-
-// export const socketUserFriends = async () => {
-//    Socket.on("userFriends", (friends: Array<any>) => {
-//       console.log(friends);
-//       return friends;
-//    });
-// };
-
-// export const socketSearchUser = (search: any) => {
-//    Socket.emit("searchUsers", search);
-//    Socket.on("searchUsersRes", (users: Array<String>) => {
-//       console.log("Usersssssssss", users);
-//       search(users);
-//    });
-// };
-
-// export const socketGetAllNFTs = () => {
-//    Socket.emit("getAllNFTs", "please");
-//    Socket.on("allNFTs", (nfts: Array<any>) => {
-//       console.log('nft', nfts);
-//       return nfts;
-//    });
-// };
-
-// export const socketGetUser = (user: String) => {
-//    Socket.emit("getUser", user);
-//    Socket.on("getUserRes", (userRes: object) => {
-//       console.log('socketGetUser', userRes);
-//       return userRes;
-//    });
-// };
-
-// export const socketAddFriend = (pubkey: String, pubkey2: String) => {
-//    Socket.emit("addFriend", pubkey, pubkey2);
-//    Socket.on("addFriendRes", (res: Boolean) => {
-//       return res;
-//    });
-// };
-
-// export const socketDeleteFriend = (pubkey: String, pubkey2: String) => {
-//    Socket.emit("deleteFriend", pubkey, pubkey2);
-//    Socket.on("deleteFriendRes", (res: Boolean) => {
-//       return res;
-//    });
-// };
-
-// export const socketGetMessages = (pubkey: string, pubkey2: string) => {
-//    Socket.emit("getMessages", pubkey, pubkey2);
-//    Socket.on("getMessagesRes", (messages: Array<Object>) => {
-//       return messages;
-//    });
-// };
-
-// export const socketNewMessage = (receiver: string, sender: string, message: string) => {
-//    Socket.emit("newMessage", receiver, sender, message);
-//    Socket.on("newMessageRes", (res: Boolean) => {
-//       if (res) {
-//          Socket.emit("getMessages", receiver);
-//          Socket.on("getMessagesRes", (messages: Array<Object>) => {
-//             return messages;
-//          });
-//       };
-//    });
-// };
-
-// export const socketLikeMessage = (friends: Array<String>, timestamp: Number) => {
-//    Socket.emit("likeMessage", friends, timestamp);
-//    Socket.on("likeMessageRes", (res: Boolean) => {
-//       return res;
-//    });
-// };
-
-// export const socketAddEmoji = (friends: Array<String>, timestamp: Number, emoji: String) => {
-//    Socket.emit("addEmoji", friends, timestamp, emoji);
-//    Socket.on("addEmojiRes", (res: Boolean) => {
-//       return res;
-//    });
-// };
+export const socketGetMapNFTs = (Socket: Socket, latUser: number, longUser: number) => {
+   Socket.emit('getMapNFTs', latUser, longUser);
+   return new Promise<INFT[]>((resolve) => {
+      Socket.on("mapNFTs", (res: INFT[]) => {
+         resolve(res);
+      }
+      );
+   });
+}

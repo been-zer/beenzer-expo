@@ -6,7 +6,7 @@ import { ActivityIndicator } from 'react-native-paper';
 import { ArrowPathIcon } from 'react-native-heroicons/outline'
 import { atomUserNFTs, atomProfile } from '../services/globals';
 import { useAtom } from 'jotai';
-import { socketUserNFTs, socketUserInfo } from "../services/socket/function";
+import { socketUserNFTs, socketUserInfo, socketGetMapNFTs } from "../services/socket/function";
 import { atomUserLocation, atomRefreshLoc } from '../services/globals/index';
 import { atomSOCKET } from '../services/socket';
 import Feed from './Feed';
@@ -19,7 +19,6 @@ import { Ionicons } from '@expo/vector-icons';
 import DisplayButton from '../components/DisplayButton';
 import { } from "@react-navigation/native";
 import { atomDarkMode, atomDarkModeOn, atomLightMode } from '../services/globals/darkmode';
-
 
 const Home = () => {
    const [phantomWalletPublicKey] = useAtom(atomPhantomWalletPublicKey);
@@ -49,19 +48,31 @@ const Home = () => {
       getInfoNft();
    }, []);
 
+
    const fetchData = async () => {
-      const location: any = await getUserLocation();
-      setUserLocation(location);
+      const getLoc: any = await getUserLocation();
+      setUserLocation(getLoc);
       setRefreshLoc(true);
       if (mapRef.current) {
          mapRef.current.animateToRegion({
-            latitude: location?.coords.latitude as number,
-            longitude: location?.coords.longitude as number,
+            latitude: getLoc?.coords.latitude,
+            longitude: getLoc?.coords.longitude,
             latitudeDelta: 0.05,
             longitudeDelta: 0.05,
          });
       };
+      getNFTmap(getLoc?.coords.latitude, getLoc?.coords.longitude);
    };
+
+   const getNFTmap = async (latitude: number, longitude: number) => {
+      try {
+         console.log('userLocation', latitude, longitude)
+         const mapNFTs = await socketGetMapNFTs(SOCKET, latitude, longitude);
+         console.log('res', mapNFTs);
+      } catch (e) {
+         console.error(e);
+      }
+   }
 
    const getInfoUser = async () => {
       try {
@@ -118,6 +129,5 @@ const Home = () => {
       </SafeAreaView >
    )
 }
-
 
 export default Home

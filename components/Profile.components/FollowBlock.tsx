@@ -51,7 +51,9 @@ const FollowBlock = ({ data, direction }: { data: IProfile[], direction: string 
                         </TouchableOpacity>
                      </View>
                      <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} mb-2 ml-2`}>{item.__pubkey__}</Text>
-                  </View>
+                     <View
+                        className='border-b-2 border-gray-300'
+                     /></View>
                )
             })}
       </>

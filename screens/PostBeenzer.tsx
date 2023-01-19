@@ -3,13 +3,13 @@ import {
    StyleSheet, TextInput, TouchableOpacity
 } from 'react-native'
 import {
-   atomPic, atomPin, atomUserLocation, atomPinCity, atomPhantomWalletPublicKey, atomProfile, mapStyle,
-   atomDescription, atomSession, atomSharedSecret, atomDappKeyPair, atomTransacSuccess, atomDataPic,
-   atomDistance, atomSupply
+   atomPic, atomPin, atomUserLocation, atomPinCity, atomPhantomWalletPublicKey, atomProfile, mapStyle, mapStyleLight,
+   atomSession, atomSharedSecret, atomDappKeyPair, atomTransacSuccess, atomDataPic,
+   atomSupply, atomDescription
 } from '../services/globals'
 import { useAtom } from 'jotai'
-import MapView, { Marker, Callout, Circle } from 'react-native-maps'
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import MapView, { Marker, Callout, Circle, Polyline } from 'react-native-maps'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { getCity } from '../services/globals/functions'
 import { useNavigation } from '@react-navigation/native'
 import { signAndSendTransaction } from '../services/phantom/sign'
@@ -23,7 +23,7 @@ const PostBeenzer = () => {
 
    const [pic, setPic] = useAtom(atomPic)
    const [pin, setPin] = useAtom(atomPin)
-   const [userLocation] = useAtom(atomUserLocation)
+   const [userLocation, setUserLocation] = useAtom(atomUserLocation)
    const [pinCity, setPinCity] = useAtom(atomPinCity)
    const [phantomWalletPublicKey, setPhantomWalletPublicKey] = useAtom(atomPhantomWalletPublicKey)
    const [profile, setProfile] = useAtom(atomProfile)
@@ -39,8 +39,14 @@ const PostBeenzer = () => {
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn)
    const [darkMode, setDarkMode] = useAtom(atomDarkMode)
    const [lightMode, setLightMode] = useAtom(atomLightMode)
-   const [distance, setDistance] = useAtom(atomDistance)
+   const [distance, setDistance] = useState(1000)
    const [supply, setSupply] = useAtom(atomSupply)
+   const [maxDistance, setMaxDistance] = useState(false)
+   const [minLat, setMinLat] = useState((pin.latitude - 0.008983).toString())
+   const [maxLat, setMaxLat] = useState((pin.latitude + 0.008983).toString())
+   const [minLong, setMinLong] = useState((pin.longitude - 0.009009).toString())
+   const [maxLong, setMaxLong] = useState((pin.longitude + 0.009009).toString())
+   const NFTsGlobal = "GLOBALLY"
 
    const scrollToBottom = () => {
       if (scrollViewRef.current) {
@@ -56,7 +62,6 @@ const PostBeenzer = () => {
          },
          headerTransparent: true,
          headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
-
       })
    }, [navigation])
 
@@ -88,134 +93,130 @@ const PostBeenzer = () => {
             pinCity,
             pin.latitude,
             pin.longitude,
+            `${maxDistance ? 0 : `${(distance / 1000)} km`}`,
+            maxLat,
+            minLat,
+            maxLong,
+            minLong,
          )
          setTransacSuccess(false)
       }
    }, [transacSuccess])
 
+   useEffect(() => {
+      if (distance === 3000000) {
+         setMaxDistance(true)
+         setMinLat('-')
+         setMaxLat('-')
+         setMinLong('-')
+         setMaxLong('-')
+      }
+      else {
+         setMaxDistance(false)
+         setMinLat((pin.latitude - (distance / 1000) * 0.008983).toString())
+         setMaxLat((pin.latitude + (distance / 1000) * 0.008983).toString())
+         setMinLong((pin.longitude - (distance / 1000) * 0.009009).toString())
+         setMaxLong((pin.longitude + (distance / 1000) * 0.009009).toString())
+      }
+   }, [distance, pin])
+
    const createBeenzer = () => {
       signAndSendTransaction(session, phantomWalletPublicKey, sharedSecret, dappKeyPair)
+      setDescription('')
    }
 
    return (
       <>
          <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}`} style={StyleSheet.absoluteFillObject} >
             {
-               userLocation.coords &&
-               <ScrollView className="flex-1 ml-5 mr-5" ref={scrollViewRef} showsVerticalScrollIndicator={false}>
-                  <MapView style={{ height: 300 }} provider='google'
-                     customMapStyle={mapStyle}
-                     initialRegion={{
-                        latitude: userLocation.coords.latitude,
-                        longitude: userLocation.coords.longitude,
-                        latitudeDelta: 0.02,
-                        longitudeDelta: 0.02,
-                     }}
-                  >
-                     <Marker
-                        coordinate={pin}
-                        // title={description}
-                        // focusable={true}
-                        // description={description}
-                        draggable={true}
-                        onDragEnd={(e) => setPin(e.nativeEvent.coordinate)}
+               userLocation.coords && pin ? (
+                  <ScrollView className="flex-1 ml-5 mr-5" ref={scrollViewRef} showsVerticalScrollIndicator={false}>
+                     <MapView style={{ height: 300 }} provider='google'
+                        customMapStyle={darkModeOn ? mapStyle : mapStyleLight}
+                        initialRegion={{
+                           latitude: userLocation.coords.latitude,
+                           longitude: userLocation.coords.longitude,
+                           latitudeDelta: 0.05,
+                           longitudeDelta: 0.05,
+                        }}
 
                      >
-                        <Text className=
-                           {`${darkModeOn ? `bg-${lightMode}` : `bg-black`} p-2 `}
-
-                        >{description}</Text>
-                        {pic && <ImageBackground
-                           source={{ uri: pic }}
-                           style={{ width: 50, height: 50 }}
-                           imageStyle={{ borderRadius: 50 }}
-                        />}
-                        {/* <Callout> */}
-                        {/* <Text>My Callout</Text>
-                     <ImageBackground
-                        source={{ uri: pic }}
-                        style={{ width: 50, height: 50 }}
-                     /> */}
-                        {/* </Callout> */}
-                     </Marker>
-                     <Circle center={pin} radius={distance}
-                        strokeColor={darkModeOn ? `${lightMode}` : "black"}
-                        strokeWidth={5}
-
-
+                        <Marker coordinate={pin} draggable={true} onDragEnd={(e) => setPin(e.nativeEvent.coordinate)}>
+                           {description && <Text className={`${darkModeOn ? `bg-${lightMode}` : `bg-black`} p-2 `}>{description}</Text>}
+                           {pic && <ImageBackground source={{ uri: pic }} style={{ width: 50, height: 50 }} imageStyle={{ borderRadius: 50 }} />}
+                        </Marker>
+                        {!maxDistance &&
+                           <Circle center={pin} radius={distance} strokeColor={darkModeOn ? `${lightMode}` : "green"} strokeWidth={5} />}
+                     </MapView>
+                     <View className='mt-2 items-center'>
+                        <Text className='text-green-800 text-xl'>DESCRIPTION</Text>
+                     </View>
+                     <View className="w-full items-center">
+                        <TextInput
+                           textAlign='center'
+                           className={`${darkModeOn ? `text-${lightMode}` : `text-black`}`}
+                           onFocus={scrollToBottom}
+                           style={styles.input}
+                           blurOnSubmit={true}
+                           multiline={true}
+                           placeholder={description || "Insert a description.."}
+                           onChangeText={(newText: string) => setDescription(newText)}
+                           placeholderTextColor={darkModeOn ? `${lightMode}` : "black"}
+                        />
+                     </View>
+                     <View className='mt-2 items-center'>
+                        <Text className='text-green-800 text-xl'>DISTANCE : {maxDistance ? 'GLOBALLY' : `~${distance / 1000} km`}</Text>
+                     </View>
+                     <Slider
+                        className="mt-2 "
+                        minimumValue={1000}
+                        maximumValue={3000000}
+                        value={1000}
+                        minimumTrackTintColor="#FFFFFF"
+                        maximumTrackTintColor="#000000"
+                        step={1000}
+                        onValueChange={(value) => (
+                           setDistance(value)
+                        )
+                        }
                      />
-                  </MapView>
-                  <View className='mt-2 items-center'>
-                     <Text className='text-green-800 text-xl'>DESCRIPTION</Text>
-                  </View>
-                  <View className="w-full items-center">
-                     <TextInput
-                        textAlign='center'
-                        className={`${darkModeOn ? `text-${lightMode}` : `text-black`}`}
-                        onFocus={scrollToBottom}
-                        style={styles.input}
-                        blurOnSubmit={true}
-                        multiline={true}
-                        placeholder={description || "Insert a description.."}
-                        onChangeText={(newText: string) => setDescription(newText)}
-                        placeholderTextColor={darkModeOn ? `${lightMode}` : "black"}
+                     <View className='mt-2 items-center'>
+                        <Text className='text-green-800 text-xl'>SUPPLY : {supply}</Text>
+                     </View>
+                     <Slider
+                        className="mt-2"
+                        minimumValue={1}
+                        maximumValue={50}
+                        onValueChange={(value) => setSupply(value)}
+                        minimumTrackTintColor="#FFFFFF"
+                        maximumTrackTintColor="#000000"
+                        step={1}
                      />
-                  </View>
-                  <View className='mt-2 items-center'>
-                     <Text className='text-green-800 text-xl'>DISTANCE : {distance / 1000} km</Text>
-                  </View>
-                  <Slider
-                     className="mt-2 "
-                     minimumValue={1000}
-                     maximumValue={50000}
-                     minimumTrackTintColor="#FFFFFF"
-                     maximumTrackTintColor="#000000"
-                     step={1000}
-                     onValueChange={(value) => setDistance(value)}
-                  />
-                  <View className='mt-2 items-center'>
-                     <Text className='text-green-800 text-xl'>SUPPLY : {supply}</Text>
-                  </View>
-                  <Slider
-                     className="mt-2"
-                     minimumValue={1}
-                     maximumValue={50}
-                     onValueChange={(value) => setSupply(value)}
-                     minimumTrackTintColor="#FFFFFF"
-                     maximumTrackTintColor="#000000"
-                     step={1}
-                  />
-                  <View className="w-full items-center mt3">
-                     <TouchableOpacity
-                        className="mt-2 w-full bg-green-600  p-4 rounded-2xl"
-                        onPress={createBeenzer}
-                     >
-                        <Text className="font-semibold text-center">
-                           {" "}
-                           Drop Beenzer 📍 Mint NFT
-                        </Text>
-                     </TouchableOpacity>
-                  </View>
-                  <View className='mt-2 items-center'>
-                     <Text className='text-green-800 text-xl '>PROPERTIES</Text>
-                  </View>
-                  <View className='flex-row flex-wrap mt-2'>
-                     <Properties props={pin.latitude} propsTitle={'LATITUDE'} />
-                     <Properties props={pin.longitude} propsTitle={'LONGITUDE'} />
-                     <Properties props={pinCity} propsTitle={'CITY'} />
-                     <Properties props={profile[0]._username_} propsTitle={'USERNAME'} />
-                     <Properties props={profile[0].__pubkey__} propsTitle={'CREATOR'} />
-                  </View>
-               </ScrollView>
-            }
-            {!userLocation.coords &&
-               <SafeAreaView className="items-center justify-center content-center">
-                  <ActivityIndicator
-                     className="self-center m-10"
-                     size="large"
-                     color="green"
-                  />
-               </SafeAreaView>
+                     <View className="w-full items-center mt3">
+                        <TouchableOpacity className="mt-2 w-full bg-green-600  p-4 rounded-2xl" onPress={createBeenzer}>
+                           <Text className="font-semibold text-center">Drop Beenzer 📍 Mint NFT </Text>
+                        </TouchableOpacity>
+                     </View>
+                     <View className='mt-2 items-center'>
+                        <Text className='text-green-800 text-xl '>PROPERTIES</Text>
+                     </View>
+                     <View className='flex-row flex-wrap mt-2'>
+                        <Properties props={pin.latitude} propsTitle={'LATITUDE'} />
+                        <Properties props={pin.longitude} propsTitle={'LONGITUDE'} />
+                        <Properties props={pinCity} propsTitle={'CITY'} />
+                        <Properties props={profile[0]._username_} propsTitle={'USERNAME'} />
+                        <Properties props={profile[0].__pubkey__} propsTitle={'CREATOR'} />
+                        <Properties props={`${maxDistance ? NFTsGlobal : `${(distance / 1000)} km`}`} propsTitle={'DISTANCE'} />
+                        <Properties props={minLat} propsTitle={'MIN LAT'} />
+                        <Properties props={maxLat} propsTitle={'MAX LAT'} />
+                        <Properties props={minLong} propsTitle={'MIN LONG'} />
+                        <Properties props={maxLong} propsTitle={'MAX LONG'} />
+                     </View>
+                  </ScrollView>
+               ) : (
+                  <SafeAreaView className="items-center justify-center content-center">
+                     <ActivityIndicator className="self-center m-10" size="large" color="green" />
+                  </SafeAreaView>)
             }
          </SafeAreaView>
       </>

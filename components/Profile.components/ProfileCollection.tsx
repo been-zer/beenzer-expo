@@ -23,10 +23,6 @@ const ProfileCollection = ({ setShowDetails, showDetails, dataNFT }: {
       setNFTselected(item);
    }
 
-   const newProfilPic = (link: string) => {
-      console.log(link);
-   }
-
    return (
       <>
          {!showDetails && dataNFT.length > 0 &&
@@ -39,7 +35,7 @@ const ProfileCollection = ({ setShowDetails, showDetails, dataNFT }: {
                      const borderColor = item._creator === profile[0].__pubkey__ ? 'black' : 'green';
                      return (
                         <>
-                           <TouchableOpacity onPress={() => handleShowDetails(item)} onLongPress={() => newProfilPic(item._asset)}>
+                           <TouchableOpacity onPress={() => handleShowDetails(item)} >
                               <View className="flex flex-col items-center">
                                  <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} font-bold`}>BEENZER #{item._id_}</Text>
                                  {item._asset ?
@@ -87,6 +83,11 @@ const ProfileCollection = ({ setShowDetails, showDetails, dataNFT }: {
                   <Properties props={NFTselected?._city} propsTitle={'CITY'} />
                   <Properties props={NFTselected?._username} propsTitle={'USERNAME'} />
                   <Properties props={NFTselected?._creator} propsTitle={'CREATOR'} />
+                  <Properties props={NFTselected?._distance} propsTitle={'DISTANCE'} />
+                  <Properties props={NFTselected?._minlat} propsTitle={'MIN LAT'} />
+                  <Properties props={NFTselected?._maxlat} propsTitle={'MAX LAT'} />
+                  <Properties props={NFTselected?._minlon} propsTitle={'MIN LON'} />
+                  <Properties props={NFTselected?._maxlon} propsTitle={'MAX LON'} />
                </View>
                <ProfileMap uniqueNFTs={NFTselected} dataNFT={null} />
             </>

@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ScrollView, TextInput, TouchableOpacity, Image, Modal, FlatList } from 'react-native'
+import { View, Text, SafeAreaView, ScrollView, Alert, TouchableOpacity, Image } from 'react-native'
 import { useAtom } from 'jotai'
 import { atomProfile } from '../services/globals'
 import EditInfos from '../components/Profile.components/EditInfos'
@@ -48,9 +48,12 @@ const EditProfile = () => {
       updateUserProfile(SOCKET, profile[0].__pubkey__, '_country', newData?._country || "")
       updateUserProfile(SOCKET, profile[0].__pubkey__, '_lastname', newData?._lastname || "")
       setButtonInactive(true)
-      setUnsavedChanges(false)
+      setTimeout(() => {
+         setUnsavedChanges(false)
+      }
+         , 3000)
    }
-   console.log(profile[0]._pfp)
+
 
    return (
       <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`} flex-1`} >

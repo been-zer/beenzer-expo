@@ -48,20 +48,25 @@ export interface IProfile {
 }
 
 export interface INFT {
+   _id_: number;
    __token__: string;
-   _asset: string;
-   _city: string;
+   _supply: number;
    _creator: string;
-   _date: string;
+   _username: string;
+   _asset: string;
+   _type: string;
    _description: string;
-   _id_: string;
+   _city: string;
    _latitude: number;
    _longitude: number;
-   _supply: number;
+   _distance: string;
+   _maxlat: string;
+   _minlat: string;
+   _maxlon: string;
+   _minlon: string;
+   _date: string;
    _time: string;
-   _timestamp: string;
-   _type: string;
-   _username: string;
+   _timestamp: number;
 }
 
 export interface IDisplay {
@@ -87,4 +92,14 @@ export interface IUpdateUser {
    _country?: string,
    _pfp?: string,
 }
+
+export interface IMessage {
+   _emoji: string,
+   _liked: boolean,
+   _message: string,
+   _owner: string,
+   _timestamp: number,
+   date: string,
+}
+
 

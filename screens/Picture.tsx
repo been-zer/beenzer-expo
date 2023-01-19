@@ -5,7 +5,6 @@ import { Button, Dimensions, Text, TouchableOpacity, View, ImageBackground, Imag
 import * as ImageManipulator from 'expo-image-manipulator';
 import { atomPic, atomDataPic, atomKeepPic } from '../services/globals';
 import { useAtom } from 'jotai';
-import PostBeenzer from './PostBeenzer';
 import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 import { } from 'react-native-paper'
 import { BoltIcon, BoltSlashIcon, ArrowPathRoundedSquareIcon } from "react-native-heroicons/solid";

@@ -31,14 +31,11 @@ const ProfileMap = ({ uniqueNFTs, dataNFT }: { uniqueNFTs: INFT | null, dataNFT:
                <>
                   {dataNFT && dataNFT.map((nft, index) => {
                      return <Marker coordinate={{ latitude: nft._latitude, longitude: nft._longitude }} pinColor="green"
-                        key={index} title={nft._description}
-                     >
+                        key={index} title={nft._description}>
                         <ImageBackground
                            className='w-10 h-10'
                            imageStyle={{ borderRadius: 50 }}
-                           source={{ uri: nft._asset }}
-
-                        />
+                           source={{ uri: nft._asset }} />
                      </Marker>
                   })}
                </>
@@ -60,18 +57,14 @@ const ProfileMap = ({ uniqueNFTs, dataNFT }: { uniqueNFTs: INFT | null, dataNFT:
                }}>
                <>
                   <Marker coordinate={{ latitude: uniqueNFTs._latitude, longitude: uniqueNFTs._longitude }} pinColor="green"
-                     title={uniqueNFTs._description}
-                  >
+                     title={uniqueNFTs._description}>
                      <ImageBackground
                         className='w-10 h-10'
                         imageStyle={{ borderRadius: 50 }}
-                        source={{ uri: uniqueNFTs._asset }}
-                     />
+                        source={{ uri: uniqueNFTs._asset }} />
                   </Marker>
                </>
-            </MapView>) : (uniqueNFTs && <ActivityIndicator className="mt-5" size="large" color="green" />
-         )
-         }
+            </MapView>) : (uniqueNFTs && <ActivityIndicator className="mt-5" size="large" color="green" />)}
       </View>
    )
 }

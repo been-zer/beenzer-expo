@@ -24,8 +24,8 @@ const FriendSearch = () => {
 
 
    useEffect(() => {
-      const searchFriends = async (searchQuery: string) => {
-         const res = await socketSeachFriends(SOCKET, searchQuery)
+      const searchFriends = async (search: string) => {
+         const res = await socketSeachFriends(SOCKET, search)
          setUsersFound(res)
       }
       searchFriends(searchQuery)
@@ -77,6 +77,7 @@ const FriendSearch = () => {
          />
          {usersFound && searchQuery && <Button title='Hide results' onPress={hideSearch} />}
          {
+            usersFound.length > 0 && searchQuery &&
             usersFound.map((item, index) => {
                return (
                   <View key={item.__pubkey__} >
@@ -101,7 +102,9 @@ const FriendSearch = () => {
                            </TouchableOpacity>}
                      </View>
                      <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} ml-2 mb-2`}>{item.__pubkey__}</Text>
-                  </View>
+                     <View
+                        className='border-b-2 border-gray-300'
+                     /></View>
                )
             })}
       </>

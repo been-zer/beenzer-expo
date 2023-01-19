@@ -36,7 +36,7 @@ const Profile = () => {
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
-   const [selectedTab, setSelectedTab] = useState<string>('Collection')
+   const [selectedTab, setSelectedTab] = useState<string>('')
 
    useEffect(() => {
       if (isFocused) {
@@ -52,9 +52,9 @@ const Profile = () => {
 
    const onRefresh = () => {
       setRefreshing(true);
-      getInfoUser();
-      getInfoNft();
       setTimeout(() => {
+         getInfoNft();
+         getInfoUser();
          setRefreshing(false);
          console.log('refreshed')
       }, 1000);
@@ -65,9 +65,11 @@ const Profile = () => {
    }
 
    const getInfoUser = async () => {
+      console.log('here')
       try {
          const receivedInfos = await socketUserInfo(SOCKET);
          setProfile(receivedInfos);
+         console.log('profile', profile)
       } catch (e) {
          console.error(e);
       }

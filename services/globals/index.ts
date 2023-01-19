@@ -18,7 +18,6 @@ export const atomPic = atom<string>("");
 export const atomKeepPic = atom<boolean>(false);
 export const atomPin = atom<coordinates>({} as coordinates);
 export const atomPinCity = atom<string>("");
-export const atomDescription = atom<string>("");
 export const atomTransacSuccess = atom<boolean>(false);
 export const atomDataPic = atom<CameraCapturedPicture>({} as CameraCapturedPicture);
 export const atomMintingOver = atom<boolean>(true);
@@ -29,10 +28,10 @@ export const atomUserFriends = atom<IProfile[]>([]);
 export const atomRefreshing = atom<boolean>(false);
 export const atomFollowing = atom<IProfile[]>([]);
 export const atomFollower = atom<IProfile[]>([]);
-export const atomDistance = atom<number>(1000)
 export const atomSupply = atom<number>(1)
 export const atomFriendPubkey = atom<IProfile>({} as IProfile);
 export const atomFriendsChanged = atom<boolean>(false);
+export const atomDescription = atom<string>("");
 
 export const mapStyleLight = [
    {
