@@ -25,7 +25,7 @@ const Logs = () => {
          console.log(mintLogs)
       } else {
          setMintingOver(true);
-         Vibration.vibrate();
+         Vibration.vibrate(1000);
          // setMintLogs([]);
 
       }

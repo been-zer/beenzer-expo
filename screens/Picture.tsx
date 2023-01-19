@@ -1,7 +1,7 @@
 import { Camera, CameraCapturedPicture, CameraType, FlashMode } from 'expo-camera';
 import * as ScreenOrientation from 'expo';
 import { useState, useRef } from 'react';
-import { Button, Dimensions, Text, TouchableOpacity, View, ImageBackground, Image, ScrollView, SafeAreaView } from 'react-native';
+import { Button, Dimensions, Text, TouchableOpacity, View, ImageBackground, Image, ScrollView, SafeAreaView, Platform } from 'react-native';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { atomPic, atomDataPic, atomKeepPic } from '../services/globals';
 import { useAtom } from 'jotai';
@@ -58,7 +58,8 @@ export default function Picture() {
       if (camReady && cameraRef.current) {
          const data = await cameraRef.current.takePictureAsync({
             base64: true,
-            quality: 0.5,
+            // quality: 0.5,
+            skipProcessing: true,
          }
          );
          setDatapic(data as CameraCapturedPicture)
@@ -90,11 +91,15 @@ export default function Picture() {
                         <ImageBackground
                            source={{ uri: pic }}
                            resizeMode="contain"
-                           style={{
-                              transform: [{ rotate: portrait ? '0deg' : '90deg' }],
-                              flex: 1,
-                              width: '100%',
-                           }}>
+                           className='bg-zinc-800 rounded-2xl'
+                           style={
+                              Platform.OS === 'ios'
+                                 ? { transform: [{ rotate: portrait ? '0deg' : '90deg' }], flex: 1, width: '100%' }
+                                 : { flex: 1, width: '100%' }
+                           }
+                        >
+                           {/* width: portrait ? Dimensions.get('window').width : Dimensions.get('window').height,  */}
+                           {/* height: portrait ? Dimensions.get('window').height : Dimensions.get('window').width,  */}
                         </ImageBackground>
                         <View className='flex-row mt-2'>
                            <TouchableOpacity className="mr-1 w-1/4 border border-red-600  p-4 rounded-2xl" onPress={() => (
@@ -105,7 +110,6 @@ export default function Picture() {
                            <TouchableOpacity className="ml-1 w-1/4 border border-green-600  p-4 rounded-2xl" onPress={handleSave} >
                               <Text className="font-semibold text-green-500 text-center" >Keep</Text>
                            </TouchableOpacity>
-
                         </View>
                      </SafeAreaView>
                   </>
@@ -113,6 +117,7 @@ export default function Picture() {
 
                (
                   <Camera
+                     ratio='16:9'
                      className='flex-1'
                      flashMode={flash}
                      type={type} ref={cameraRef} onCameraReady={cameraReady}>

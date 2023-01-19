@@ -102,7 +102,6 @@ const Login = () => {
                </Animated.View>
             </View>
             <Text
-               style={{ fontFamily: "Avenir-Black" }}
                className={`${darkModeOn ? `text-${lightMode}` : `${darkMode}`} font-medium text-justify ml-5 mr-5`}
             >
                Beenzer - the ultimate social app for true digital ownership. Share and mint your stories on the map, monetize your creations with NFT marketplaces. Take control of your online legacy

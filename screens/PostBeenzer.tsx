@@ -48,12 +48,6 @@ const PostBeenzer = () => {
    const [maxLong, setMaxLong] = useState((pin.longitude + 0.009009).toString())
    const NFTsGlobal = "GLOBALLY"
 
-   const scrollToBottom = () => {
-      if (scrollViewRef.current) {
-         scrollViewRef.current.scrollToEnd({ animated: true })
-      }
-   }
-
    useLayoutEffect(() => {
       navigation.setOptions({
          headerTitle: 'Drop Beenzer',
@@ -69,7 +63,7 @@ const PostBeenzer = () => {
       if (userLocation.coords) {
          setPin({ latitude: userLocation.coords.latitude, longitude: userLocation.coords.longitude })
       }
-   }, [userLocation])
+   }, [userLocation, pic])
 
    useEffect(() => {
       if (pin.latitude && pin.longitude) {
@@ -129,8 +123,8 @@ const PostBeenzer = () => {
       <>
          <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}`} style={StyleSheet.absoluteFillObject} >
             {
-               userLocation.coords && pin ? (
-                  <ScrollView className="flex-1 ml-5 mr-5" ref={scrollViewRef} showsVerticalScrollIndicator={false}>
+               userLocation.coords && pin && pic ? (
+                  <ScrollView className="flex-1 ml-5 mr-5" showsVerticalScrollIndicator={false}>
                      <MapView style={{ height: 300 }} provider='google'
                         customMapStyle={darkModeOn ? mapStyle : mapStyleLight}
                         initialRegion={{
@@ -155,7 +149,6 @@ const PostBeenzer = () => {
                         <TextInput
                            textAlign='center'
                            className={`${darkModeOn ? `text-${lightMode}` : `text-black`}`}
-                           onFocus={scrollToBottom}
                            style={styles.input}
                            blurOnSubmit={true}
                            multiline={true}

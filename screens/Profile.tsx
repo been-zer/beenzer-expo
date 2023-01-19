@@ -65,7 +65,6 @@ const Profile = () => {
    }
 
    const getInfoUser = async () => {
-      console.log('here')
       try {
          const receivedInfos = await socketUserInfo(SOCKET);
          setProfile(receivedInfos);
