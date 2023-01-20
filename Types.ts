@@ -102,4 +102,8 @@ export interface IMessage {
    date: string,
 }
 
+export interface IVideo {
+   uri: string
+}
+
 

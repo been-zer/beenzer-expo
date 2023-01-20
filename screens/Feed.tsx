@@ -1,25 +1,28 @@
-import { View, Text, ScrollView, Image } from 'react-native'
-import React from 'react'
+import { StyleSheet, View, FlatList, Dimensions } from "react-native";
 import { atomUserNFTs } from '../services/globals'
 import { useAtom } from 'jotai'
+import FeedsItem from "./FeedsItem";
+import { INFT } from "../Types";
 
-const Feed = () => {
+const Feed = ({ feedItems, setHideMenu }: {
+   feedItems: INFT[], setHideMenu: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
 
-   const [userNFTs, setUserNFTs] = useAtom(atomUserNFTs)
+   setHideMenu(true)
 
    return (
-      <ScrollView>
-         {userNFTs && userNFTs.map((nft, index) => {
-            return (
-               <View key={index}>
-                  <Text>{nft._username}</Text>
-                  <Image source={{ uri: nft._asset }} />
-               </View>
-            )
-         })
-         }
-      </ScrollView>
-   )
+      <View className="flex-1">
+         <FlatList
+            data={feedItems}
+            renderItem={({ item }) => <FeedsItem feedItem={item} />}
+            keyExtractor={(item) => item.__token__}
+            snapToAlignment="start"
+            decelerationRate={"fast"}
+            snapToInterval={Dimensions.get("window").height}
+         />
+      </View>
+   );
 }
+
 
 export default Feed

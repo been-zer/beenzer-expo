@@ -32,6 +32,7 @@ export const atomSupply = atom<number>(1)
 export const atomFriendPubkey = atom<IProfile>({} as IProfile);
 export const atomFriendsChanged = atom<boolean>(false);
 export const atomDescription = atom<string>("");
+export const atomFeedItems = atom<INFT[]>([]);
 
 export const mapStyleLight = [
    {

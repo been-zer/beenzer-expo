@@ -15,7 +15,7 @@ import { atomSOCKET } from '../services/socket';
 const Credentials = () => {
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
-   const [lightkMode, setLightMode] = useAtom(atomLightMode);
+   const [lightMode, setLightMode] = useAtom(atomLightMode);
    const navigation = useNavigation<NavigationProp<ParamListBase>>()
    const [buttonInactive, setButtonInactive] = useState(true)
    const [username, setUsername] = useState('')
@@ -72,7 +72,7 @@ const Credentials = () => {
    fadeIn(fadeAnim)
 
    return (
-      <SafeAreaView className={`h-full bg-${darkModeOn ? darkMode : lightkMode} flex-1 items-center`}  >
+      <SafeAreaView className={`h-full bg-${darkModeOn ? darkMode : lightMode} flex-1 items-center`}  >
          <Animated.View style={{ opacity: fadeAnim }}>
             <View>
                <Text className="text-center my-5 text-green-600 font-bold text-4xl">Welcome </Text>
@@ -81,7 +81,7 @@ const Credentials = () => {
          </Animated.View>
          <View className={`border-2 justify-between border-green-600 flex-row rounded-lg w-80 h-18 my-4 p-3`}>
             <TextInput
-               className={`text-${darkModeOn ? lightkMode : darkMode} flex-1`}
+               className={`text-${darkModeOn ? lightMode : darkMode} flex-1`}
                placeholder="Username"
                placeholderTextColor="gray"
                onChangeText={handleUsername}
@@ -116,7 +116,7 @@ const Credentials = () => {
             </Text>
          </TouchableOpacity>
          <View>
-            <Text className={`text-${darkModeOn ? lightkMode : darkMode} text-center my-4`}>
+            <Text className={`text-${darkModeOn ? lightMode : darkMode} text-center my-4`}>
                Or
             </Text>
          </View>

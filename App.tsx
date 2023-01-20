@@ -19,6 +19,7 @@ import ColorMode from './components/ColorMode';
 import ProfileFriends from './screens/ProfileFriends';
 import Messages from './screens/Messages';
 import DirectMessages from './screens/DirectMessages';
+import Feed from './screens/Feed';
 
 const Stack = createNativeStackNavigator();
 
@@ -131,6 +132,10 @@ export default function App() {
             headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
             animation: 'none',
           }} />
+          {/* <Stack.Screen name="Feed" component={Feed} options={{
+            headerShown: false,
+            animation: 'none',
+          }} /> */}
           <Stack.Screen name="DirectMessages"
             options={{
               headerTransparent: true,
@@ -144,6 +149,6 @@ export default function App() {
           </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer >
-    </View>
+    </View >
   );
 }

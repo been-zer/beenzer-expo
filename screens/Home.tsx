@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity } from "react-native"
+import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity, Button } from "react-native"
 import Footer from './Footer';
 import HomeMap from './HomeMap';
 import { ActivityIndicator } from 'react-native-paper';
@@ -7,7 +7,7 @@ import { ArrowPathIcon } from 'react-native-heroicons/outline'
 import { atomUserNFTs, atomProfile } from '../services/globals';
 import { useAtom } from 'jotai';
 import { socketUserNFTs, socketUserInfo, socketGetMapNFTs } from "../services/socket/function";
-import { atomUserLocation, atomRefreshLoc } from '../services/globals/index';
+import { atomUserLocation, atomRefreshLoc, atomFeedItems } from '../services/globals/index';
 import { atomSOCKET } from '../services/socket';
 import Feed from './Feed';
 import { getUserLocation } from '../services/globals/functions';
@@ -35,6 +35,8 @@ const Home = () => {
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
+   const [feedItems, setFeedItems] = useAtom(atomFeedItems)
+   const [hideMenu, setHideMenu] = useState(true);
 
    useEffect(() => {
       if (isFocused) {
@@ -66,9 +68,8 @@ const Home = () => {
 
    const getNFTmap = async (latitude: number, longitude: number) => {
       try {
-         console.log('userLocation', latitude, longitude)
          const mapNFTs = await socketGetMapNFTs(SOCKET, latitude, longitude);
-         console.log('mapNFTs', mapNFTs)
+         setFeedItems(mapNFTs);
       } catch (e) {
          console.error(e);
       }
@@ -86,6 +87,7 @@ const Home = () => {
    const getInfoNft = async () => {
       try {
          const profileNFTs = await socketUserNFTs(SOCKET, phantomWalletPublicKey as string);
+         console.log(profileNFTs);
          setUserNFTs(profileNFTs.reverse());
       } catch (e) {
          console.error(e);
@@ -95,31 +97,39 @@ const Home = () => {
    return (
       <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`} h-full flex-1 `} style={StyleSheet.absoluteFillObject} >
          {/* {title} */}
-         < View className='flex-row justify-around' >
-            <TouchableOpacity className='justify-center items-center' onPress={() => navigation.navigate('Notifications')}>
-               <Ionicons name="notifications" size={24} color={`${darkModeOn ? 'white' : 'black'}`} />
-            </TouchableOpacity>
-            <Text style={{ alignSelf: 'flex-start' }} className='text-green-600 text-3xl font-bold'>Beenzer</Text>
-            <View style={{ alignSelf: 'flex-end' }} >
-               <ColorMode />
-            </View>
-         </View >
-         <TouchableOpacity className='justify-center items-center' onPress={() => (fetchData(), setRefreshLoc(false))}>
-            {userLocation && refreshLoc ? <View className='flex-row items-center justify-center mb-2'>
-               <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`}`}>{userLocation.city}&nbsp;</Text>
-               <ArrowPathIcon size={10} color={`${darkModeOn ? lightMode : darkMode}`} /></View > :
-               <ActivityIndicator className=' bottom-1' color={`${darkModeOn ? lightMode : darkMode}`} />
-            }
-         </TouchableOpacity>
+         {hideMenu &&
+            <>
+               < View className='flex-row justify-around' >
+                  <TouchableOpacity className='justify-center items-center' onPress={() => navigation.navigate('Notifications')}>
+                     <Ionicons name="notifications" size={24} color={`${darkModeOn ? 'white' : 'black'}`} />
+                  </TouchableOpacity>
+                  <Text style={{ alignSelf: 'flex-start' }} className='text-green-600 text-3xl font-bold'>Beenzer</Text>
+                  <View style={{ alignSelf: 'flex-end' }} >
+                     <ColorMode />
+                  </View>
+               </View >
+               <TouchableOpacity className='justify-center items-center' onPress={() => (fetchData(), setRefreshLoc(false))}>
+                  {userLocation && refreshLoc ? <View className='flex-row items-center justify-center mb-2'>
+                     <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`}`}>{userLocation.city}&nbsp;</Text>
+                     <ArrowPathIcon size={10} color={`${darkModeOn ? lightMode : darkMode}`} /></View > :
+                     <ActivityIndicator className=' bottom-1' color={`${darkModeOn ? lightMode : darkMode}`} />
+                  }
+               </TouchableOpacity>
+            </>}
          {/* {tab bar} */}
-         <View className='flex-row justify-around'>
+         <View className='flex-row justify-around items-center'>
             <DisplayButton title="Map" display={display} setDisplay={setDisplay} />
+            <TouchableOpacity onPress={() => setHideMenu(!hideMenu)}>
+               <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`}`}>
+                  {hideMenu ? 'Hide' : 'Show'}
+               </Text>
+            </TouchableOpacity>
             <DisplayButton title="Feeds" display={display} setDisplay={setDisplay} />
 
          </View>
          {
             display === 'Feeds' &&
-            <Feed />
+            <Feed feedItems={feedItems} setHideMenu={setHideMenu} />
          }
          {
             display === 'Map' &&

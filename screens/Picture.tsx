@@ -1,6 +1,6 @@
 import { Camera, CameraCapturedPicture, CameraType, FlashMode } from 'expo-camera';
 import { useState, useRef, useEffect } from 'react';
-import { Button, Dimensions, Text, TouchableOpacity, View, ImageBackground, Image, ScrollView, SafeAreaView, Platform } from 'react-native';
+import { Button, Dimensions, Text, TouchableOpacity, View, ImageBackground, Image, ScrollView, SafeAreaView, Platform, Alert } from 'react-native';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { atomPic, atomDataPic, atomKeepPic } from '../services/globals';
 import { useAtom } from 'jotai';
@@ -8,9 +8,11 @@ import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/
 import { } from 'react-native-paper'
 import { BoltIcon, BoltSlashIcon, ArrowPathRoundedSquareIcon } from "react-native-heroicons/solid";
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
-import * as ScreenOrientation from 'expo-screen-orientation';
+import { Video } from 'expo-av';
+import { IVideo } from '../Types';
 
 export default function Picture() {
+
    const [type, setType] = useState(CameraType.back);
    const [permission, requestPermission] = Camera.useCameraPermissions();
    const cameraRef = useRef<Camera>(null);
@@ -24,6 +26,10 @@ export default function Picture() {
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
+   const [isRecording, setIsRecording] = useState<boolean>(false);
+   const [video, setVideo] = useState<IVideo>();
+
+
 
    if (!permission) {
       // Camera permissions are still loading
@@ -52,17 +58,45 @@ export default function Picture() {
       setCamReady(true);
    }
 
+   const recordVideo = async () => {
+      setIsRecording(true);
+      let options = {
+         quality: '720p',
+         maxDuration: 60,
+         mute: true,
+      }
+      if (camReady && cameraRef.current) {
+         cameraRef.current.recordAsync(options).then(recordVideo => {
+            setVideo(recordVideo), console.log('recordVideo', recordVideo);
+         });
+      }
+   }
+
+   const stopVideo = () => {
+      setIsRecording(false);
+      cameraRef.current?.stopRecording();
+   }
+
+
+
    const takePicture = async () => {
       setClicked(false);
       if (camReady && cameraRef.current) {
          const data = await cameraRef.current.takePictureAsync({
             base64: true,
-            // quality: 0.5,
+            quality: 0.8,
             skipProcessing: true,
+            exif: true,
          }
          );
+         console.log(data.exif);
          setDatapic(data as CameraCapturedPicture)
-         setPortrait(data.width < data.height);
+         if (data.width > data.height && Platform.OS === 'ios') {
+            Alert.alert('To use Landscape mode, please use lock orientation in your device settings');
+            setPic('')
+            setClicked(true)
+            return
+         }
          if (type === CameraType.front) {
             const flipped = await ImageManipulator.manipulateAsync(
                data.uri,
@@ -80,6 +114,36 @@ export default function Picture() {
       navigation.navigate('PostBeenzer');
    }
 
+   if (video) {
+      return (
+         <View className={`flex-1 ${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}`}>
+            <View className='flex-1'>
+               <Video
+                  source={{ uri: video.uri }}
+                  shouldPlay
+                  isLooping
+                  style=
+                  {{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
+
+               />
+            </View>
+            <View className='flex-1 justify-end mb-20 z-1'>
+               <View className='flex-row self-center'>
+                  <TouchableOpacity className="mr-1 w-1/3 border-4 border-red-600  p-4 rounded-2xl" onPress={() => (
+                     setVideo(undefined), setClicked(true)
+                  )} >
+                     <Text className="font-semibold text-2xl text-red-600 text-center" >Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity className="ml-1 w-1/3  border-4 border-green-600  p-4 rounded-2xl" onPress={handleSave} >
+                     <Text className="font-semibold text-2xl text-green-500 text-center" >Keep</Text>
+                  </TouchableOpacity>
+               </View>
+            </View>
+         </View>
+      )
+   }
+
+
    return (
       <>
          <View className='flex-1'>
@@ -91,33 +155,26 @@ export default function Picture() {
                         resizeMode="contain"
                         className='bg-zinc-800 rounded-2xl z-0'
                         style={
-                           Platform.OS === 'ios'
-                              ? {
-                                 transform: [{ rotate: portrait ? '0deg' : '90deg' }],
-                                 width: '100%',
-                                 height: '100%',
-                              }
-                              : {
-                                 width: portrait ? Dimensions.get('window').width : Dimensions.get('window').height,
-                                 height: portrait ? Dimensions.get('window').height : Dimensions.get('window').width,
-                              }
+                           {
+                              width: portrait ? Dimensions.get('window').width : Dimensions.get('window').height,
+                              height: portrait ? Dimensions.get('window').height : Dimensions.get('window').width,
+                           }
                         }>
-                        <View className='flex-1 justify-end mb-4 z-1'>
-                           <View className='flex-row mt-2 self-center'>
-                              <TouchableOpacity className="mr-1 w-1/4 border border-red-600  p-4 rounded-2xl" onPress={() => (
+                        <View className='flex-1 justify-end mb-10 z-1'>
+                           <View className='flex-row self-center'>
+                              <TouchableOpacity className="mr-1 w-1/3 border-4 border-red-600  p-4 rounded-2xl" onPress={() => (
                                  setPic(""), setClicked(true)
                               )} >
-                                 <Text className="font-semibold text-red-600 text-center" >Cancel</Text>
+                                 <Text className="font-semibold text-2xl text-red-600 text-center" >Cancel</Text>
                               </TouchableOpacity>
-                              <TouchableOpacity className="ml-1 w-1/4 border border-green-600  p-4 rounded-2xl" onPress={handleSave} >
-                                 <Text className="font-semibold text-green-500 text-center" >Keep</Text>
+                              <TouchableOpacity className="ml-1 w-1/3  border-4 border-green-600  p-4 rounded-2xl" onPress={handleSave} >
+                                 <Text className="font-semibold text-2xl text-green-500 text-center" >Keep</Text>
                               </TouchableOpacity>
                            </View>
                         </View>
                      </ImageBackground>
                   </>
                ) :
-
                (
                   <Camera
                      ratio='16:9'
@@ -136,8 +193,8 @@ export default function Picture() {
                                  <ArrowPathRoundedSquareIcon size={65} color="green" />
                               </TouchableOpacity>
                            </View>
-                           <TouchableOpacity className=" mb-5 w-3/4 self-center border border-green-500 p-4 rounded-2xl" disabled={!clicked} onPress={() => takePicture()}>
-                              <Text className="font-semibold text-center text-2xl text-white "> Beenzer 📷 </Text>
+                           <TouchableOpacity className=" mb-5 w-3/4 self-center border border-green-500 p-4 rounded-2xl" onLongPress={recordVideo} onPress={() => isRecording ? stopVideo() : takePicture()}>
+                              <Text className="font-semibold text-center text-2xl text-white ">{isRecording ? 'Stop recording' : 'Beenzer 📷 🎥 '}</Text>
                            </TouchableOpacity>
                         </View>
                      </View>

@@ -148,7 +148,7 @@ const PostBeenzer = () => {
                      <View className="w-full items-center">
                         <TextInput
                            textAlign='center'
-                           className={`${darkModeOn ? `text-${lightMode}` : `text-black`}`}
+                           className={`text-${darkModeOn ? lightMode : darkMode} flex-1`}
                            style={styles.input}
                            blurOnSubmit={true}
                            multiline={true}

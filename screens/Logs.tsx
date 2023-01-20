@@ -24,6 +24,7 @@ const Logs = () => {
          setMintLogs([...mintLogs, data])
          console.log(mintLogs)
       } else {
+         console.log('minting over', data)
          setMintingOver(true);
          Vibration.vibrate(1000);
          // setMintLogs([]);

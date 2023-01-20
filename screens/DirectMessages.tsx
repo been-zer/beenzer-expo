@@ -21,13 +21,17 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
    const [handleChanged, setHandleChanged] = useState(false)
 
 
-   useEffect(() => {
-      const getMessages = async () => {
-         const messages = await socketGetMessages(SOCKET, profile[0].__pubkey__, friendPubkey.__pubkey__)
-         setMessages(messages)
-      }
+   setTimeout(() => {
       getMessages()
-   }, [handleChanged])
+   }, 1000)
+
+   const getMessages = async () => {
+      const messages = await socketGetMessages(SOCKET, profile[0].__pubkey__, friendPubkey.__pubkey__)
+      messages.sort((a, b) => {
+         return b._timestamp - a._timestamp
+      })
+      setMessages(messages)
+   }
 
    const handleSendMessage = async (e: any) => {
       const message = e.nativeEvent.text
@@ -60,24 +64,25 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
                {friendPubkey._username_}</Text>
          </View>
          <TextInput
-            className=' rounded-2xl bg-gray-200 p-5 h-20 ml-1 mt-2 mr-1'
+            className=' rounded-2xl bg-gray-200 p-3 h-10 ml-1 mt-2 mr-1'
             textAlign='center'
             placeholder="Type here"
             onSubmitEditing={handleSendMessage}
+
             value={message}
             onChange={(e) => setMessage(e.nativeEvent.text)}
          />
          <ScrollView className='flex-1  mt-2 mx-1'>
-            {messages.reverse().map((item: IMessage, index) => {
+            {messages.map((item: IMessage, index) => {
                return (
                   <View key={index}>
                      {item._owner === profile[0].__pubkey__ &&
                         <View className='flex-col'>
                            <View className='flex-row justify-start flex-1 items-center mt-1'>
-                              <Image source={{ uri: friendPubkey._pfp }} className='w-10 h-10 rounded-full ml-2 mt-2 mr-2' />
+                              <Image source={{ uri: friendPubkey._pfp }} className='w-10 h-10 rounded-full  ml-2 mt-2 mr-2' />
                               <TouchableOpacity onPress={handleLike}>
-                                 <View className={`border${darkModeOn ? `border-${lightMode}` : `border-black`} bg-white rounded-2xl p-3 `} >
-                                    <Text className='text-black text-xl'>{item._message}</Text>
+                                 <View className={`border${darkModeOn ? `border-${lightMode}` : `border-black`} bg-white rounded-2xl rounded-bl-none p-2 w-[220px] `} >
+                                    <Text className='text-black text-[16px]'>{item._message}</Text>
                                     <Text className='text-black text-xs self-end'>{getMessageDetails(item._timestamp)}</Text>
                                  </View>
                               </TouchableOpacity>
@@ -88,11 +93,11 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
                         item._owner !== profile[0].__pubkey__ &&
                         <View className='flex-col'>
                            <View className='flex-row justify-end flex-1 items-center mt-1'>
-                              <View className='bg-green-500 rounded-2xl p-3 ' >
-                                 <Text className='text-white text-xl'>{item._message}</Text>
+                              <View className={`bg-green-500 rounded-2xl rounded-br-none p-2 w-[220px] `} >
+                                 <Text className='text-white text-[16px]'>{item._message}</Text>
                                  <Text className='text-white text-xs self-end'>{getMessageDetails(item._timestamp)}</Text>
                               </View>
-                              <Image source={{ uri: profile[0]._pfp }} className='w-10 h-10 rounded-full ml-2 mt-2 mr-2' />
+                              <Image source={{ uri: profile[0]._pfp }} className='w-10 h-10 rounded-full ml-2 mt-2 mr-2 -mb-5' />
                            </View>
                         </View>
                      }

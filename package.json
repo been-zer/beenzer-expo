@@ -47,7 +47,8 @@
     "redux": "^4.2.0",
     "remove": "^0.1.5",
     "socket.io-client": "^4.5.4",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "^1.0.3",
+    "expo-av": "~13.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

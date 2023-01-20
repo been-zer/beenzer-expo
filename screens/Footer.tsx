@@ -26,9 +26,9 @@ export default function Footer() {
             {active === 'Home' && <View className='bg-green-500 w-2 h-2 rounded-full' />}
          </TouchableOpacity>
 
-         <TouchableOpacity className=' flex-col  w-16 h-16 justify-center items-center' onPress={() => handleNavigation('Friends')}>
+         <TouchableOpacity className=' flex-col  w-16 h-16 justify-center items-center' onPress={() => handleNavigation('Feed')}>
             <UsersIcon size={35} color='#16a34a' />
-            {active === 'Friends' && <View className='bg-green-500 w-2 h-2 rounded-full' />}
+            {active === 'Feed' && <View className='bg-green-500 w-2 h-2 rounded-full' />}
          </TouchableOpacity>
 
          <TouchableOpacity className=' flex-col w-24 h-16 justify-center items-center' onPress={() => handleNavigation('Picture')} onLongPress={() => handleNavigation('BeenzerMenu')}>
