@@ -171,6 +171,16 @@ export const socketLikeMessage = (Socket: Socket, pubkey1: string, pubkey2: stri
    });
 }
 
+export const socketUnlikeMessage = (Socket: Socket, pubkey1: string, pubkey2: string, timestamp: number) => {
+   Socket.emit('unLikeMessage', pubkey1, pubkey2, timestamp);
+   return new Promise((resolve) => {
+      Socket.on("unLikeMessageRes", (res: boolean) => {
+         resolve(res);
+      }
+      );
+   });
+}
+
 export const socketGetMapNFTs = (Socket: Socket, latUser: number, longUser: number) => {
    Socket.emit('getMapNFTs', latUser, longUser);
    return new Promise<INFT[]>((resolve) => {

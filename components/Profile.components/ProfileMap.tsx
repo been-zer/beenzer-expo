@@ -7,7 +7,7 @@ import { useAtom } from 'jotai'
 import { INFT } from '../../Types'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../../services/globals/darkmode'
 
-const ProfileMap = ({ uniqueNFTs, dataNFT }: { uniqueNFTs: INFT | null, dataNFT: INFT[] | null }) => {
+const ProfileMap = ({ uniqueNFTs, dataNFT, viewMap }: { uniqueNFTs: INFT | null, dataNFT: INFT[] | null, viewMap: number | undefined }) => {
    const [userLocation, setUserLocation] = useAtom(atomUserLocation);
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
@@ -24,8 +24,8 @@ const ProfileMap = ({ uniqueNFTs, dataNFT }: { uniqueNFTs: INFT | null, dataNFT:
                initialRegion={{
                   latitude: userLocation.coords.latitude as number,
                   longitude: userLocation.coords.longitude as number,
-                  latitudeDelta: 0.05,
-                  longitudeDelta: 0.05,
+                  latitudeDelta: viewMap || 0.05,
+                  longitudeDelta: viewMap || 0.05,
 
                }}>
                <>
@@ -51,8 +51,8 @@ const ProfileMap = ({ uniqueNFTs, dataNFT }: { uniqueNFTs: INFT | null, dataNFT:
                initialRegion={{
                   latitude: uniqueNFTs._latitude as number,
                   longitude: uniqueNFTs._longitude as number,
-                  latitudeDelta: 0.05,
-                  longitudeDelta: 0.05,
+                  latitudeDelta: viewMap || 0.05,
+                  longitudeDelta: viewMap || 0.05,
 
                }}>
                <>

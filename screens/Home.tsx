@@ -115,18 +115,16 @@ const Home = () => {
                      <ActivityIndicator className=' bottom-1' color={`${darkModeOn ? lightMode : darkMode}`} />
                   }
                </TouchableOpacity>
+               <View className='flex-row justify-around items-center'>
+                  <DisplayButton title="Map" display={display} setDisplay={setDisplay} />
+                  <DisplayButton title="Feeds" display={display} setDisplay={setDisplay} />
+               </View>
             </>}
-         {/* {tab bar} */}
-         <View className='flex-row justify-around items-center'>
-            <DisplayButton title="Map" display={display} setDisplay={setDisplay} />
-            <TouchableOpacity onPress={() => setHideMenu(!hideMenu)}>
-               <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`}`}>
-                  {hideMenu ? 'Hide' : 'Show'}
-               </Text>
-            </TouchableOpacity>
-            <DisplayButton title="Feeds" display={display} setDisplay={setDisplay} />
-
-         </View>
+         <TouchableOpacity onPress={() => setHideMenu(!hideMenu)}>
+            <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`} self-center mb-2`}>
+               {hideMenu ? 'Hide menu' : 'Show menu'}
+            </Text>
+         </TouchableOpacity>
          {
             display === 'Feeds' &&
             <Feed feedItems={feedItems} setHideMenu={setHideMenu} />
@@ -135,7 +133,7 @@ const Home = () => {
             display === 'Map' &&
             <HomeMap mapRef={mapRef} />
          }
-         <Footer />
+         {hideMenu && <Footer />}
       </SafeAreaView >
    )
 }

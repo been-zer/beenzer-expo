@@ -2,7 +2,7 @@ import { Camera, CameraCapturedPicture, CameraType, FlashMode } from 'expo-camer
 import { useState, useRef, useEffect } from 'react';
 import { Button, Dimensions, Text, TouchableOpacity, View, ImageBackground, Image, ScrollView, SafeAreaView, Platform, Alert } from 'react-native';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { atomPic, atomDataPic, atomKeepPic } from '../services/globals';
+import { atomPic, atomDataPic, atomVideo } from '../services/globals';
 import { useAtom } from 'jotai';
 import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 import { } from 'react-native-paper'
@@ -27,7 +27,7 @@ export default function Picture() {
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
    const [isRecording, setIsRecording] = useState<boolean>(false);
-   const [video, setVideo] = useState<IVideo>();
+   const [video, setVideo] = useAtom(atomVideo);
 
 
 
@@ -61,9 +61,13 @@ export default function Picture() {
    const recordVideo = async () => {
       setIsRecording(true);
       let options = {
-         quality: '720p',
+         quality: '1080p',
          maxDuration: 60,
          mute: true,
+         mirror: true
+      }
+      if (type === CameraType.front) {
+         options.mirror = true;
       }
       if (camReady && cameraRef.current) {
          cameraRef.current.recordAsync(options).then(recordVideo => {
@@ -76,8 +80,6 @@ export default function Picture() {
       setIsRecording(false);
       cameraRef.current?.stopRecording();
    }
-
-
 
    const takePicture = async () => {
       setClicked(false);
@@ -122,6 +124,7 @@ export default function Picture() {
                   source={{ uri: video.uri }}
                   shouldPlay
                   isLooping
+                  isMuted
                   style=
                   {{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
 
@@ -130,7 +133,7 @@ export default function Picture() {
             <View className='flex-1 justify-end mb-20 z-1'>
                <View className='flex-row self-center'>
                   <TouchableOpacity className="mr-1 w-1/3 border-4 border-red-600  p-4 rounded-2xl" onPress={() => (
-                     setVideo(undefined), setClicked(true)
+                     setVideo(null), setClicked(true)
                   )} >
                      <Text className="font-semibold text-2xl text-red-600 text-center" >Cancel</Text>
                   </TouchableOpacity>
@@ -193,8 +196,8 @@ export default function Picture() {
                                  <ArrowPathRoundedSquareIcon size={65} color="green" />
                               </TouchableOpacity>
                            </View>
-                           <TouchableOpacity className=" mb-5 w-3/4 self-center border border-green-500 p-4 rounded-2xl" onLongPress={recordVideo} onPress={() => isRecording ? stopVideo() : takePicture()}>
-                              <Text className="font-semibold text-center text-2xl text-white ">{isRecording ? 'Stop recording' : 'Beenzer 📷 🎥 '}</Text>
+                           <TouchableOpacity className=" mb-5 w-3/4 self-center border border-green-500 p-4 rounded-2xl" onLongPress={recordVideo} onPressOut={stopVideo} onPress={() => takePicture()}>
+                              <Text className="font-semibold text-center text-2xl text-white ">{isRecording ? `Stop recording ` : 'Beenzer 📷 🎥 '}</Text>
                            </TouchableOpacity>
                         </View>
                      </View>
@@ -205,4 +208,3 @@ export default function Picture() {
       </>
    );
 }
-

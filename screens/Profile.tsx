@@ -118,7 +118,7 @@ const Profile = () => {
                   </>
                )}
                {showProfileTab === 'ProfileMap' && (
-                  <ProfileMap uniqueNFTs={null} dataNFT={userNFTs} />
+                  <ProfileMap uniqueNFTs={null} dataNFT={userNFTs} viewMap={undefined} />
                )}
                {showProfileTab === 'Friends' && (
                   <Friends dataPubkey={profile[0].__pubkey__} showSearch={true} />

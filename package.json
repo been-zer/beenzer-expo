@@ -18,8 +18,10 @@
     "@solana/web3.js": "~1.35.0",
     "buffer": "^6.0.3",
     "dotenv": "^16.0.3",
-    "expo": "~47.0.9",
+    "expo-av": "~13.0.2",
     "expo-camera": "~13.1.0",
+    "expo-fetch": "^0.0.0",
+    "expo-file-system": "^15.1.1",
     "expo-image-manipulator": "~11.0.0",
     "expo-linear-gradient": "~12.0.1",
     "expo-linking": "~3.3.0",
@@ -47,8 +49,7 @@
     "redux": "^4.2.0",
     "remove": "^0.1.5",
     "socket.io-client": "^4.5.4",
-    "tweetnacl": "^1.0.3",
-    "expo-av": "~13.0.2"
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

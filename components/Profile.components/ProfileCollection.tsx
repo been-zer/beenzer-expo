@@ -83,13 +83,13 @@ const ProfileCollection = ({ setShowDetails, showDetails, dataNFT }: {
                   <Properties props={NFTselected?._city} propsTitle={'CITY'} />
                   <Properties props={NFTselected?._username} propsTitle={'USERNAME'} />
                   <Properties props={NFTselected?._creator} propsTitle={'CREATOR'} />
-                  <Properties props={NFTselected?._distance} propsTitle={'DISTANCE'} />
+                  <Properties props={NFTselected?._distance} propsTitle={'VISIBILITY'} />
                   <Properties props={NFTselected?._minlat} propsTitle={'MIN LAT'} />
                   <Properties props={NFTselected?._maxlat} propsTitle={'MAX LAT'} />
                   <Properties props={NFTselected?._minlon} propsTitle={'MIN LON'} />
                   <Properties props={NFTselected?._maxlon} propsTitle={'MAX LON'} />
                </View>
-               <ProfileMap uniqueNFTs={NFTselected} dataNFT={null} />
+               <ProfileMap uniqueNFTs={NFTselected} dataNFT={null} viewMap={undefined} />
             </>
          }
       </>

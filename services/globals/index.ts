@@ -1,7 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 import nacl from 'tweetnacl'
 import { atom } from "jotai";
-import { INFT, IProfile, ILocation, coordinates } from '../../Types';
+import { INFT, IProfile, ILocation, coordinates, IVideo } from '../../Types';
 import { CameraCapturedPicture } from 'expo-camera';
 
 export const atomDeepLink = atom("");
@@ -33,6 +33,7 @@ export const atomFriendPubkey = atom<IProfile>({} as IProfile);
 export const atomFriendsChanged = atom<boolean>(false);
 export const atomDescription = atom<string>("");
 export const atomFeedItems = atom<INFT[]>([]);
+export const atomVideo = atom<IVideo | null>(null);
 
 export const mapStyleLight = [
    {

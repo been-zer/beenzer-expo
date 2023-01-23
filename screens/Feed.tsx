@@ -3,15 +3,18 @@ import { atomUserNFTs } from '../services/globals'
 import { useAtom } from 'jotai'
 import FeedsItem from "./FeedsItem";
 import { INFT } from "../Types";
+import { useEffect } from "react";
 
 const Feed = ({ feedItems, setHideMenu }: {
    feedItems: INFT[], setHideMenu: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
 
-   setHideMenu(true)
+   useEffect(() => {
+      setHideMenu(true)
+   }, [])
 
    return (
-      <View className="flex-1">
+      <View className="flex-1 w-full h-full">
          <FlatList
             data={feedItems}
             renderItem={({ item }) => <FeedsItem feedItem={item} />}

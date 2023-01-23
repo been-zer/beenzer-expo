@@ -1,11 +1,12 @@
 import {
    View, Text, ScrollView, SafeAreaView, ImageBackground, ActivityIndicator,
-   StyleSheet, TextInput, TouchableOpacity
+   StyleSheet, TextInput, TouchableOpacity, Dimensions
 } from 'react-native'
+import { Video } from 'expo-av';
 import {
    atomPic, atomPin, atomUserLocation, atomPinCity, atomPhantomWalletPublicKey, atomProfile, mapStyle, mapStyleLight,
    atomSession, atomSharedSecret, atomDappKeyPair, atomTransacSuccess, atomDataPic,
-   atomSupply, atomDescription
+   atomSupply, atomDescription, atomVideo
 } from '../services/globals'
 import { useAtom } from 'jotai'
 import MapView, { Marker, Callout, Circle, Polyline } from 'react-native-maps'
@@ -46,7 +47,10 @@ const PostBeenzer = () => {
    const [maxLat, setMaxLat] = useState((pin.latitude + 0.008983).toString())
    const [minLong, setMinLong] = useState((pin.longitude - 0.009009).toString())
    const [maxLong, setMaxLong] = useState((pin.longitude + 0.009009).toString())
+   const [video, setVideo] = useAtom(atomVideo)
    const NFTsGlobal = "GLOBALLY"
+   const [type, setType] = useState('')
+   const [videoBuffer, setVideoBuffer] = useState<Buffer | null>(null)
 
    useLayoutEffect(() => {
       navigation.setOptions({
@@ -58,6 +62,16 @@ const PostBeenzer = () => {
          headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
       })
    }, [navigation])
+
+   useEffect(() => {
+      if (video) {
+         setType('video/mp4')
+      }
+      else {
+         setType('image/png')
+      }
+   }, [video, pic])
+
 
    useEffect(() => {
       if (userLocation.coords) {
@@ -75,11 +89,23 @@ const PostBeenzer = () => {
       }
    }, [pin])
 
+   let xhr = new XMLHttpRequest();
+   xhr.open('GET', video?.uri as string);
+   xhr.responseType = 'arraybuffer';
+   xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+         let buffer = new Uint8Array(xhr.response);
+         setVideoBuffer(buffer as Buffer)
+      }
+   };
+   xhr.send();
+
+
    useEffect(() => {
       if (transacSuccess) {
          socketMint(SOCKET,
-            Buffer.from(dataPic.base64 as any, "base64"),
-            "image/png",
+            videoBuffer as Buffer,
+            type,
             profile[0].__pubkey__,
             supply,
             profile[0]._username_,
@@ -123,7 +149,7 @@ const PostBeenzer = () => {
       <>
          <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}`} style={StyleSheet.absoluteFillObject} >
             {
-               userLocation.coords && pin && pic ? (
+               userLocation.coords && pin && (pic || video) ? (
                   <ScrollView className="flex-1 ml-5 mr-5" showsVerticalScrollIndicator={false}>
                      <MapView style={{ height: 300 }} provider='google'
                         customMapStyle={darkModeOn ? mapStyle : mapStyleLight}
@@ -138,6 +164,18 @@ const PostBeenzer = () => {
                         <Marker coordinate={pin} draggable={true} onDragEnd={(e) => setPin(e.nativeEvent.coordinate)}>
                            {description && <Text className={`${darkModeOn ? `bg-${lightMode}` : `bg-black`} p-2 `}>{description}</Text>}
                            {pic && <ImageBackground source={{ uri: pic }} style={{ width: 50, height: 50 }} imageStyle={{ borderRadius: 50 }} />}
+                           {video && <Video
+                              source={{ uri: video.uri }}
+                              isMuted={true}
+                              shouldPlay
+                              isLooping
+                              style={{
+                                 width: 50,
+                                 height: 50,
+                                 borderRadius: 50,
+                              }}
+                           />
+                           }
                         </Marker>
                         {!maxDistance &&
                            <Circle center={pin} radius={distance} strokeColor={darkModeOn ? `${lightMode}` : "green"} strokeWidth={5} />}
@@ -145,7 +183,7 @@ const PostBeenzer = () => {
                      <View className='mt-2 items-center'>
                         <Text className='text-green-800 text-xl'>DESCRIPTION</Text>
                      </View>
-                     <View className="w-full items-center">
+                     <View className="w-full items-center h-26">
                         <TextInput
                            textAlign='center'
                            className={`text-${darkModeOn ? lightMode : darkMode} flex-1`}
@@ -199,7 +237,7 @@ const PostBeenzer = () => {
                         <Properties props={pinCity} propsTitle={'CITY'} />
                         <Properties props={profile[0]._username_} propsTitle={'USERNAME'} />
                         <Properties props={profile[0].__pubkey__} propsTitle={'CREATOR'} />
-                        <Properties props={`${maxDistance ? NFTsGlobal : `${(distance / 1000)} km`}`} propsTitle={'DISTANCE'} />
+                        <Properties props={`${maxDistance ? NFTsGlobal : `${(distance / 1000)} km`}`} propsTitle={'VISIBILITY'} />
                         <Properties props={minLat} propsTitle={'MIN LAT'} />
                         <Properties props={maxLat} propsTitle={'MAX LAT'} />
                         <Properties props={minLong} propsTitle={'MIN LONG'} />

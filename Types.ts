@@ -99,7 +99,7 @@ export interface IMessage {
    _message: string,
    _owner: string,
    _timestamp: number,
-   date: string,
+   date: string | number,
 }
 
 export interface IVideo {

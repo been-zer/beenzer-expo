@@ -10,11 +10,11 @@ import { atom, useAtom } from "jotai";
 import {
    atomDappKeyPair, atomSharedSecret, atomSession, atomPhantomWalletPublicKey, atomTransacSuccess,
    atomPic,
-   atomDisplay
+   atomDisplay,
 } from "../services/globals";
 import { atomSOCKET } from "../services/socket";
 import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
-import { Vibration } from 'react-native';
+import { Vibration, Alert } from 'react-native';
 import { firstLogin } from "../services/socket/function";
 import { socketConnection } from "../services/socket/connexion";
 
@@ -38,6 +38,11 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
       const params = url.searchParams;
 
       if (params.get("errorCode")) {
+         if (params.get("errorCode") === '-32603') {
+            Alert.alert("Error", "An error occurred while connecting to Phantom. Make sure you have SOL in your wallet.")
+            console.log("Error code", params.get("errorCode"));
+         }
+         else { Alert.alert("An error occurred while connecting to Phantom.") }
          return;
       }
 
