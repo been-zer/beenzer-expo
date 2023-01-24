@@ -71,7 +71,9 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
       <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`} h-full flex-1 `}  >
          <View className='flex-row justify-center items-center'>
             <Image
-               source={{ uri: friendPubkey._pfp }}
+               source={friendPubkey._pfp ?
+                  { uri: friendPubkey._pfp } :
+                  require("./../assets/newUser.png")}
                className='w-10 h-10 rounded-full ml-2 mt-2 mr-2'
             />
             <Text
@@ -94,12 +96,16 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
                      {item._owner === profile[0].__pubkey__ &&
                         <View className='flex-col'>
                            <View className='flex-row justify-start flex-1 items-center mt-2'>
-                              <Image source={{ uri: friendPubkey._pfp }} className='w-10 h-10 rounded-full  ml-2 mt-7 mr-2' />
+                              <Image source={
+                                 friendPubkey._pfp ?
+                                    { uri: friendPubkey._pfp } :
+                                    require("./../assets/newUser.png")
+                              } className='w-10 h-10 rounded-full  ml-2 mt-7 mr-2' />
                               <TouchableOpacity onLongPress={() => handleLike(item)}>
                                  <View className={`border ${darkModeOn ? `border-${lightMode}` : `border-green-500`} bg-white rounded-2xl rounded-bl-none p-2 w-[220px] `} >
                                     <Text className='text-black text-[16px]'>{item._message}</Text>
                                  </View>
-                                 <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`} text-xs self-start`}>{item.date}</Text>
+                                 <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`} text-xs self-start`}>{item.date} UTC</Text>
                               </TouchableOpacity>
                               {item._liked && <Text className='ml-1'>❤️</Text>}
                            </View>
@@ -114,7 +120,7 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
                                     <View className={`bg-green-500 rounded-2xl rounded-br-none p-2 w-[220px] `} >
                                        <Text className='text-white text-[16px]'>{item._message}</Text>
                                     </View>
-                                    <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`} text-xs self-end`}>{item.date}</Text>
+                                    <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`} text-xs self-end`}>{item.date} UTC</Text>
                                  </View>
                               </View>
                               <Image source={{ uri: profile[0]._pfp }} className=' w-10 h-10 rounded-full ml-2 mt-7 mr-2' />

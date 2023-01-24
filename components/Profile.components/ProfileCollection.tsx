@@ -1,4 +1,5 @@
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native'
+import { Video } from 'expo-av';
 import { useEffect, useState } from 'react'
 import { useAtom } from 'jotai'
 import { atomUserNFTs, atomProfile } from '../../services/globals'
@@ -8,9 +9,9 @@ import ProfileMap from './ProfileMap'
 import { ActivityIndicator } from 'react-native-paper'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../../services/globals/darkmode'
 
-const ProfileCollection = ({ setShowDetails, showDetails, dataNFT }: {
+const ProfileCollection = ({ setShowDetails, showDetails, dataNFT, setSelectedTab }: {
    showDetails: boolean, setShowDetails: any,
-   dataNFT: INFT[]
+   dataNFT: INFT[], setSelectedTab: any
 }) => {
    const [profile, setProfile] = useAtom(atomProfile);
    const [NFTselected, setNFTselected] = useState<INFT | null>(null);
@@ -21,7 +22,9 @@ const ProfileCollection = ({ setShowDetails, showDetails, dataNFT }: {
    const handleShowDetails = (item: INFT) => {
       setShowDetails(true);
       setNFTselected(item);
+      setSelectedTab('')
    }
+   console.log(dataNFT)
 
    return (
       <>
@@ -38,15 +41,26 @@ const ProfileCollection = ({ setShowDetails, showDetails, dataNFT }: {
                            <TouchableOpacity onPress={() => handleShowDetails(item)} >
                               <View className="flex flex-col items-center">
                                  <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} font-bold`}>BEENZER #{item._id_}</Text>
-                                 {item._asset ?
+                                 {item._asset && item._type == 'image/png' ?
                                     <Image
                                        source={{ uri: item._asset }}
                                        style={{ width: 150, height: 150, marginRight: 10, marginLeft: 10, borderWidth: 1, borderColor, borderRadius: 10, marginBottom: 10 }}
-                                    /> : <ActivityIndicator
-                                       className="self-center m-10"
-                                       size="large"
-                                       color="green"
-                                    />}
+                                    /> : item._type == 'video' ?
+                                       <Video
+                                          source={{ uri: `${item._asset}` }}
+                                          isMuted={true}
+                                          shouldPlay
+                                          isLooping
+                                          style={{
+                                             width: 500,
+                                             height: 500,
+                                          }}
+                                       />
+                                       : <ActivityIndicator
+                                          className="self-center m-10"
+                                          size="large"
+                                          color="green"
+                                       />}
                               </View>
                            </TouchableOpacity>
                         </>

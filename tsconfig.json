@@ -1,6 +1,11 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/expo/ts3.2/@types",
+      "./@types"
+    ],
   }
 }

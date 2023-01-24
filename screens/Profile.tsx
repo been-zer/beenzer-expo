@@ -114,7 +114,7 @@ const Profile = () => {
             <View className='flex flex-col'>
                {showProfileTab === 'Collection' && (
                   <>
-                     <ProfileCollection setShowDetails={setShowDetails} showDetails={showDetails} dataNFT={userNFTs} />
+                     <ProfileCollection setShowDetails={setShowDetails} showDetails={showDetails} dataNFT={userNFTs} setSelectedTab={setSelectedTab} />
                   </>
                )}
                {showProfileTab === 'ProfileMap' && (

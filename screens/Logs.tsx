@@ -1,7 +1,7 @@
-import { View, Text, ScrollView, SafeAreaView, ActivityIndicator, Linking, TouchableOpacity, Vibration } from 'react-native'
+import { View, Text, ScrollView, SafeAreaView, ActivityIndicator, Linking, TouchableOpacity, Vibration, Platform } from 'react-native'
 import { useState } from 'react'
 import { atomSOCKET } from '../services/socket';
-import { atomMintLogs, atomMintingOver, atomPic } from '../services/globals';
+import { atomMintLogs, atomMintingOver, atomPic, atomVideo } from '../services/globals';
 import { useAtom } from 'jotai'
 import OpenURLButton from '../components/OpenURLButton'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
@@ -16,17 +16,25 @@ const Logs = () => {
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn)
    const [darkMode, setDarkMode] = useAtom(atomDarkMode)
    const [lightMode, setLightMode] = useAtom(atomLightMode)
+   const [video, setVideo] = useAtom(atomVideo)
 
    SOCKET.on('mintLogs', (data: string) => {
       setMintingOver(false);
-      if (data != 'true') {
+      if (data == 'false') {
+         setMintLogs([...mintLogs, 'Minting failed, something went wrong. Please try again.'])
+         setMintingOver(true);
+         console.log(mintLogs)
+      }
+      else if (data != 'true') {
          setPic('')
+         setVideo(null)
          setMintLogs([...mintLogs, data])
          console.log(mintLogs)
       } else {
          console.log('minting over', data)
          setMintingOver(true);
          Vibration.vibrate(1000);
+         setMintLogs([...mintLogs, 'Minting complete. Go to your profile or to phantom to view your NFT'])
          // setMintLogs([]);
 
       }
@@ -48,9 +56,10 @@ const Logs = () => {
             </ScrollView >
          </View >
          {!mintingOver && <ActivityIndicator className='mt-2' size="large" color="green" />}
-         {mintingOver && <OpenURLButton url={phantomURL}>
-            Go to phantom
-         </OpenURLButton>}
+         {mintingOver && Platform.OS === 'ios' &&
+            <OpenURLButton url={phantomURL}>
+               Go to phantom
+            </OpenURLButton>}
       </SafeAreaView >
    );
 };

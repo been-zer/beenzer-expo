@@ -38,4 +38,13 @@ export const getHoursFromTimestamp = (timestamp: number): string => {
    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
-
+export const arrayBufferToBase64 = (buffer: Buffer) => {
+   let binary = '';
+   let bytes = new Uint8Array(buffer);
+   let len = bytes.byteLength;
+   for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+   }
+   console.log('here', window.btoa(binary))
+   return window.btoa(binary);
+}

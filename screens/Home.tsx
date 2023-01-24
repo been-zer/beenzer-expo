@@ -131,7 +131,7 @@ const Home = () => {
          }
          {
             display === 'Map' &&
-            <HomeMap mapRef={mapRef} />
+            <HomeMap mapRef={mapRef} feedItems={feedItems} />
          }
          {hideMenu && <Footer />}
       </SafeAreaView >

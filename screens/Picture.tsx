@@ -9,7 +9,6 @@ import { } from 'react-native-paper'
 import { BoltIcon, BoltSlashIcon, ArrowPathRoundedSquareIcon } from "react-native-heroicons/solid";
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
 import { Video } from 'expo-av';
-import { IVideo } from '../Types';
 
 export default function Picture() {
 
@@ -28,8 +27,6 @@ export default function Picture() {
    const [lightMode, setLightMode] = useAtom(atomLightMode);
    const [isRecording, setIsRecording] = useState<boolean>(false);
    const [video, setVideo] = useAtom(atomVideo);
-
-
 
    if (!permission) {
       // Camera permissions are still loading
@@ -64,10 +61,7 @@ export default function Picture() {
          quality: '1080p',
          maxDuration: 60,
          mute: true,
-         mirror: true
-      }
-      if (type === CameraType.front) {
-         options.mirror = true;
+         mirror: type === CameraType.front ? true : false,
       }
       if (camReady && cameraRef.current) {
          cameraRef.current.recordAsync(options).then(recordVideo => {
@@ -88,10 +82,8 @@ export default function Picture() {
             base64: true,
             quality: 0.8,
             skipProcessing: true,
-            exif: true,
          }
          );
-         console.log(data.exif);
          setDatapic(data as CameraCapturedPicture)
          if (data.width > data.height && Platform.OS === 'ios') {
             Alert.alert('To use Landscape mode, please use lock orientation in your device settings');
@@ -106,6 +98,7 @@ export default function Picture() {
             );
             setPic(flipped.uri);
          } else {
+            console.log('data', data)
             setPic(data.uri);
          }
       }

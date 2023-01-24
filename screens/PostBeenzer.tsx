@@ -1,8 +1,7 @@
 import {
    View, Text, ScrollView, SafeAreaView, ImageBackground, ActivityIndicator,
-   StyleSheet, TextInput, TouchableOpacity, Dimensions
+   StyleSheet, TextInput, TouchableOpacity, Image,
 } from 'react-native'
-import { Video } from 'expo-av';
 import {
    atomPic, atomPin, atomUserLocation, atomPinCity, atomPhantomWalletPublicKey, atomProfile, mapStyle, mapStyleLight,
    atomSession, atomSharedSecret, atomDappKeyPair, atomTransacSuccess, atomDataPic,
@@ -11,10 +10,10 @@ import {
 import { useAtom } from 'jotai'
 import MapView, { Marker, Callout, Circle, Polyline } from 'react-native-maps'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { getCity } from '../services/globals/functions'
+import { getCity, arrayBufferToBase64 } from '../services/globals/functions'
 import { useNavigation } from '@react-navigation/native'
 import { signAndSendTransaction } from '../services/phantom/sign'
-import { socketMint } from '../services/socket/function'
+import { socketMint, videoToGifSocket } from '../services/socket/function'
 import { atomSOCKET } from '../services/socket'
 import Properties from '../components/Properties'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode'
@@ -35,7 +34,6 @@ const PostBeenzer = () => {
    const [sharedSecret, setSharedSecret] = useAtom(atomSharedSecret)
    const [dappKeyPair, setDappKeyPair] = useAtom(atomDappKeyPair)
    const [transacSuccess, setTransacSuccess] = useAtom(atomTransacSuccess)
-   const [dataPic, setDataPic] = useAtom(atomDataPic)
    const [SOCKET] = useAtom(atomSOCKET)
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn)
    const [darkMode, setDarkMode] = useAtom(atomDarkMode)
@@ -51,6 +49,9 @@ const PostBeenzer = () => {
    const NFTsGlobal = "GLOBALLY"
    const [type, setType] = useState('')
    const [videoBuffer, setVideoBuffer] = useState<Buffer | null>(null)
+   const [buffertoServer, setBufferToServer] = useState<Buffer>()
+   const [gif, setGif] = useState<Buffer>()
+   const [img, setImg] = useState<string>()
 
    useLayoutEffect(() => {
       navigation.setOptions({
@@ -64,20 +65,10 @@ const PostBeenzer = () => {
    }, [navigation])
 
    useEffect(() => {
-      if (video) {
-         setType('video/mp4')
-      }
-      else {
-         setType('image/png')
-      }
-   }, [video, pic])
-
-
-   useEffect(() => {
       if (userLocation.coords) {
          setPin({ latitude: userLocation.coords.latitude, longitude: userLocation.coords.longitude })
       }
-   }, [userLocation, pic])
+   }, [userLocation, pic, video])
 
    useEffect(() => {
       if (pin.latitude && pin.longitude) {
@@ -89,22 +80,50 @@ const PostBeenzer = () => {
       }
    }, [pin])
 
-   let xhr = new XMLHttpRequest();
-   xhr.open('GET', video?.uri as string);
-   xhr.responseType = 'arraybuffer';
-   xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-         let buffer = new Uint8Array(xhr.response);
-         setVideoBuffer(buffer as Buffer)
+   useEffect(() => {
+      if (video) {
+         setType('video/mp4')
+         setBufferToServer(videoBuffer as Buffer)
+         const getGif = async () => {
+            try {
+               const res = await videoToGifSocket(SOCKET, videoBuffer as Buffer)
+               console.log('res socket', res)
+               setGif(res as Buffer)
+               setImg(arrayBufferToBase64(res))
+            }
+            catch (e) {
+               console.log(e)
+            }
+         }
+         getGif()
       }
-   };
-   xhr.send();
+      else {
+         setType('image/png')
+         setBufferToServer(Buffer.from(pic as string, 'base64'))
+      }
+      img && console.log(img)
+   }, [video, pic, videoBuffer, pin])
 
+
+   useEffect(() => {
+      if (video) {
+         let xhr = new XMLHttpRequest()
+         xhr.open('GET', video?.uri as string)
+         xhr.responseType = 'arraybuffer'
+         xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+               let buffer = new Uint8Array(xhr.response)
+               setVideoBuffer(buffer as Buffer)
+            }
+         };
+         xhr.send();
+      }
+   }, [video])
 
    useEffect(() => {
       if (transacSuccess) {
          socketMint(SOCKET,
-            videoBuffer as Buffer,
+            buffertoServer as Buffer,
             type,
             profile[0].__pubkey__,
             supply,
@@ -141,13 +160,14 @@ const PostBeenzer = () => {
    }, [distance, pin])
 
    const createBeenzer = () => {
+      console.log(buffertoServer, 'buffertoServer')
       signAndSendTransaction(session, phantomWalletPublicKey, sharedSecret, dappKeyPair)
       setDescription('')
    }
 
    return (
       <>
-         <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}`} style={StyleSheet.absoluteFillObject} >
+         <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}`} style={StyleSheet.absoluteFillObject}>
             {
                userLocation.coords && pin && (pic || video) ? (
                   <ScrollView className="flex-1 ml-5 mr-5" showsVerticalScrollIndicator={false}>
@@ -158,24 +178,11 @@ const PostBeenzer = () => {
                            longitude: userLocation.coords.longitude,
                            latitudeDelta: 0.05,
                            longitudeDelta: 0.05,
-                        }}
-
-                     >
+                        }}>
                         <Marker coordinate={pin} draggable={true} onDragEnd={(e) => setPin(e.nativeEvent.coordinate)}>
                            {description && <Text className={`${darkModeOn ? `bg-${lightMode}` : `bg-black`} p-2 `}>{description}</Text>}
                            {pic && <ImageBackground source={{ uri: pic }} style={{ width: 50, height: 50 }} imageStyle={{ borderRadius: 50 }} />}
-                           {video && <Video
-                              source={{ uri: video.uri }}
-                              isMuted={true}
-                              shouldPlay
-                              isLooping
-                              style={{
-                                 width: 50,
-                                 height: 50,
-                                 borderRadius: 50,
-                              }}
-                           />
-                           }
+                           {video && <ImageBackground source={{ uri: img }} style={{ width: 50, height: 50 }} imageStyle={{ borderRadius: 50 }} />}
                         </Marker>
                         {!maxDistance &&
                            <Circle center={pin} radius={distance} strokeColor={darkModeOn ? `${lightMode}` : "green"} strokeWidth={5} />}
@@ -186,7 +193,7 @@ const PostBeenzer = () => {
                      <View className="w-full items-center h-26">
                         <TextInput
                            textAlign='center'
-                           className={`text-${darkModeOn ? lightMode : darkMode} flex-1`}
+                           className={`text-${darkModeOn ? lightMode : darkMode} flex-1 h-12`}
                            style={styles.input}
                            blurOnSubmit={true}
                            multiline={true}
@@ -196,10 +203,10 @@ const PostBeenzer = () => {
                         />
                      </View>
                      <View className='mt-2 items-center'>
-                        <Text className='text-green-800 text-xl'>DISTANCE : {maxDistance ? 'GLOBALLY' : `~${distance / 1000} km`}</Text>
+                        <Text className='text-green-800 text-xl'>VISIBILITY : {maxDistance ? 'GLOBALLY' : `~${distance / 1000} km`}</Text>
                      </View>
                      <Slider
-                        className="mt-2 "
+                        className="mt-2"
                         minimumValue={1000}
                         maximumValue={3000000}
                         value={1000}
