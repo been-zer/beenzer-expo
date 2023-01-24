@@ -22,6 +22,7 @@ import Slider from '@react-native-community/slider'
 const PostBeenzer = () => {
 
    const [pic, setPic] = useAtom(atomPic)
+   const [dataPic, setDatapic] = useAtom(atomDataPic)
    const [pin, setPin] = useAtom(atomPin)
    const [userLocation, setUserLocation] = useAtom(atomUserLocation)
    const [pinCity, setPinCity] = useAtom(atomPinCity)
@@ -48,8 +49,7 @@ const PostBeenzer = () => {
    const [video, setVideo] = useAtom(atomVideo)
    const NFTsGlobal = "GLOBALLY"
    const [type, setType] = useState('')
-   const [videoBuffer, setVideoBuffer] = useState<Buffer | null>(null)
-   const [buffertoServer, setBufferToServer] = useState<Buffer>()
+   const [bufferToServer, setBufferToServer] = useState<Buffer | null>(null)
    const [gif, setGif] = useState<Buffer>()
    const [img, setImg] = useState<string>()
 
@@ -68,7 +68,7 @@ const PostBeenzer = () => {
       if (userLocation.coords) {
          setPin({ latitude: userLocation.coords.latitude, longitude: userLocation.coords.longitude })
       }
-   }, [userLocation, pic, video])
+   }, [userLocation, pic])
 
    useEffect(() => {
       if (pin.latitude && pin.longitude) {
@@ -81,15 +81,34 @@ const PostBeenzer = () => {
    }, [pin])
 
    useEffect(() => {
-      if (video) {
+      if (video && video.uri) {
+         console.log('1')
          setType('video/mp4')
-         setBufferToServer(videoBuffer as Buffer)
-         const getGif = async () => {
+      }
+   }, [video])
+
+   useEffect(() => {
+      if (video && video.uri) {
+         console.log('3')
+         const getGif = () => {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', video?.uri as string);
+            xhr.responseType = 'arraybuffer';
+            xhr.onreadystatechange = function () {
+               if (xhr.readyState === 4 && xhr.status === 200) {
+                  let buffer = new Uint8Array(xhr.response);
+                  setBufferToServer(buffer as Buffer)
+               }
+            };
+            xhr.send();
             try {
-               const res = await videoToGifSocket(SOCKET, videoBuffer as Buffer)
-               console.log('res socket', res)
-               setGif(res as Buffer)
-               setImg(arrayBufferToBase64(res))
+               if (bufferToServer) {
+                  console.log('4')
+                  videoToGifSocket(SOCKET, bufferToServer as Buffer)
+                  // setGif(res as Buffer)
+                  // console.log("hey", res.length)
+                  // setImg(arrayBufferToBase64(res as Buffer))
+               }
             }
             catch (e) {
                console.log(e)
@@ -98,47 +117,44 @@ const PostBeenzer = () => {
          getGif()
       }
       else {
-         setType('image/png')
-         setBufferToServer(Buffer.from(pic as string, 'base64'))
+         console.log('no video')
       }
-      img && console.log(img)
-   }, [video, pic, videoBuffer, pin])
-
+   }, [bufferToServer])
 
    useEffect(() => {
-      if (video) {
-         let xhr = new XMLHttpRequest()
-         xhr.open('GET', video?.uri as string)
-         xhr.responseType = 'arraybuffer'
-         xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-               let buffer = new Uint8Array(xhr.response)
-               setVideoBuffer(buffer as Buffer)
-            }
-         };
-         xhr.send();
+      if (pic) {
+         console.log('photo')
+         setType('image/png')
+         let img = Buffer.from(dataPic.base64 as any, "base64")
+         setBufferToServer(img)
       }
-   }, [video])
+   }, [pic])
 
    useEffect(() => {
       if (transacSuccess) {
-         socketMint(SOCKET,
-            buffertoServer as Buffer,
-            type,
-            profile[0].__pubkey__,
-            supply,
-            profile[0]._username_,
-            description,
-            pinCity,
-            pin.latitude,
-            pin.longitude,
-            `${maxDistance ? 0 : `${(distance / 1000)} km`}`,
-            maxLat,
-            minLat,
-            maxLong,
-            minLong,
-         )
-         setTransacSuccess(false)
+         try {
+            socketMint(SOCKET,
+               bufferToServer as Buffer,
+               type,
+               profile[0].__pubkey__,
+               supply,
+               profile[0]._username_,
+               description,
+               pinCity,
+               pin.latitude,
+               pin.longitude,
+               `${maxDistance ? 0 : `${(distance / 1000)} km`}`,
+               maxLat,
+               minLat,
+               maxLong,
+               minLong,
+               gif as Buffer || "",
+            )
+            setTransacSuccess(false)
+         }
+         catch (e) {
+            console.log('error in socketMint', e)
+         }
       }
    }, [transacSuccess])
 
@@ -160,7 +176,6 @@ const PostBeenzer = () => {
    }, [distance, pin])
 
    const createBeenzer = () => {
-      console.log(buffertoServer, 'buffertoServer')
       signAndSendTransaction(session, phantomWalletPublicKey, sharedSecret, dappKeyPair)
       setDescription('')
    }
@@ -169,7 +184,7 @@ const PostBeenzer = () => {
       <>
          <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}`} style={StyleSheet.absoluteFillObject}>
             {
-               userLocation.coords && pin && (pic || video) ? (
+               bufferToServer && userLocation.coords && pin && (pic || video) ? (
                   <ScrollView className="flex-1 ml-5 mr-5" showsVerticalScrollIndicator={false}>
                      <MapView style={{ height: 300 }} provider='google'
                         customMapStyle={darkModeOn ? mapStyle : mapStyleLight}

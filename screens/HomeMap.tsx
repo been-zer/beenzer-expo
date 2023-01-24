@@ -1,11 +1,12 @@
-import { View, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, ImageBackground, Modal, TouchableOpacity, Image, Text, SafeAreaView } from 'react-native'
 import MapView, { Marker } from 'react-native-maps';
 import { mapStyle, mapStyleLight } from '../services/globals/index';
 import { useAtom } from 'jotai';
 import { atomUserLocation } from '../services/globals';
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
 import { INFT } from '../Types';
-
+import { useState } from 'react';
+import FeedsItem from './FeedsItem';
 
 const HomeMap = ({ mapRef, feedItems }: { mapRef: any, feedItems: INFT[] }) => {
 
@@ -13,6 +14,24 @@ const HomeMap = ({ mapRef, feedItems }: { mapRef: any, feedItems: INFT[] }) => {
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
+   const [showItem, setShowItem] = useState(false)
+   const [item, setItem] = useState<INFT>({} as INFT)
+   const [modalVisible, setModalVisible] = useState(false)
+
+   if (showItem) {
+      return (
+         <>
+            <SafeAreaView className='flex-1'>
+               <FeedsItem feedItem={item} />
+            </SafeAreaView>
+         </>
+      )
+   }
+
+   const handlePress = (nft: any) => {
+      setShowItem(!showItem)
+      setItem(nft)
+   }
 
    return (
       <View className='flex-1'>
@@ -32,15 +51,15 @@ const HomeMap = ({ mapRef, feedItems }: { mapRef: any, feedItems: INFT[] }) => {
             >
                {feedItems && feedItems.map((nft, index) => {
                   return (
-                     <TouchableOpacity key={nft.__token__} onPress={() => console.log('hey')}>
-                        <Marker coordinate={{ latitude: nft._latitude, longitude: nft._longitude }} pinColor="green"
-                           key={index} title={nft._description}>
-                           <ImageBackground
-                              className='w-10 h-10'
-                              imageStyle={{ borderRadius: 50 }}
-                              source={{ uri: nft._asset }} />
-                        </Marker>
-                     </TouchableOpacity>)
+                     <Marker tappable={true} onPress={() => handlePress(nft)}
+                        coordinate={{ latitude: nft._latitude, longitude: nft._longitude }} pinColor="green"
+                        key={index} title={nft._description}>
+                        <ImageBackground
+                           className='w-10 h-10'
+                           imageStyle={{ borderRadius: 50 }}
+                           source={{ uri: nft._asset }} />
+                     </Marker>
+                  )
                })}
             </MapView>
          ) : (

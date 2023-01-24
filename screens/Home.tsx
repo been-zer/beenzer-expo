@@ -87,7 +87,6 @@ const Home = () => {
    const getInfoNft = async () => {
       try {
          const profileNFTs = await socketUserNFTs(SOCKET, phantomWalletPublicKey as string);
-         console.log(profileNFTs);
          setUserNFTs(profileNFTs.reverse());
       } catch (e) {
          console.error(e);

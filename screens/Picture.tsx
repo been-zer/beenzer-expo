@@ -20,7 +20,7 @@ export default function Picture() {
    const [camReady, setCamReady] = useState<boolean>(false);
    const navigation = useNavigation<NavigationProp<ParamListBase>>();
    const [clicked, setClicked] = useState<boolean>(true);
-   const [dataPic, setDatapic] = useAtom(atomDataPic)
+   const [dataPic, setDataPic] = useAtom(atomDataPic)
    const [flash, setFlash] = useState<FlashMode>(FlashMode.off);
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
@@ -84,7 +84,7 @@ export default function Picture() {
             skipProcessing: true,
          }
          );
-         setDatapic(data as CameraCapturedPicture)
+         setDataPic(data as CameraCapturedPicture)
          if (data.width > data.height && Platform.OS === 'ios') {
             Alert.alert('To use Landscape mode, please use lock orientation in your device settings');
             setPic('')
@@ -96,9 +96,10 @@ export default function Picture() {
                data.uri,
                [{ flip: ImageManipulator.FlipType.Horizontal }],
             );
+            flipped.base64 = data.base64
+            setDataPic(flipped as CameraCapturedPicture)
             setPic(flipped.uri);
          } else {
-            console.log('data', data)
             setPic(data.uri);
          }
       }

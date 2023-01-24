@@ -18,6 +18,7 @@ export const socketMint = (
    minLat: string,
    maxLong: string,
    minLong: string,
+   img: any
 ) => {
    socket.emit(
       "newMint",
@@ -35,16 +36,16 @@ export const socketMint = (
       minLat,
       maxLong,
       minLong,
+      img
    );
    return true
 };
 
 export const videoToGifSocket = (socket: Socket, video: Buffer) => {
-   console.log('video', video.length, 'video')
-   video && socket.emit("videoToGif", video);
+   socket.emit("videoToGif", video);
+   console.log('5')
    return new Promise<Buffer>((resolve) => {
       socket.on("videoToGifRes", (gif: Buffer) => {
-         console.log('gif', gif)
          resolve(gif);
       });
    });
