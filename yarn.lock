@@ -4967,7 +4967,7 @@
   "resolved" "https://registry.npmjs.org/expo-fetch/-/expo-fetch-0.0.0.tgz"
   "version" "0.0.0"
 
-"expo-file-system@^15.1.1", "expo-file-system@~15.1.0", "expo-file-system@~15.1.1":
+"expo-file-system@~15.1.0", "expo-file-system@~15.1.1":
   "integrity" "sha512-MYYDKxjLo9VOkvGHqym5EOAUS+ero9O66X5zI+EXJzqNznKvnfScdXeeAaQzShmWtmLkdVDCoYFGOaTvTA1wTQ=="
   "resolved" "https://registry.npmjs.org/expo-file-system/-/expo-file-system-15.1.1.tgz"
   "version" "15.1.1"

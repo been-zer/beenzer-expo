@@ -2,13 +2,15 @@ import { Camera, CameraCapturedPicture, CameraType, FlashMode } from 'expo-camer
 import { useState, useRef, useEffect } from 'react';
 import { Button, Dimensions, Text, TouchableOpacity, View, ImageBackground, Image, ScrollView, SafeAreaView, Platform, Alert } from 'react-native';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { atomPic, atomDataPic, atomVideo } from '../services/globals';
+import { atomPic, atomDataPic, atomVideo, atomVideoBuffer } from '../services/globals';
 import { useAtom } from 'jotai';
 import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 import { } from 'react-native-paper'
 import { BoltIcon, BoltSlashIcon, ArrowPathRoundedSquareIcon } from "react-native-heroicons/solid";
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
 import { Video } from 'expo-av';
+import * as FileSystem from 'expo-file-system';
+
 
 export default function Picture() {
 
@@ -27,6 +29,11 @@ export default function Picture() {
    const [lightMode, setLightMode] = useAtom(atomLightMode);
    const [isRecording, setIsRecording] = useState<boolean>(false);
    const [video, setVideo] = useAtom(atomVideo);
+   const [videoBuffer, setVideoBuffer] = useAtom(atomVideoBuffer);
+
+   useEffect(() => {
+      console.log('videoBufferLength', videoBuffer?.length);
+   }, [videoBuffer])
 
    if (!permission) {
       // Camera permissions are still loading
@@ -65,8 +72,21 @@ export default function Picture() {
       }
       if (camReady && cameraRef.current) {
          cameraRef.current.recordAsync(options).then(recordVideo => {
-            setVideo(recordVideo), console.log('recordVideo', recordVideo);
-         });
+            setVideo(recordVideo)
+            console.log('recordVideo', recordVideo);
+            const getMP4 = async () => {
+               try {
+                  const videoBase64 = await FileSystem.readAsStringAsync(recordVideo.uri, { encoding: FileSystem.EncodingType.Base64 })
+                  const tempVideoBuffer = Buffer.from(videoBase64, 'base64')
+                  setVideoBuffer(tempVideoBuffer)
+               }
+               catch (e) {
+                  console.log('e', e);
+               }
+            }
+            getMP4()
+         }
+         );
       }
    }
 
@@ -127,7 +147,7 @@ export default function Picture() {
             <View className='flex-1 justify-end mb-20 z-1'>
                <View className='flex-row self-center'>
                   <TouchableOpacity className="mr-1 w-1/3 border-4 border-red-600  p-4 rounded-2xl" onPress={() => (
-                     setVideo(null), setClicked(true)
+                     setClicked(true), setVideo(null), setVideoBuffer(null)
                   )} >
                      <Text className="font-semibold text-2xl text-red-600 text-center" >Cancel</Text>
                   </TouchableOpacity>

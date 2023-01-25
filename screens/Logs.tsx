@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, SafeAreaView, ActivityIndicator, Linking, TouchableOpacity, Vibration, Platform } from 'react-native'
 import { useState } from 'react'
 import { atomSOCKET } from '../services/socket';
-import { atomMintLogs, atomMintingOver, atomPic, atomVideo } from '../services/globals';
+import { atomMintLogs, atomMintingOver, atomPic, atomVideo, atomVideoBuffer } from '../services/globals';
 import { useAtom } from 'jotai'
 import OpenURLButton from '../components/OpenURLButton'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
@@ -17,6 +17,7 @@ const Logs = () => {
    const [darkMode, setDarkMode] = useAtom(atomDarkMode)
    const [lightMode, setLightMode] = useAtom(atomLightMode)
    const [video, setVideo] = useAtom(atomVideo)
+   const [videoBuffer, setVideoBuffer] = useAtom(atomVideoBuffer)
 
    SOCKET.on('mintLogs', (data: string) => {
       setMintingOver(false);
@@ -27,10 +28,11 @@ const Logs = () => {
       }
       else if (data != 'true') {
          setPic('')
+         setVideoBuffer(null)
          setVideo(null)
          setMintLogs([...mintLogs, data])
          console.log(mintLogs)
-      } else {
+      } else if (data == 'true') {
          console.log('minting over', data)
          setMintingOver(true);
          Vibration.vibrate(1000);

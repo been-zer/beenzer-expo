@@ -105,4 +105,3 @@ export interface IMessage {
 export interface IVideo {
    uri: string
 }
-

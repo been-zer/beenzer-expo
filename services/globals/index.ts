@@ -34,6 +34,7 @@ export const atomFriendsChanged = atom<boolean>(false);
 export const atomDescription = atom<string>("");
 export const atomFeedItems = atom<INFT[]>([]);
 export const atomVideo = atom<IVideo | null>(null);
+export const atomVideoBuffer = atom<Buffer | null | string>(null)
 
 export const mapStyleLight = [
    {
