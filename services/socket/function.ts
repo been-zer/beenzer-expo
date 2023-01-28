@@ -8,6 +8,7 @@ export const socketMint = (
    type: string,
    creator: string,
    supply: number = 1,
+   floor: number = 1,
    username: string,
    description: string,
    city: string,
@@ -21,11 +22,12 @@ export const socketMint = (
 ) => {
    console.log('socketMint', buffer.length, type, creator, supply, username, description, city, latitude, longitude, distance, maxLat, minLat, maxLong, minLong)
    socket.emit(
-      "newMint",
+      "mintNFT",
       buffer,
       type,
       creator,
       supply,
+      floor,
       username,
       description,
       city,

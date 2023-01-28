@@ -99,6 +99,7 @@ const PostBeenzer = () => {
             type,
             profile[0].__pubkey__,
             supply,
+            1,
             profile[0]._username_,
             description,
             pinCity,

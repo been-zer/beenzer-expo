@@ -24,7 +24,6 @@ const ProfileCollection = ({ setShowDetails, showDetails, dataNFT, setSelectedTa
       setNFTselected(item);
       setSelectedTab('')
    }
-   console.log(dataNFT)
 
    return (
       <>
