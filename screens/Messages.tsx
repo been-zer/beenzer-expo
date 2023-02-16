@@ -39,14 +39,14 @@ const Messages = () => {
          const res = await socketGetFriends(SOCKET, pubkey)
          setUserFriends(res)
       }
-      getFriends(profile[0].__pubkey__)
+      getFriends(profile.__pubkey__)
    }, [friendsChanged])
 
    useEffect(() => {
       const searchFriends = async (search: string) => {
          const res = await socketSeachFriends(SOCKET, search)
          //eliminitate the user from the search results
-         const filtered = res.filter((user: IProfile) => user.__pubkey__ !== profile[0].__pubkey__)
+         const filtered = res.filter((user: IProfile) => user.__pubkey__ !== profile.__pubkey__)
          setUsersFound(filtered)
       }
       searchFriends(searchQuery)

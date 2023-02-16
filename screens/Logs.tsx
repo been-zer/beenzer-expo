@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, SafeAreaView, ActivityIndicator, Linking, TouchableOpacity, Vibration, Platform } from 'react-native'
 import { useState } from 'react'
 import { atomSOCKET } from '../services/socket';
-import { atomMintLogs, atomMintingOver, atomPic, atomVideo, atomVideoBuffer } from '../services/globals';
+import { atomMintLogs, atomMintingOver, atomPic, atomVideo, atomVideoBuffer, atomDescription } from '../services/globals';
 import { useAtom } from 'jotai'
 import OpenURLButton from '../components/OpenURLButton'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
@@ -18,28 +18,27 @@ const Logs = () => {
    const [lightMode, setLightMode] = useAtom(atomLightMode)
    const [video, setVideo] = useAtom(atomVideo)
    const [videoBuffer, setVideoBuffer] = useAtom(atomVideoBuffer)
+   const [description, setDescription] = useAtom(atomDescription)
 
    SOCKET.on('mintLogs', (data: string) => {
       setMintingOver(false);
-      if (data == 'false') {
-         setMintLogs([...mintLogs, 'Minting failed, something went wrong. Please try again.'])
+      if (data === 'false') {
+         setMintLogs(prev => [...prev, 'Minting failed, something went wrong. Please try again.'])
          setMintingOver(true);
-         console.log(mintLogs)
       }
-      else if (data != 'true') {
+      else if (data !== 'true') {
          setPic('')
+         setDescription('')
          setVideoBuffer(null)
          setVideo(null)
-         setMintLogs([...mintLogs, data])
-         console.log(mintLogs)
-      } else if (data == 'true') {
-         console.log('minting over', data)
+         setMintLogs((prev) => [...prev, data])
+      } else if (data === 'true') {
          setMintingOver(true);
          Vibration.vibrate(1000);
-         setMintLogs([...mintLogs, 'Minting complete. Go to your profile or to phantom to view your NFT'])
+         setMintLogs(prev => [...prev, 'Minting complete. Go to your profile or to phantom to view your NFT'])
          // setMintLogs([]);
-
       }
+      console.log(data)
    })
 
    return (

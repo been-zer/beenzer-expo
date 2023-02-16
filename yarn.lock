@@ -9427,6 +9427,19 @@
   "resolved" "https://registry.npmjs.org/react-native-heroicons/-/react-native-heroicons-3.2.0.tgz"
   "version" "3.2.0"
 
+"react-native-iphone-x-helper@^1.0.3":
+  "integrity" "sha512-HOf0jzRnq2/aFUcdCJ9w9JGzN3gdEg0zFE4FyYlp4jtidqU03D5X7ZegGKfT1EWteR0gPBGp9ye5T5FvSWi9Yg=="
+  "resolved" "https://registry.npmjs.org/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz"
+  "version" "1.3.1"
+
+"react-native-keyboard-aware-scroll-view@^0.9.5":
+  "integrity" "sha512-XwfRn+T/qBH9WjTWIBiJD2hPWg0yJvtaEw6RtPCa5/PYHabzBaWxYBOl0usXN/368BL1XktnZPh8C2lmTpOREA=="
+  "resolved" "https://registry.npmjs.org/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.9.5.tgz"
+  "version" "0.9.5"
+  dependencies:
+    "prop-types" "^15.6.2"
+    "react-native-iphone-x-helper" "^1.0.3"
+
 "react-native-maps@^1.3.2":
   "integrity" "sha512-NB7HGRZOgxxXCWzrhIVucx/bsrEWANvk3DLci1ov4P9MQnEVQYQCCkTxsnaEvO191GeBOCRDyYn6jckqbfMtmg=="
   "resolved" "https://registry.npmjs.org/react-native-maps/-/react-native-maps-1.3.2.tgz"
@@ -9505,7 +9518,7 @@
     "postcss-value-parser" "^4.2.0"
     "styleq" "^0.1.2"
 
-"react-native@*", "react-native@>= 0.64.3", "react-native@>=0.56", "react-native@>=0.57", "react-native@>=0.59", "react-native@0.70.5":
+"react-native@*", "react-native@>= 0.64.3", "react-native@>=0.42.0", "react-native@>=0.48.4", "react-native@>=0.56", "react-native@>=0.57", "react-native@>=0.59", "react-native@0.70.5":
   "integrity" "sha512-5NZM80LC3L+TIgQX/09yiyy48S73wMgpIgN5cCv3XTMR394+KpDI3rBZGH4aIgWWuwijz31YYVF5504+9n2Zfw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.70.5.tgz"
   "version" "0.70.5"

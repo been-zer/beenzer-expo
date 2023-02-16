@@ -19,7 +19,6 @@ import { atomSOCKET } from '../services/socket'
 import Properties from '../components/Properties'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode'
 import Slider from '@react-native-community/slider'
-import fs from 'fs'
 
 const PostBeenzer = () => {
 
@@ -66,11 +65,14 @@ const PostBeenzer = () => {
    }, [navigation])
 
    useEffect(() => {
+      setSupply(1)
       if (video) {
-         setType('video/mov')
+         setType('video/mp4')
+         console.log('video : ', video)
       }
-      else {
+      if (pic) {
          setType('image/png')
+         console.log('pic : ', pic)
       }
    }, [video, pic])
 
@@ -95,12 +97,12 @@ const PostBeenzer = () => {
    useEffect(() => {
       if (transacSuccess) {
          socketMint(SOCKET,
-            videoBuffer as Buffer,
+            type === 'video/mp4' ? videoBuffer as Buffer : type === 'image/png' ? Buffer.from(dataPic.base64 as string, "base64") : Buffer.from("", "base64"),
             type,
-            profile[0].__pubkey__,
+            profile.__pubkey__,
             supply,
-            1,
-            profile[0]._username_,
+            0.1,
+            profile._username_,
             description,
             pinCity,
             pin.latitude,
@@ -134,7 +136,6 @@ const PostBeenzer = () => {
 
    const createBeenzer = () => {
       signAndSendTransaction(session, phantomWalletPublicKey, sharedSecret, dappKeyPair)
-      setDescription('')
       console.log('clicked')
       // videoToGifSocket(SOCKET, videoBuffer as Buffer)
    }
@@ -143,7 +144,7 @@ const PostBeenzer = () => {
       <>
          <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`}`} style={StyleSheet.absoluteFillObject} >
             {
-               videoBuffer && userLocation.coords && pin && (pic || video) ? (
+               userLocation.coords && pin && pinCity && (pic || videoBuffer) ? (
                   <ScrollView className="flex-1 ml-5 mr-5" showsVerticalScrollIndicator={false}>
                      <MapView style={{ height: 300 }} provider='google'
                         customMapStyle={darkModeOn ? mapStyle : mapStyleLight}
@@ -154,22 +155,28 @@ const PostBeenzer = () => {
                            longitudeDelta: 0.05,
                         }}
 
+                        region={pin && {
+                           latitude: pin.latitude,
+                           longitude: pin.longitude,
+                           latitudeDelta: (distance / 35000),
+                           longitudeDelta: (distance / 35000)
+                        }}
                      >
                         <Marker coordinate={pin} draggable={true} onDragEnd={(e) => setPin(e.nativeEvent.coordinate)}>
                            {description && <Text className={`${darkModeOn ? `bg-${lightMode}` : `bg-black`} p-2 `}>{description}</Text>}
-                           {pic && <ImageBackground source={{ uri: pic }} style={{ width: 50, height: 50 }} imageStyle={{ borderRadius: 50 }} />}
-                           {video && <Video
-                              source={{ uri: video.uri }}
-                              isMuted={true}
-                              shouldPlay
-                              isLooping
-                              style={{
-                                 width: 50,
-                                 height: 50,
-                                 borderRadius: 50,
-                              }}
-                           />
-                           }
+                           {pic ? <ImageBackground source={{ uri: pic }} style={{ width: 50, height: 50 }} imageStyle={{ borderRadius: 50 }} /> :
+                              video ? <Video
+                                 source={{ uri: video.uri }}
+                                 isMuted={true}
+                                 shouldPlay
+                                 isLooping
+                                 style={{
+                                    width: 50,
+                                    height: 50,
+                                    borderRadius: 50,
+                                 }}
+                              />
+                                 : null}
                         </Marker>
                         {!maxDistance &&
                            <Circle center={pin} radius={distance} strokeColor={darkModeOn ? `${lightMode}` : "green"} strokeWidth={5} />}
@@ -177,7 +184,7 @@ const PostBeenzer = () => {
                      <View className='mt-2 items-center'>
                         <Text className='text-green-800 text-xl'>DESCRIPTION</Text>
                      </View>
-                     <View className="w-full items-center h-26">
+                     <View className="w-full items-center" style={{ height: 100 }}>
                         <TextInput
                            textAlign='center'
                            className={`text-${darkModeOn ? lightMode : darkMode} flex-1`}
@@ -206,7 +213,7 @@ const PostBeenzer = () => {
                         }
                      />
                      <View className='mt-2 items-center'>
-                        <Text className='text-green-800 text-xl'>SUPPLY : {supply}</Text>
+                        <Text className='text-green-800 text-xl'>SUPPLY : {supply} (beta)</Text>
                      </View>
                      <Slider
                         className="mt-2"
@@ -229,8 +236,8 @@ const PostBeenzer = () => {
                         <Properties props={pin.latitude} propsTitle={'LATITUDE'} />
                         <Properties props={pin.longitude} propsTitle={'LONGITUDE'} />
                         <Properties props={pinCity} propsTitle={'CITY'} />
-                        <Properties props={profile[0]._username_} propsTitle={'USERNAME'} />
-                        <Properties props={profile[0].__pubkey__} propsTitle={'CREATOR'} />
+                        <Properties props={profile._username_} propsTitle={'USERNAME'} />
+                        <Properties props={profile.__pubkey__} propsTitle={'CREATOR'} />
                         <Properties props={`${maxDistance ? NFTsGlobal : `${(distance / 1000)} km`}`} propsTitle={'VISIBILITY'} />
                         <Properties props={minLat} propsTitle={'MIN LAT'} />
                         <Properties props={maxLat} propsTitle={'MAX LAT'} />

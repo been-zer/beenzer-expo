@@ -7,7 +7,7 @@ import ProfileBio from '../components/Profile.components/ProfileBio'
 import ProfileTab from '../components/Profile.components/ProfileTab'
 import ProfileCollection from '../components/Profile.components/ProfileCollection'
 import ProfileMap from '../components/Profile.components/ProfileMap'
-import { INFT, IProfile } from '../Types'
+import { INFT, IProfile, UserNFT } from '../Types'
 import Footer from './Footer'
 import Friends from '../components/Friends'
 import { atomActiveScreen, atomRefreshing } from '../services/globals'
@@ -23,11 +23,12 @@ const ProfileFriends = ({ friendPubkey }: { friendPubkey: IProfile }) => {
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
    const [refreshing, setRefreshing] = useAtom(atomRefreshing);
-   const [friendsNFTs, setFriendsNFTs] = useState<INFT[]>([]);
+   const [friendsNFTs, setFriendsNFTs] = useState<UserNFT[]>([]);
    const [SOCKET] = useAtom(atomSOCKET);
    const isFocused = useIsFocused();
    const [active, setActive] = useAtom(atomActiveScreen)
-   const [selectedTab, setSelectedTab] = useState<string>('Collection')
+   const [selectedTab, setSelectedTab] = useState<string>('')
+   const [onProfile, setOnProfile] = useState<boolean>(true)
 
 
 
@@ -83,14 +84,14 @@ const ProfileFriends = ({ friendPubkey }: { friendPubkey: IProfile }) => {
             <View className='flex flex-col'>
                {showProfileTab === 'Collection' && (
                   <>
-                     <ProfileCollection setShowDetails={setShowDetails} showDetails={showDetails} dataNFT={friendsNFTs} />
+                     <ProfileCollection setShowDetails={setShowDetails} showDetails={showDetails} dataNFT={friendsNFTs} setSelectedTab={setSelectedTab} />
                   </>
                )}
                {showProfileTab === 'ProfileMap' && (
-                  <ProfileMap uniqueNFTs={null} dataNFT={friendsNFTs} />
+                  <ProfileMap uniqueNFTs={null} dataNFT={friendsNFTs} viewMap={undefined} />
                )}
                {showProfileTab === 'Friends' && (
-                  <Friends dataPubkey={friendPubkey.__pubkey__} showSearch={false} />
+                  <Friends dataPubkey={friendPubkey.__pubkey__} showSearch={false} onProfile={onProfile} />
                )}
             </View>
          </ScrollView>

@@ -4,14 +4,21 @@ import MapView, { Marker, Callout } from 'react-native-maps'
 import { mapStyle, mapStyleLight } from '../../services/globals'
 import { atomUserLocation, atomUserNFTs } from '../../services/globals'
 import { useAtom } from 'jotai'
-import { INFT } from '../../Types'
+import { INFT, UserNFT } from '../../Types'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../../services/globals/darkmode'
 
-const ProfileMap = ({ uniqueNFTs, dataNFT, viewMap }: { uniqueNFTs: INFT | null, dataNFT: INFT[] | null, viewMap: number | undefined }) => {
+const ProfileMap = ({ uniqueNFTs, dataNFT, viewMap }: { uniqueNFTs: UserNFT | null | INFT, dataNFT: UserNFT[] | null | INFT[], viewMap: number | undefined }) => {
    const [userLocation, setUserLocation] = useAtom(atomUserLocation);
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
+
+   function isINFT(nft: INFT | UserNFT): nft is INFT {
+      return '_latitude' in nft;
+   }
+
+   console.log('uniqueNFTs', uniqueNFTs)
+   console.log('dataNFT', uniqueNFTs && isINFT(uniqueNFTs))
 
    return (
       <View className='items-center'>
@@ -30,12 +37,23 @@ const ProfileMap = ({ uniqueNFTs, dataNFT, viewMap }: { uniqueNFTs: INFT | null,
                }}>
                <>
                   {dataNFT && dataNFT.map((nft, index) => {
-                     return <Marker coordinate={{ latitude: nft._latitude, longitude: nft._longitude }} pinColor="green"
-                        key={index} title={nft._description}>
+                     const NFT = isINFT(nft) ? {
+                        lat: nft._latitude,
+                        lon: nft._longitude,
+                        description: nft._description,
+                        asset: nft._image
+                     } : {
+                        lat: nft.lat,
+                        lon: nft.lon,
+                        description: nft.description,
+                        asset: nft.image_uri
+                     }
+                     return <Marker coordinate={{ latitude: NFT.lat, longitude: NFT.lon }} pinColor="green"
+                        key={index} title={NFT.description}>
                         <ImageBackground
                            className='w-10 h-10'
                            imageStyle={{ borderRadius: 50 }}
-                           source={{ uri: nft._asset }} />
+                           source={{ uri: NFT.asset }} />
                      </Marker>
                   })}
                </>
@@ -49,23 +67,27 @@ const ProfileMap = ({ uniqueNFTs, dataNFT, viewMap }: { uniqueNFTs: INFT | null,
                showsUserLocation={true}
                provider="google"
                initialRegion={{
-                  latitude: uniqueNFTs._latitude as number,
-                  longitude: uniqueNFTs._longitude as number,
+                  latitude: isINFT(uniqueNFTs) ? uniqueNFTs._latitude as number : uniqueNFTs.lat as number,
+                  longitude: isINFT(uniqueNFTs) ? uniqueNFTs._longitude as number : uniqueNFTs.lon as number,
                   latitudeDelta: viewMap || 0.05,
                   longitudeDelta: viewMap || 0.05,
 
                }}>
                <>
-                  <Marker coordinate={{ latitude: uniqueNFTs._latitude, longitude: uniqueNFTs._longitude }} pinColor="green"
-                     title={uniqueNFTs._description}>
+                  <Marker coordinate={{
+                     latitude: isINFT(uniqueNFTs) ? uniqueNFTs._latitude as number : uniqueNFTs.lat as number,
+                     longitude: isINFT(uniqueNFTs) ? uniqueNFTs._longitude as number : uniqueNFTs.lon as number,
+                  }} pinColor="green"
+                     title={isINFT(uniqueNFTs) ? uniqueNFTs._description : uniqueNFTs.description}>
                      <ImageBackground
                         className='w-10 h-10'
                         imageStyle={{ borderRadius: 50 }}
-                        source={{ uri: uniqueNFTs._asset }} />
+                        source={{ uri: isINFT(uniqueNFTs) ? uniqueNFTs._image : uniqueNFTs.image_uri }} />
                   </Marker>
                </>
-            </MapView>) : (uniqueNFTs && <ActivityIndicator className="mt-5" size="large" color="green" />)}
-      </View>
+            </MapView>) : (uniqueNFTs && <ActivityIndicator className="mt-5" size="large" color="green" />)
+         }
+      </View >
    )
 }
 

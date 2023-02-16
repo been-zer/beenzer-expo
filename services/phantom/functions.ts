@@ -46,7 +46,7 @@ export const createTransferTransaction = async (pubkey: any) => {
       SystemProgram.transfer({
          fromPubkey: pubkey,
          toPubkey: new PublicKey('BctLWb6Q9viYjeJ2gNCr4xkRHc91NyikRR1TWn1qGGYr'),
-         lamports: Number(REACT_APP_MINT_COST) * 1000000000, // 10000000 lamports = 0.01 SOL
+         lamports: 0 //Number(REACT_APP_MINT_COST) * 1000000000, // 10000000 lamports = 0.01 SOL
       })
    );
    transaction.feePayer = pubkey;

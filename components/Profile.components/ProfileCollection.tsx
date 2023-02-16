@@ -3,27 +3,30 @@ import { Video } from 'expo-av';
 import { useEffect, useState } from 'react'
 import { useAtom } from 'jotai'
 import { atomUserNFTs, atomProfile } from '../../services/globals'
-import { INFT } from '../../Types'
+import { INFT, UserNFT } from '../../Types'
 import Properties from '../Properties'
 import ProfileMap from './ProfileMap'
 import { ActivityIndicator } from 'react-native-paper'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../../services/globals/darkmode'
+import { Item } from 'react-native-paper/lib/typescript/components/Drawer/Drawer';
 
 const ProfileCollection = ({ setShowDetails, showDetails, dataNFT, setSelectedTab }: {
    showDetails: boolean, setShowDetails: any,
-   dataNFT: INFT[], setSelectedTab: any
+   dataNFT: UserNFT[], setSelectedTab: any
 }) => {
    const [profile, setProfile] = useAtom(atomProfile);
-   const [NFTselected, setNFTselected] = useState<INFT | null>(null);
+   const [NFTselected, setNFTselected] = useState<UserNFT>({} as UserNFT);
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
 
-   const handleShowDetails = (item: INFT) => {
+   const handleShowDetails = (item: UserNFT) => {
       setShowDetails(true);
       setNFTselected(item);
       setSelectedTab('')
    }
+
+   console.log('dataNFT: ', dataNFT)
 
    return (
       <>
@@ -34,38 +37,28 @@ const ProfileCollection = ({ setShowDetails, showDetails, dataNFT, setSelectedTa
                   data={dataNFT}
                   numColumns={2}
                   renderItem={({ item }) => {
-                     const borderColor = item._creator === profile[0].__pubkey__ ? 'black' : 'green';
+                     const borderColor = item.creator === profile.__pubkey__ ? 'black' : 'green';
                      return (
                         <>
                            <TouchableOpacity onPress={() => handleShowDetails(item)} >
                               <View className="flex flex-col items-center">
-                                 <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} font-bold`}>BEENZER #{item._id_}</Text>
-                                 {item._asset && item._type == 'image/png' ?
+                                 <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} font-bold`}>{item.name}</Text>
+                                 {item.image_uri ?
                                     <Image
-                                       source={{ uri: item._asset }}
+                                       source={{ uri: item.image_uri }}
                                        style={{ width: 150, height: 150, marginRight: 10, marginLeft: 10, borderWidth: 1, borderColor, borderRadius: 10, marginBottom: 10 }}
-                                    /> : item._type == 'video' ?
-                                       <Video
-                                          source={{ uri: `${item._asset}` }}
-                                          isMuted={true}
-                                          shouldPlay
-                                          isLooping
-                                          style={{
-                                             width: 500,
-                                             height: 500,
-                                          }}
-                                       />
-                                       : <ActivityIndicator
-                                          className="self-center m-10"
-                                          size="large"
-                                          color="green"
-                                       />}
+                                    />
+                                    : <ActivityIndicator
+                                       className="self-center m-10"
+                                       size="large"
+                                       color="green"
+                                    />}
                               </View>
                            </TouchableOpacity>
                         </>
                      );
                   }}
-                  keyExtractor={(item) => item.__token__}
+                  keyExtractor={(item) => item.image_uri}
                />
             </View>
          }
@@ -77,30 +70,33 @@ const ProfileCollection = ({ setShowDetails, showDetails, dataNFT, setSelectedTa
             <>
                <View className="flex justify-center align-center ">
                   <Text className='text-2xl font-bold text-white text-center'>
-                     Beenzer #{NFTselected?._id_}
+                     {NFTselected?.name}
                   </Text>
                   <View className="flex justify-center items-center mr-2 ml-2 ">
-                     <Image
-                        style={{ height: 500, width: 500, resizeMode: 'center' }}
-                        className="shadow-md shadow-white rounded-2xl items-center "
-                        source={{ uri: NFTselected?._asset }} />
+                     {NFTselected?.asset_uri ? (
+                        <Video source={{ uri: NFTselected.asset_uri }} isMuted={true} shouldPlay isLooping
+                           className="shadow-md shadow-white rounded-2xl items-center w-full h-96" />) : (
+                        <Image
+                           style={{ height: 500, width: 500, resizeMode: 'center' }}
+                           className="shadow-md shadow-white rounded-2xl items-center "
+                           source={{ uri: NFTselected?.image_uri }} />)}
                   </View>
                </View>
                <View className='mt-2 items-center '>
                   <Text className='text-green-800 text-xl '>PROPERTIES</Text>
                </View>
                <View className='flex-col mt-2 justify-center'>
-                  <Properties props={NFTselected?._description} propsTitle={'DESCRIPTION'} />
-                  <Properties props={NFTselected?._latitude} propsTitle={'LATITUDE'} />
-                  <Properties props={NFTselected?._longitude} propsTitle={'LONGITUDE'} />
-                  <Properties props={NFTselected?._city} propsTitle={'CITY'} />
-                  <Properties props={NFTselected?._username} propsTitle={'USERNAME'} />
-                  <Properties props={NFTselected?._creator} propsTitle={'CREATOR'} />
-                  <Properties props={NFTselected?._distance} propsTitle={'VISIBILITY'} />
-                  <Properties props={NFTselected?._minlat} propsTitle={'MIN LAT'} />
-                  <Properties props={NFTselected?._maxlat} propsTitle={'MAX LAT'} />
-                  <Properties props={NFTselected?._minlon} propsTitle={'MIN LON'} />
-                  <Properties props={NFTselected?._maxlon} propsTitle={'MAX LON'} />
+                  <Properties props={NFTselected?.description} propsTitle={'DESCRIPTION'} />
+                  <Properties props={NFTselected?.lat} propsTitle={'LATITUDE'} />
+                  <Properties props={NFTselected?.lon} propsTitle={'LONGITUDE'} />
+                  <Properties props={NFTselected?.city} propsTitle={'CITY'} />
+                  <Properties props={NFTselected?.username} propsTitle={'USERNAME'} />
+                  <Properties props={NFTselected?.creator} propsTitle={'CREATOR'} />
+                  <Properties props={NFTselected?.visibility} propsTitle={'VISIBILITY'} />
+                  <Properties props={NFTselected?.minlat} propsTitle={'MIN LAT'} />
+                  <Properties props={NFTselected?.maxlat} propsTitle={'MAX LAT'} />
+                  <Properties props={NFTselected?.minlon} propsTitle={'MIN LON'} />
+                  <Properties props={NFTselected?.maxlon} propsTitle={'MAX LON'} />
                </View>
                <ProfileMap uniqueNFTs={NFTselected} dataNFT={null} viewMap={undefined} />
             </>

@@ -4,9 +4,9 @@ import Footer from './Footer';
 import HomeMap from './HomeMap';
 import { ActivityIndicator } from 'react-native-paper';
 import { ArrowPathIcon } from 'react-native-heroicons/outline'
-import { atomUserNFTs, atomProfile } from '../services/globals';
+import { atomUserNFTs, atomProfile, atomFriendsNFT, atomModalVisible } from '../services/globals';
 import { useAtom } from 'jotai';
-import { socketUserNFTs, socketUserInfo, socketGetMapNFTs } from "../services/socket/function";
+import { socketUserNFTs, socketUserInfo, socketGetMapNFTs, socketGetFriendsFeed } from "../services/socket/function";
 import { atomUserLocation, atomRefreshLoc, atomFeedItems } from '../services/globals/index';
 import { atomSOCKET } from '../services/socket';
 import Feed from './Feed';
@@ -37,10 +37,16 @@ const Home = () => {
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [feedItems, setFeedItems] = useAtom(atomFeedItems)
    const [hideMenu, setHideMenu] = useState(true);
+   const [friendsNFT, setFriendsNFT] = useAtom(atomFriendsNFT)
+   const [hideShowMenu, setHideShowMenu] = useAtom(atomModalVisible)
+   const [showItem, setShowItem] = useState(false)
+
 
    useEffect(() => {
       if (isFocused) {
          setActive('Home')
+         fetchData();
+         getInfoUser();
       }
    }, [isFocused]);
 
@@ -48,6 +54,7 @@ const Home = () => {
       fetchData();
       getInfoUser();
       getInfoNft();
+
    }, []);
 
 
@@ -64,6 +71,7 @@ const Home = () => {
          });
       };
       getNFTmap(getLoc?.coords.latitude, getLoc?.coords.longitude);
+      getFriendsNFT(phantomWalletPublicKey.toString(), getLoc?.coords.latitude, getLoc?.coords.longitude);
    };
 
    const getNFTmap = async (latitude: number, longitude: number) => {
@@ -77,7 +85,7 @@ const Home = () => {
 
    const getInfoUser = async () => {
       try {
-         const receivedInfos = await socketUserInfo(SOCKET);
+         const receivedInfos = await socketUserInfo(SOCKET, phantomWalletPublicKey.toString());
          setProfile(receivedInfos);
       } catch (e) {
          console.error(e);
@@ -86,8 +94,18 @@ const Home = () => {
 
    const getInfoNft = async () => {
       try {
-         const profileNFTs = await socketUserNFTs(SOCKET, phantomWalletPublicKey as string);
+         const profileNFTs = await socketUserNFTs(SOCKET, phantomWalletPublicKey.toString());
          setUserNFTs(profileNFTs.reverse());
+      } catch (e) {
+         console.error(e);
+      }
+   }
+
+   const getFriendsNFT = async (pubkey: string, latitude: number, longitude: number) => {
+      try {
+         console.log('getFriendsNFT', pubkey, latitude, longitude)
+         const friendsNFTsRes = await socketGetFriendsFeed(SOCKET, pubkey, latitude, longitude);
+         setFriendsNFT(friendsNFTsRes)
       } catch (e) {
          console.error(e);
       }
@@ -96,7 +114,7 @@ const Home = () => {
    return (
       <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`} h-full flex-1 `} style={StyleSheet.absoluteFillObject} >
          {/* {title} */}
-         {hideMenu &&
+         {hideMenu && !hideShowMenu &&
             <>
                < View className='flex-row justify-around' >
                   <TouchableOpacity className='justify-center items-center' onPress={() => navigation.navigate('Notifications')}>
@@ -115,24 +133,23 @@ const Home = () => {
                   }
                </TouchableOpacity>
                <View className='flex-row justify-around items-center'>
-                  <DisplayButton title="Map" display={display} setDisplay={setDisplay} />
-                  <DisplayButton title="Feeds" display={display} setDisplay={setDisplay} />
+                  <DisplayButton title="Map" display={display} setDisplay={setDisplay} setShowItem={setShowItem} />
+                  <DisplayButton title="Public feed" display={display} setDisplay={setDisplay} setShowItem={undefined} />
                </View>
             </>}
          <TouchableOpacity onPress={() => setHideMenu(!hideMenu)}>
             <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`} self-center mb-2`}>
-               {hideMenu ? 'Hide menu' : 'Show menu'}
+               {hideShowMenu ? "" : hideMenu ? 'Hide menu' : 'Show menu'}
             </Text>
          </TouchableOpacity>
          {
-            display === 'Feeds' &&
+            display === 'Public feed' &&
             <Feed feedItems={feedItems} setHideMenu={setHideMenu} />
          }
          {
             display === 'Map' &&
-            <HomeMap mapRef={mapRef} feedItems={feedItems} />
+            <HomeMap mapRef={mapRef} feedItems={feedItems} showItem={showItem} setShowItem={setShowItem} />
          }
-         {hideMenu && <Footer />}
       </SafeAreaView >
    )
 }

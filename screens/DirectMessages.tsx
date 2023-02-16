@@ -26,7 +26,7 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
 
 
    const getMessages = async () => {
-      const ResMessages = await socketGetMessages(SOCKET, profile[0].__pubkey__, friendPubkey.__pubkey__)
+      const ResMessages = await socketGetMessages(SOCKET, profile.__pubkey__, friendPubkey.__pubkey__)
       ResMessages.sort((a, b) => {
          return b._timestamp - a._timestamp
       })
@@ -39,7 +39,7 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
    const handleSendMessage = async (e: any) => {
       const text = e.nativeEvent.text
       const sendMessage = async () => {
-         const res = await socketSendMessages(SOCKET, profile[0].__pubkey__, friendPubkey.__pubkey__, text)
+         const res = await socketSendMessages(SOCKET, profile.__pubkey__, friendPubkey.__pubkey__, text)
       }
       sendMessage()
       setMessage('')
@@ -54,14 +54,14 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
    const handleLike = (item: IMessage) => {
       if (item._liked) {
          const unlikeMessage = async () => {
-            const res = await socketUnlikeMessage(SOCKET, profile[0].__pubkey__, friendPubkey.__pubkey__, item._timestamp)
+            const res = await socketUnlikeMessage(SOCKET, profile.__pubkey__, friendPubkey.__pubkey__, item._timestamp)
          };
          unlikeMessage()
          setHandleChanged(!handleChanged)
          return
       }
       const likeMessage = async () => {
-         const res = await socketLikeMessage(SOCKET, profile[0].__pubkey__, friendPubkey.__pubkey__, item._timestamp)
+         const res = await socketLikeMessage(SOCKET, profile.__pubkey__, friendPubkey.__pubkey__, item._timestamp)
       };
       likeMessage()
       setHandleChanged(!handleChanged)
@@ -93,7 +93,7 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
             {messages.map((item: IMessage, index) => {
                return (
                   <View key={index}>
-                     {item._owner === profile[0].__pubkey__ &&
+                     {item._owner === profile.__pubkey__ &&
                         <View className='flex-col'>
                            <View className='flex-row justify-start flex-1 items-center mt-2'>
                               <Image source={
@@ -112,7 +112,7 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
                         </View>
                      }
                      {
-                        item._owner !== profile[0].__pubkey__ &&
+                        item._owner !== profile.__pubkey__ &&
                         <View className='flex-col'>
                            <View className='flex-row justify-end flex-1 items-center mt-2'>
                               <View>
@@ -123,7 +123,7 @@ const DirectMessages = ({ friendPubkey }: { friendPubkey: IProfile }) => {
                                     <Text className={`${darkModeOn ? `text-${lightMode}` : `text-black`} text-xs self-end`}>{item.date} UTC</Text>
                                  </View>
                               </View>
-                              <Image source={{ uri: profile[0]._pfp }} className=' w-10 h-10 rounded-full ml-2 mt-7 mr-2' />
+                              <Image source={{ uri: profile._pfp }} className=' w-10 h-10 rounded-full ml-2 mt-7 mr-2' />
                            </View>
                         </View>
                      }

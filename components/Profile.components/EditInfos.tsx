@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import { Dispatch, useEffect, useState } from 'react'
 import { IUpdateUser } from '../../Types'
 import { CheckCircleIcon, XCircleIcon } from 'react-native-heroicons/outline'
@@ -7,6 +7,7 @@ import { atomSOCKET } from '../../services/socket'
 import { useAtom } from 'jotai'
 import { atomRegex, atomProfile } from '../../services/globals/index'
 import { atomDarkModeOn, atomLightMode } from '../../services/globals/darkmode'
+
 
 const EditInfos = ({
    userInfo,
@@ -28,6 +29,7 @@ const EditInfos = ({
    const [props, setProps] = useState<string | undefined>('')
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
+   const [pad, setPad] = useState<number>(2)
 
    const handleChange = async (text: string) => {
       if (text.match(regex)) {
@@ -38,23 +40,26 @@ const EditInfos = ({
       }
       if (userInfo === 'Username') {
          text = text.toLowerCase();
-         if (text === profile[0]._username_) {
+         if (text === profile._username_) {
             setErrorText("");
             setNewData((prev) => ({ ...prev, [sockName]: text }));
             setButtonInactive(false);
          }
          else if (text.includes(' ')) {
             setErrorText("No spaces allowed 🥲");
-         } else if (text.length < 3) {
+         }
+         else if (text.length < 3) {
             setErrorText("Minimum 3 letters please 🥲");
             setButtonInactive(true);
             setUsernameAvailable(false);
             setNewData((prev) => ({ ...prev, [sockName]: text }));
-         } else {
+         }
+         else {
             setErrorText("");
             setNewData((prev) => ({ ...prev, [sockName]: text }));
             const check = async () => {
-               const availability: boolean = await checkUsernameAvailability(text, SOCKET)
+               const availability = await checkUsernameAvailability(text, SOCKET)
+               console.log(availability, 'availability')
                setUsernameAvailable(availability);
                if (availability) {
                   setButtonInactive(false);
@@ -63,10 +68,11 @@ const EditInfos = ({
                   setErrorText("Username already taken 🥲");
                }
             }
-            check();
+            const ans = check();
+            console.log(ans, 'ans')
          }
       }
-      else {
+      else if (userInfo !== 'Username') {
          setButtonInactive(false);
          setNewData((prev) => ({ ...prev, [sockName]: text }));
          setValueChanged(true);
@@ -108,12 +114,17 @@ const EditInfos = ({
          break;
    }
 
-   return (
+   const handleFocus = () => {
+      console.log('focus')
+      setPad(20)
+   }
 
+   return (
       <View className='p-2'>
          <Text className='text-green-500'>{userInfo}</Text>
          <View className='flex-row border-2 border-green-600 rounded-lg p-2 w-full h-16'>
             <TextInput
+               onFocus={handleFocus}
                value={valueToChange}
                className=' text-white flex-1'
                onChangeText={handleChange}
@@ -127,7 +138,6 @@ const EditInfos = ({
                   userInfo !== 'Username' ? valueChanged ? (<CheckCircleIcon color='green' />) : null
                      : null
                }
-
             </View>
          </View>
          <Text className='text-red-500'>{errorText}</Text>

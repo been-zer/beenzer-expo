@@ -48,25 +48,63 @@ export interface IProfile {
 }
 
 export interface INFT {
-   _id_: number;
    __token__: string;
-   _supply: number;
-   _creator: string;
-   _username: string;
    _asset: string;
-   _type: string;
-   _description: string;
+   _ccy: string;
    _city: string;
+   _creator: string;
+   _date: string;
+   _description: string;
+   _floor: number;
+   _id_: string;
+   _image: string;
    _latitude: number;
    _longitude: number;
-   _distance: string;
-   _maxlat: string;
-   _minlat: string;
-   _maxlon: string;
-   _minlon: string;
-   _date: string;
+   _maxlat: number;
+   _maxlon: number;
+   _metadata: string;
+   _minlat: number;
+   _minlon: number;
+   _name: string;
+   _supply: number;
    _time: string;
-   _timestamp: number;
+   _timestamp: string;
+   _type: string;
+   _username: string;
+   _visibility: string;
+}
+
+export interface UserNFT {
+   master: string;
+   editions: EditionId[];
+   amount: number;
+   supply: number;
+   floor: number;
+   ccy: string;
+   creator: string;
+   username: string;
+   image_uri: string;
+   asset_uri: string;
+   type: string;
+   name: string;
+   description: string;
+   date: string;
+   time: string;
+   city: string;
+   lat: number;
+   lon: number;
+   visibility: string;
+   maxlat: number;
+   minlat: number;
+   maxlon: number;
+   minlon: number;
+   metadata_uri: string;
+}
+
+export interface EditionId {
+   token: string;
+   id: number;
+   timestamp: number;
 }
 
 export interface IDisplay {

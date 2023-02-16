@@ -1,7 +1,7 @@
 import { View, Text, Modal, SafeAreaView, TouchableOpacity, FlatList, Image } from 'react-native'
 import { atomUserNFTs } from '../../services/globals'
 import { useAtom } from 'jotai'
-import { INFT } from '../../Types'
+import { UserNFT } from '../../Types'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../../services/globals/darkmode'
 
 const EditProfilePic = ({ setModalVisible, setSelectedPicture, modalVisible, setButtonInactive, setUnsavedChanges }: any) => {
@@ -13,8 +13,8 @@ const EditProfilePic = ({ setModalVisible, setSelectedPicture, modalVisible, set
    const closePictureModal = () => {
       setModalVisible(false);
    }
-   const selectPicture = (picture: INFT) => {
-      setSelectedPicture(picture._asset);
+   const selectPicture = (picture: UserNFT) => {
+      setSelectedPicture(picture.asset_uri);
       setButtonInactive(false);
       setModalVisible(false);
       setUnsavedChanges(true);
@@ -41,14 +41,14 @@ const EditProfilePic = ({ setModalVisible, setSelectedPicture, modalVisible, set
                         <TouchableOpacity onPress={() => selectPicture(item)}>
 
                            <Image
-                              source={{ uri: item._asset }}
+                              source={{ uri: item.asset_uri }}
                               style={{ marginBottom: 20 }}
                               className="h-28 w-28 rounded-full m-1"
                            />
                         </TouchableOpacity>
                      </View>
                   )}
-                  keyExtractor={item => item.__token__}
+                  keyExtractor={item => item.asset_uri}
                />}
             {userNFTs.length === 0 &&
                <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} text-2xl mt-2 h-full`}>No BEENZER yet</Text>

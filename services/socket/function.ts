@@ -1,6 +1,6 @@
 import { PublicKey } from '@solana/web3.js'
 import { Socket } from "socket.io-client";
-import { IMessage, INFT, IProfile } from "../../Types";
+import { IMessage, INFT, IProfile, UserNFT } from "../../Types";
 
 export const socketMint = (
    socket: Socket,
@@ -63,7 +63,6 @@ export const firstLogin = (socket: Socket) => {
 export const checkUsernameAvailability = (username: String, socket: Socket) => {
    socket.emit('userName', username)
    return new Promise<boolean>((resolve) => {
-      console.log(username)
       socket.on('userNameAv', (data: any) => {
          console.log('userNameAv', data)
          resolve(data)
@@ -72,31 +71,31 @@ export const checkUsernameAvailability = (username: String, socket: Socket) => {
 }
 
 export const handleNewUserCreated = (socket: Socket, pubkey: PublicKey | string, username: string, appuser: boolean) => {
+   socket.emit('newUser', pubkey, username, appuser)
    return new Promise((resolve) => {
-      socket.emit('newUser', pubkey, username, appuser)
       socket.on('newUserCreated', async (resp: boolean) => {
          resolve(resp)
       })
    })
 }
 
-export const socketUserInfo = (socket: Socket) => {
-   return new Promise<IProfile[]>((resolve) => {
-      socket.on('userInfo', (receivedInfos: IProfile[]) => {
+export const socketUserInfo = (socket: Socket, pubkey: string) => {
+   socket.emit('getUser', pubkey)
+   return new Promise<IProfile>((resolve) => {
+      socket.on('getUserRes', (receivedInfos: IProfile) => {
          resolve(receivedInfos)
-      });
+      })
    })
 }
 
 export const socketUserNFTs = (socket: Socket, pubkey: string) => {
    socket.emit('getUserNFTs', pubkey);
-   return new Promise<INFT[]>((resolve) => {
-      socket.on('userNFTs', (receivedNfts: INFT[]) => {
+   return new Promise<UserNFT[]>((resolve) => {
+      socket.on('userNFTs', (receivedNfts: UserNFT[]) => {
          resolve(receivedNfts)
       });
    })
 }
-
 
 export const updateUserProfile = (socket: Socket, pubkey: PublicKey | string, update: string, value: string) => {
    socket.emit('updateUser', pubkey, update, value)
@@ -198,6 +197,17 @@ export const socketGetMapNFTs = (socket: Socket, latUser: number, longUser: numb
    socket.emit('getMapNFTs', latUser, longUser);
    return new Promise<INFT[]>((resolve) => {
       socket.on("mapNFTs", (res: INFT[]) => {
+         resolve(res);
+      }
+      );
+   });
+}
+
+export const socketGetFriendsFeed = (socket: Socket, pubkey: string, latUser: number, longUser: number) => {
+   socket.emit('getFeed', pubkey, latUser, longUser);
+   console.log('here')
+   return new Promise<INFT[]>((resolve) => {
+      socket.on("getFeedRes", (res: INFT[]) => {
          resolve(res);
       }
       );

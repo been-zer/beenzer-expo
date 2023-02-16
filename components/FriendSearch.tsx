@@ -36,16 +36,16 @@ const FriendSearch = () => {
          const res = await socketGetFriends(SOCKET, pubkey)
          setUserFriends(res)
       }
-      getFriends(profile[0].__pubkey__)
+      getFriends(profile.__pubkey__)
    }, [friendsChanged])
 
    const onChangeSearch = (query: string) => setSearchQuery(query.toLowerCase());
 
    const addFriends = async (pubkeyFriends: string) => {
-      const ans = await socketAddFriend(SOCKET, profile[0].__pubkey__, pubkeyFriends)
+      const ans = await socketAddFriend(SOCKET, profile.__pubkey__, pubkeyFriends)
    }
    const deleteFriends = async (pubkeyFriends: string) => {
-      const ans = await socketDelFriend(SOCKET, profile[0].__pubkey__, pubkeyFriends)
+      const ans = await socketDelFriend(SOCKET, profile.__pubkey__, pubkeyFriends)
    }
 
    const handleFriendAction = (pubkeyFriends: string) => {
@@ -92,7 +92,7 @@ const FriendSearch = () => {
                               </View>
                            </View>
                         </TouchableOpacity>
-                        {item.__pubkey__ !== profile[0].__pubkey__ &&
+                        {item.__pubkey__ !== profile.__pubkey__ &&
                            <TouchableOpacity onPress={() => handleFriendAction(item.__pubkey__)} className='self-center'>
                               {following && following.find((friends) => friends.__pubkey__ === item.__pubkey__) ? <View className='ml-2 flex items-center justify-center'>
                                  <Text className='text-blue-500  font-bold'>Unfollow</Text>

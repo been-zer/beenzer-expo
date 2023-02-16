@@ -37,12 +37,15 @@ const Profile = () => {
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
    const [selectedTab, setSelectedTab] = useState<string>('')
+   const [onProfile, setOnProfile] = useState<boolean>(true)
 
    useEffect(() => {
       if (isFocused) {
          setActive('Profile')
          getInfoUser();
          getInfoNft();
+         setOnProfile(!onProfile)
+
       }
    }, [isFocused]);
 
@@ -66,9 +69,8 @@ const Profile = () => {
 
    const getInfoUser = async () => {
       try {
-         const receivedInfos = await socketUserInfo(SOCKET);
+         const receivedInfos = await socketUserInfo(SOCKET, profile.__pubkey__);
          setProfile(receivedInfos);
-         console.log('profile', profile)
       } catch (e) {
          console.error(e);
       }
@@ -76,7 +78,7 @@ const Profile = () => {
 
    const getInfoNft = async () => {
       try {
-         const profileNFTs = await socketUserNFTs(SOCKET, profile[0].__pubkey__);
+         const profileNFTs = await socketUserNFTs(SOCKET, profile.__pubkey__);
          setUserNFTs(profileNFTs.reverse());
       } catch (e) {
          console.error(e);
@@ -95,7 +97,7 @@ const Profile = () => {
                />
             }>
             <View className='flex flex-row justify-center items-end'>
-               <ProfilePic img={profile[0]._pfp} functionOnClick={editProfile} />
+               <ProfilePic img={profile._pfp} functionOnClick={editProfile} />
                <TouchableOpacity
                   className="  "
                   onPress={editProfile}
@@ -103,7 +105,7 @@ const Profile = () => {
                   <PencilSquareIcon size={18} color="#30a24f" />
                </TouchableOpacity>
             </View>
-            <ProfileBio name={profile[0]._username_} description={profile[0]._description} />
+            <ProfileBio name={profile._username_} description={profile._description} />
             <View className='flex flex-row flex-wrap'>
             </View>
             <View className='flex flex-row justify-evenly'>
@@ -121,7 +123,7 @@ const Profile = () => {
                   <ProfileMap uniqueNFTs={null} dataNFT={userNFTs} viewMap={undefined} />
                )}
                {showProfileTab === 'Friends' && (
-                  <Friends dataPubkey={profile[0].__pubkey__} showSearch={true} />
+                  <Friends dataPubkey={profile.__pubkey__} showSearch={true} onProfile={onProfile} />
                )}
             </View>
          </ScrollView>

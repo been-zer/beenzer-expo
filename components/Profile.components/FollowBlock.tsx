@@ -23,7 +23,7 @@ const FollowBlock = ({ data, direction }: { data: IProfile[], direction: string 
          setFriendsPubkey(item)
          return
       }
-      if (item.__pubkey__ === profile[0].__pubkey__) {
+      if (item.__pubkey__ === profile.__pubkey__) {
          navigation.navigate('Profile')
          return
       }

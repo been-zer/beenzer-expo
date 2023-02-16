@@ -3,11 +3,16 @@ import { Dispatch, SetStateAction } from 'react'
 import { atomDarkMode, atomDarkModeOn, atomLightMode } from '../services/globals/darkmode';
 import { useAtom } from 'jotai';
 
-const DisplayButton = ({ title, setDisplay, display }:
-   { title: string, setDisplay: Dispatch<SetStateAction<string>>, display: string }) => {
+const DisplayButton = ({ title, setDisplay, display, setShowItem }:
+   {
+      title: string, setDisplay: Dispatch<SetStateAction<string>>, display: string, setShowItem: Dispatch<SetStateAction<boolean>> | undefined
+   }) => {
 
    const changeDisplay = (display: string) => {
       setDisplay(display)
+      if (title === 'Map' && setShowItem) {
+         setShowItem(false)
+      }
    }
 
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);

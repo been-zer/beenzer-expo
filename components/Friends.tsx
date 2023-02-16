@@ -10,9 +10,8 @@ import DisplayButton from './DisplayButton';
 import FriendSearch from './FriendSearch';
 import FollowBlock from './Profile.components/FollowBlock';
 
-const Friends = ({ dataPubkey, showSearch }: { dataPubkey: string, showSearch: boolean }) => {
+const Friends = ({ dataPubkey, showSearch, onProfile }: { dataPubkey: string, showSearch: boolean, onProfile: boolean }) => {
    const [SOCKET] = useAtom(atomSOCKET);
-   const [profile, setProfile] = useAtom(atomProfile)
    const [userFriends, setUserFriends] = useAtom(atomUserFriends);
    const [friendsChanged, setFriendsChanged] = useAtom(atomFriendsChanged);
    const [display, setDisplay] = useState('Friends')
@@ -36,7 +35,7 @@ const Friends = ({ dataPubkey, showSearch }: { dataPubkey: string, showSearch: b
       getUserFollowing(dataPubkey)
       getUserFollowers(dataPubkey)
 
-   }, [friendsChanged])
+   }, [friendsChanged, onProfile])
 
 
    return (

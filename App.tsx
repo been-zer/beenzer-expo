@@ -7,7 +7,7 @@ import Credentials from './screens/Credentials';
 import BeenzerMenu from './screens/BeenzerMenu';
 import PostBeenzer from './screens/PostBeenzer';
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from './services/globals/darkmode';
-import { atomFriendPubkey } from './services/globals';
+import { atomFriendPubkey, atomFriendsNFT } from './services/globals';
 import { useAtom } from 'jotai';
 import Picture from './screens/Picture';
 import Logs from './screens/Logs';
@@ -36,6 +36,8 @@ export default function App() {
   const [darkMode, setDarkMode] = useAtom(atomDarkMode);
   const [lightMode, setLightMode] = useAtom(atomLightMode);
   const [friendPubkey, setFriendPubkey] = useAtom(atomFriendPubkey);
+  const changeDarkMode = `${darkModeOn ? `${lightMode}` : "black"}`;
+  const [friendsNFTs, setFriendsNFTs] = useAtom(atomFriendsNFT);
 
   return (
     <View className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`} flex-1`}>
@@ -54,7 +56,7 @@ export default function App() {
               headerShown: true,
               headerTitle: 'Sign Up',
               headerTransparent: true,
-              headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+              headerTintColor: changeDarkMode,
               headerBackTitle: 'Back',
               headerBackTitleVisible: false,
               animation: 'none',
@@ -66,12 +68,12 @@ export default function App() {
           }} />
           <Stack.Screen name="BeenzerMenu" component={BeenzerMenu} options={{
             headerTitleStyle: {
-              color: `${darkModeOn ? `${lightMode}` : "black"}`,
+              color: changeDarkMode,
             },
             headerShown: true,
             headerTitle: 'New Beenzer',
             headerTransparent: true,
-            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+            headerTintColor: changeDarkMode,
             headerBackVisible: false,
             animation: 'none',
 
@@ -79,7 +81,7 @@ export default function App() {
           <Stack.Screen name="Picture" component={Picture} options={{
             headerTitle: '',
             headerTransparent: true,
-            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+            headerTintColor: changeDarkMode,
             headerBackTitle: '',
             headerBackVisible: true,
             headerBackButtonMenuEnabled: true,
@@ -89,14 +91,14 @@ export default function App() {
             headerTitle: 'Logs',
             headerTransparent: true,
             headerBackVisible: false,
-            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+            headerTintColor: changeDarkMode,
             animation: 'none',
           }} />
           <Stack.Screen name="Profile" component={Profile} options={{
             headerTitle: 'Profile',
             headerTransparent: true,
             headerBackVisible: false,
-            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+            headerTintColor: changeDarkMode,
             headerRight: () => (<Logout />),
             headerLeft: () => (<ColorMode />),
             animation: 'none',
@@ -105,7 +107,7 @@ export default function App() {
             headerTitle: 'Edit Profile',
             headerTransparent: true,
             headerBackVisible: true,
-            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+            headerTintColor: changeDarkMode,
             animation: 'none',
           }} />
           <Stack.Screen name="ProfileFriends"
@@ -114,7 +116,7 @@ export default function App() {
               headerTransparent: true,
               headerBackVisible: true,
               headerBackTitle: '',
-              headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+              headerTintColor: changeDarkMode,
               animation: 'none',
             }}>
             {(props) => <ProfileFriends {...props} friendPubkey={friendPubkey} />}
@@ -129,7 +131,7 @@ export default function App() {
             headerTransparent: true,
             headerBackVisible: false,
             headerBackTitle: '',
-            headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+            headerTintColor: changeDarkMode,
             animation: 'none',
           }} />
           {/* <Stack.Screen name="Feed" component={Feed} options={{
@@ -142,10 +144,20 @@ export default function App() {
               headerTitle: '',
               headerBackVisible: true,
               headerBackTitle: '',
-              headerTintColor: `${darkModeOn ? `${lightMode}` : "black"}`,
+              headerTintColor: changeDarkMode,
               animation: 'none',
             }} >
             {(props) => <DirectMessages {...props} friendPubkey={friendPubkey} />}
+          </Stack.Screen>
+          <Stack.Screen name="Feed"
+            options={{
+              headerTransparent: true,
+              headerTintColor: changeDarkMode,
+              animation: 'none',
+              headerTitle: 'Friends Feed',
+              headerBackVisible: false,
+            }} >
+            {(props) => <Feed {...props} feedItems={friendsNFTs} setHideMenu={undefined} />}
           </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer >

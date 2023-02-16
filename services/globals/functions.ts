@@ -45,6 +45,5 @@ export const arrayBufferToBase64 = (buffer: Buffer) => {
    for (let i = 0; i < len; i++) {
       binary += String.fromCharCode(bytes[i]);
    }
-   console.log('here', window.btoa(binary))
    return window.btoa(binary);
 }
