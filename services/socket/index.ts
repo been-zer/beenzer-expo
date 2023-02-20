@@ -1,9 +1,8 @@
 import { atom } from 'jotai';
 import { io, Socket } from 'socket.io-client';
-import Constants from 'expo-constants';
+import { REACT_APP_SERVER } from './../../config';
 
-const server = Constants.manifest ? Constants.manifest.extra ? Constants.manifest.extra.REACT_APP_SERVER as string : null : null;
-
+const server = REACT_APP_SERVER;
 export const SOCKET = io(String(server), { transports: ["websocket"], });//forceBase64: true 
 
 

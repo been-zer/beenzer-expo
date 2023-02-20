@@ -20,6 +20,9 @@ import ProfileFriends from './screens/ProfileFriends';
 import Messages from './screens/Messages';
 import DirectMessages from './screens/DirectMessages';
 import Feed from './screens/Feed';
+// import { Logs as ConsoleLog } from 'expo'
+
+// ConsoleLog.enableExpoCliLogging()
 
 const Stack = createNativeStackNavigator();
 
