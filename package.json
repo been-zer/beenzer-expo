@@ -18,6 +18,8 @@
     "@solana/web3.js": "~1.35.0",
     "buffer": "^6.0.3",
     "dotenv": "^16.0.3",
+    "eas-cli": "^3.6.0",
+    "expo": "^47.0.13",
     "expo-av": "~13.0.2",
     "expo-camera": "~13.1.0",
     "expo-fetch": "^0.0.0",

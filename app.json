@@ -1,9 +1,13 @@
 {
   "expo": {
-    "name": "v1.0",
-    "slug": "v1.0",
+    "name": "Beenzer App",
+    "slug": "beenzer-app",
     "version": "1.0.0",
     "orientation": "portrait",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "scheme": "myapp",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,7 +23,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.beenzer.myapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,6 +35,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": []
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "f45e2e6a-72ff-4693-83d0-ad667d9cae13"
+      }
+    }
   }
 }
