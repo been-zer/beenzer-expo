@@ -18,8 +18,8 @@ const Notifications = () => {
    return (
       <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`} h-full flex-1`}>
          <View className='flex-row justify-around'>
-            <DisplayButton title='Notifications' setDisplay={setDisplay} display={display} />
-            <DisplayButton title='Logs' setDisplay={setDisplay} display={display} />
+            <DisplayButton title='Notifications' setDisplay={setDisplay} display={display} setShowItem={undefined} />
+            <DisplayButton title='Logs' setDisplay={setDisplay} display={display} setShowItem={undefined} />
          </View>
          {display === 'Logs' && <Logs />}
          {display === 'Notifications' &&
