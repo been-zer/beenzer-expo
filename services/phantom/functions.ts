@@ -7,7 +7,6 @@ import {
    Connection,
    PublicKey,
 } from "@solana/web3.js";
-import { REACT_APP_MINT_COST } from '../../config';
 import Constants from 'expo-constants';
 
 
