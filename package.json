@@ -1,5 +1,5 @@
 {
-  "name": "v1.0",
+  "name": "beenzer",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.3",
+    "expo-modules-autolinking": "1.0.0",
     "@react-native-community/slider": "4.2.4",
     "@react-native-masked-view/masked-view": "^0.2.8",
     "@react-navigation/native": "^6.1.1",
