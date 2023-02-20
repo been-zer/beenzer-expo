@@ -8,10 +8,14 @@ import {
    PublicKey,
 } from "@solana/web3.js";
 import { REACT_APP_MINT_COST } from '../../config';
+import Constants from 'expo-constants';
+
 
 
 const NETWORK = clusterApiUrl("mainnet-beta");
 const connection = new Connection(NETWORK);
+const fees = Constants.manifest ? Constants.manifest.extra ? Constants.manifest.extra.REACT_APP_MINT_COST : null : null;
+
 
 export const buildUrl = (path: string, params: URLSearchParams) =>
    `https://phantom.app/ul/v1/${path}?${params.toString()}`;
@@ -46,7 +50,7 @@ export const createTransferTransaction = async (pubkey: any) => {
       SystemProgram.transfer({
          fromPubkey: pubkey,
          toPubkey: new PublicKey('BctLWb6Q9viYjeJ2gNCr4xkRHc91NyikRR1TWn1qGGYr'),
-         lamports: 0 //Number(REACT_APP_MINT_COST) * 1000000000, // 10000000 lamports = 0.01 SOL
+         lamports: fees * 1000000000, // 10000000 lamports = 0.01 SOL
       })
    );
    transaction.feePayer = pubkey;

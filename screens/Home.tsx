@@ -103,7 +103,6 @@ const Home = () => {
 
    const getFriendsNFT = async (pubkey: string, latitude: number, longitude: number) => {
       try {
-         console.log('getFriendsNFT', pubkey, latitude, longitude)
          const friendsNFTsRes = await socketGetFriendsFeed(SOCKET, pubkey, latitude, longitude);
          setFriendsNFT(friendsNFTsRes)
       } catch (e) {

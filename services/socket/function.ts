@@ -64,7 +64,6 @@ export const checkUsernameAvailability = (username: String, socket: Socket) => {
    socket.emit('userName', username)
    return new Promise<boolean>((resolve) => {
       socket.on('userNameAv', (data: any) => {
-         console.log('userNameAv', data)
          resolve(data)
       })
    })
@@ -205,7 +204,6 @@ export const socketGetMapNFTs = (socket: Socket, latUser: number, longUser: numb
 
 export const socketGetFriendsFeed = (socket: Socket, pubkey: string, latUser: number, longUser: number) => {
    socket.emit('getFeed', pubkey, latUser, longUser);
-   console.log('here')
    return new Promise<INFT[]>((resolve) => {
       socket.on("getFeedRes", (res: INFT[]) => {
          resolve(res);

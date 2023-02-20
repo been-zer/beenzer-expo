@@ -59,7 +59,6 @@ const EditInfos = ({
             setNewData((prev) => ({ ...prev, [sockName]: text }));
             const check = async () => {
                const availability = await checkUsernameAvailability(text, SOCKET)
-               console.log(availability, 'availability')
                setUsernameAvailable(availability);
                if (availability) {
                   setButtonInactive(false);
@@ -69,7 +68,6 @@ const EditInfos = ({
                }
             }
             const ans = check();
-            console.log(ans, 'ans')
          }
       }
       else if (userInfo !== 'Username') {
@@ -114,17 +112,17 @@ const EditInfos = ({
          break;
    }
 
-   const handleFocus = () => {
-      console.log('focus')
-      setPad(20)
-   }
+   // const handleFocus = () => {
+   //    console.log('focus')
+   //    setPad(20)
+   // }
 
    return (
       <View className='p-2'>
          <Text className='text-green-500'>{userInfo}</Text>
          <View className='flex-row border-2 border-green-600 rounded-lg p-2 w-full h-16'>
             <TextInput
-               onFocus={handleFocus}
+               // onFocus={handleFocus}
                value={valueToChange}
                className=' text-white flex-1'
                onChangeText={handleChange}

@@ -2,6 +2,7 @@
 beenzer-token-keypair.json
 mint.json
 payer.json
+app.json
 
 # keys folder
 key/

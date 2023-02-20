@@ -35,7 +35,6 @@ const ProfileFriends = ({ friendPubkey }: { friendPubkey: IProfile }) => {
    const getFriendsNFT = async () => {
       try {
          const friendsNFTs = await socketUserNFTs(SOCKET, friendPubkey.__pubkey__);
-         console.log('friendsNFTs: ', friendsNFTs)
          setFriendsNFTs(friendsNFTs.reverse());
       } catch (e) {
          console.error(e);

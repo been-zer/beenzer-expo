@@ -17,8 +17,7 @@ const ProfileMap = ({ uniqueNFTs, dataNFT, viewMap }: { uniqueNFTs: UserNFT | nu
       return '_latitude' in nft;
    }
 
-   console.log('uniqueNFTs', uniqueNFTs)
-   console.log('dataNFT', uniqueNFTs && isINFT(uniqueNFTs))
+
 
    return (
       <View className='items-center'>
