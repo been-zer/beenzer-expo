@@ -4,13 +4,10 @@
     "slug": "beenzer-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "platforms": [
-      "ios",
-      "android"
-    ],
-    "scheme": "myapp",
+    "platforms": ["ios", "android"],
+    "scheme": "beenzer",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -20,9 +17,7 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/f45e2e6a-72ff-4693-83d0-ad667d9cae13"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "buildNumber": "4",
