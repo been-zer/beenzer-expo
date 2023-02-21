@@ -32,7 +32,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "beenzer.dapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
