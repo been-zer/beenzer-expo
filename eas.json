@@ -23,6 +23,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "beenzer.app@gmail.com",
+        "ascAppId": "1673144711",
+        "appleTeamId": "SP66HL25RH"
+      }
+    }
   }
 }
