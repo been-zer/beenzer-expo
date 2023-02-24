@@ -4,17 +4,11 @@
     "slug": "beenzerdapp",
     "version": "1.0.0",
     "orientation": "portrait",
-<<<<<<< HEAD
-    "platforms": ["ios", "android"],
-    "scheme": "beenzer",
-=======
-    "privacy": "hidden",
     "platforms": [
       "ios",
       "android"
     ],
     "scheme": "com.beenzerdapp.com",
->>>>>>> 14d197e0 (scheme)
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
@@ -26,18 +20,13 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/f45e2e6a-72ff-4693-83d0-ad667d9cae13"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.beenzerdapp.com",
       "buildNumber": "2"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "package": "beenzer.dapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
