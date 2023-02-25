@@ -6,7 +6,7 @@ import {
 import { mapStyle } from '../services/globals'
 import { ArrowRightOnRectangleIcon, PencilSquareIcon } from "react-native-heroicons/solid"
 import { useAtom } from 'jotai'
-import { atomProfile, atomUserNFTs, atomActiveScreen, atomRefreshing } from '../services/globals'
+import { atomProfile, atomUserNFTs, atomActiveScreen, atomRefreshing, atomIsLogin } from '../services/globals'
 import GradientText from "../components/GradientText"
 import MapView from 'react-native-maps'
 import ProfileTab from '../components/Profile.components/ProfileTab'
@@ -38,13 +38,14 @@ const Profile = () => {
    const [lightMode, setLightMode] = useAtom(atomLightMode);
    const [selectedTab, setSelectedTab] = useState<string>('')
    const [onProfile, setOnProfile] = useState<boolean>(true)
+   const [isLogin, setIsLogin] = useAtom(atomIsLogin);
 
    useEffect(() => {
       if (isFocused) {
          setActive('Profile')
-         getInfoUser();
-         getInfoNft();
-         setOnProfile(!onProfile)
+         isLogin && getInfoUser();
+         isLogin && getInfoNft();
+         isLogin && setOnProfile(!onProfile)
 
       }
    }, [isFocused]);
@@ -83,6 +84,19 @@ const Profile = () => {
       } catch (e) {
          console.error(e);
       }
+   }
+
+   if (!isLogin) {
+      return (
+         <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`} h-full flex-1 `}>
+            <View className="flex justify-center items-center flex-1">
+               <Text className={`${darkModeOn ? `text-white` : `text-${darkMode}`} text-2xl font-bold text-center`}>
+                  Please login to phantom to use this functionality
+               </Text>
+            </View>
+            <Footer />
+         </SafeAreaView >
+      )
    }
 
    return (

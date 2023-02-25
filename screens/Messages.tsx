@@ -6,7 +6,7 @@ import { useAtom } from 'jotai'
 import Footer from './Footer'
 import { atomDarkMode, atomDarkModeOn } from '../services/globals/darkmode'
 import FriendSearch from '../components/FriendSearch'
-import { atomFriendsChanged, atomUserFriends, atomProfile } from '../services/globals'
+import { atomFriendsChanged, atomUserFriends, atomProfile, atomIsLogin } from '../services/globals'
 import FollowBlock from '../components/Profile.components/FollowBlock'
 import { Searchbar } from 'react-native-paper';
 import { atomSOCKET } from '../services/socket/index'
@@ -26,6 +26,7 @@ const Messages = () => {
    const [searchQuery, setSearchQuery] = useState('');
    const [usersFound, setUsersFound] = useState<IProfile[]>([]);
    const [profile, setProfile] = useAtom(atomProfile)
+   const [isLogin, setIsLogin] = useAtom(atomIsLogin)
 
 
    useEffect(() => {
@@ -34,7 +35,7 @@ const Messages = () => {
       }
    }, [isFocused]);
 
-   useEffect(() => {
+   isLogin && useEffect(() => {
       const getFriends = async (pubkey: string) => {
          const res = await socketGetFriends(SOCKET, pubkey)
          setUserFriends(res)
@@ -42,7 +43,8 @@ const Messages = () => {
       getFriends(profile.__pubkey__)
    }, [friendsChanged])
 
-   useEffect(() => {
+   isLogin && useEffect(() => {
+
       const searchFriends = async (search: string) => {
          const res = await socketSeachFriends(SOCKET, search)
          //eliminitate the user from the search results
@@ -57,6 +59,19 @@ const Messages = () => {
    const hideSearch = () => {
       setSearchQuery('')
       setUsersFound([])
+   }
+
+   if (!isLogin) {
+      return (
+         <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`} h-full flex-1 `}>
+            <View className="flex justify-center items-center flex-1">
+               <Text className={`${darkModeOn ? `text-white` : `text-${darkMode}`} text-2xl font-bold text-center`}>
+                  Please login to phantom to use this functionality
+               </Text>
+            </View>
+            <Footer />
+         </SafeAreaView >
+      )
    }
 
    return (

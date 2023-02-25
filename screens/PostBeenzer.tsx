@@ -6,7 +6,7 @@ import { Video } from 'expo-av';
 import {
    atomPic, atomPin, atomUserLocation, atomPinCity, atomPhantomWalletPublicKey, atomProfile, mapStyle, mapStyleLight,
    atomSession, atomSharedSecret, atomDappKeyPair, atomTransacSuccess, atomDataPic,
-   atomSupply, atomDescription, atomVideo, atomVideoBuffer
+   atomSupply, atomDescription, atomVideo, atomVideoBuffer, atomIsLogin
 } from '../services/globals'
 import { useAtom } from 'jotai'
 import MapView, { Marker, Callout, Circle, Polyline } from 'react-native-maps'
@@ -19,6 +19,7 @@ import { atomSOCKET } from '../services/socket'
 import Properties from '../components/Properties'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode'
 import Slider from '@react-native-community/slider'
+import Footer from './Footer';
 
 const PostBeenzer = () => {
 
@@ -51,6 +52,7 @@ const PostBeenzer = () => {
    const NFTsGlobal = "GLOBALLY"
    const [type, setType] = useState('')
    const [videoBuffer, setVideoBuffer] = useAtom(atomVideoBuffer)
+   const [isLogin, setIsLogin] = useAtom(atomIsLogin)
 
    useLayoutEffect(() => {
 
@@ -138,6 +140,17 @@ const PostBeenzer = () => {
       signAndSendTransaction(session, phantomWalletPublicKey, sharedSecret, dappKeyPair)
       console.log('clicked')
       // videoToGifSocket(SOCKET, videoBuffer as Buffer)
+   }
+
+   if (!isLogin) {
+      return (
+         <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`} h-full flex-1 `}>
+            <View className="flex justify-center items-center flex-1">
+               <Text className={`${darkModeOn ? `text-white` : `text-${darkMode}`} text-2xl font-bold text-center`}>Please login to phantom to use this functionality</Text>
+            </View>
+            <Footer />
+         </SafeAreaView >
+      )
    }
 
    return (

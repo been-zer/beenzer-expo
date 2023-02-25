@@ -3,9 +3,9 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import { connect } from "../services/phantom/login"
 import * as Linking from "expo-linking";
 import { useAtom } from "jotai";
-import { atomDeepLink, atomDappKeyPair } from "../services/globals";
+import { atomDeepLink, atomDappKeyPair, atomIsLogin } from "../services/globals";
 import PhantomEffect from "./PhantomEffect";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
 import { atomDarkModeOn, atomDarkMode, atomLightMode, atomPinkMode, useSwipe } from "../services/globals/darkmode";
 import { fadeIn } from "../services/globals/functions";
 import ColorMode from "../components/ColorMode";
@@ -14,12 +14,14 @@ const Login = () => {
 
    const [deepLink, setDeepLink] = useAtom(atomDeepLink)
    const [dappKeyPair] = useAtom(atomDappKeyPair)
-   const navigation = useNavigation();
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
    const fadeAnim = useRef(new Animated.Value(0)).current;
    const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
+   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+   const [isLogin, setIsLogin] = useAtom(atomIsLogin);
+
 
 
    function onSwipeLeft() {
@@ -32,6 +34,10 @@ const Login = () => {
    const handleLogin = () => {
       connect(dappKeyPair);
    };
+
+   const handleWithoutLogin = () => {
+      navigation.navigate('Home')
+   }
 
    useEffect(() => {
       (async () => {
@@ -97,6 +103,13 @@ const Login = () => {
                      />
                      <Text className={`font-semibold text-center text-${darkModeOn ? lightMode : darkMode}`}>
                         {'   '}Login with Phantom
+                     </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                     className="w-52 shadow-xl rounded-2xl flex-row justify-center items-center p-2 mt-2"
+                     onPress={handleWithoutLogin}>
+                     <Text className={`font-semibold text-center text-${darkModeOn ? lightMode : darkMode}`}>
+                        Continue without login
                      </Text>
                   </TouchableOpacity>
                </Animated.View>

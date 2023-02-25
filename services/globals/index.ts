@@ -5,6 +5,7 @@ import { INFT, IProfile, ILocation, coordinates, IVideo, UserNFT } from '../../T
 import { CameraCapturedPicture } from 'expo-camera';
 
 export const atomDeepLink = atom("");
+export const atomIsLogin = atom<boolean>(false);
 export const atomDappKeyPair = atom(nacl.box.keyPair());
 export const atomSharedSecret = atom<Uint8Array | string>("");
 export const atomSession = atom("");

@@ -5,6 +5,7 @@ import { INFT } from "../Types";
 import { useEffect } from "react";
 import Footer from "./Footer";
 import { atomDarkMode, atomDarkModeOn } from "../services/globals/darkmode";
+import { atomIsLogin } from "../services/globals";
 
 const Feed = ({ feedItems, setHideMenu }: {
    feedItems: INFT[], setHideMenu: React.Dispatch<React.SetStateAction<boolean>> | undefined,
@@ -12,7 +13,7 @@ const Feed = ({ feedItems, setHideMenu }: {
 
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
-
+   const [isLogin, setIsLogin] = useAtom(atomIsLogin);
 
    useEffect(() => {
       if (setHideMenu) {
@@ -20,10 +21,23 @@ const Feed = ({ feedItems, setHideMenu }: {
       }
    }, [])
 
+   if (!isLogin && setHideMenu == undefined) {
+      return (
+         <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`} h-full flex-1 `}>
+            <View className="flex justify-center items-center flex-1">
+               <Text className={`${darkModeOn ? `text-white` : `text-${darkMode}`} text-2xl font-bold text-center`}>
+                  Please login to phantom to use this functionality
+               </Text>
+            </View>
+            <Footer />
+         </SafeAreaView >
+      )
+   }
+
    return (
       <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`} h-full flex-1 `}>
          {feedItems.length == 0 &&
-            <View className="flex justify-center items-center">
+            <View className="flex justify-center items-center flex-1">
                <Text className="text-2xl font-bold">No NFTs to show</Text>
             </View>}
          {feedItems.length > 0 &&

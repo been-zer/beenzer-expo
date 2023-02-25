@@ -10,7 +10,7 @@ import { atom, useAtom } from "jotai";
 import {
    atomDappKeyPair, atomSharedSecret, atomSession, atomPhantomWalletPublicKey, atomTransacSuccess,
    atomPic,
-   atomDisplay,
+   atomDisplay, atomIsLogin
 } from "../services/globals";
 import { atomSOCKET } from "../services/socket";
 import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
@@ -29,6 +29,7 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
    const [transacSuccess, setTransacSuccess] = useAtom(atomTransacSuccess);
    const [Pic, setPic] = useAtom(atomPic);
    const [display, setDisplay] = useAtom(atomDisplay);
+   const [isLogin, setIsLogin] = useAtom(atomIsLogin);
 
    // handle inbounds links
    useEffect(() => {
@@ -61,6 +62,7 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
          setSession(connectData.session);
          setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
          socketConnection(connectData.public_key, SOCKET);
+         setIsLogin(true);
          const getNewUserStatus = async () => {
             const newUser = await firstLogin(SOCKET);
             if (newUser) {
@@ -85,6 +87,7 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
       else if (/onDisconnect/.test(url.pathname)) {
          navigation.navigate("Login");
          console.log('disconnect', phantomWalletPublicKey)
+         setIsLogin(false);
       }
 
    }, [deepLink]);

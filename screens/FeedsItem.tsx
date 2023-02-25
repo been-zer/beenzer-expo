@@ -12,7 +12,7 @@ import { atomModalVisible } from "../services/globals/";
 
 
 const FeedsItem = ({ feedItem }: {
-   feedItem: INFT,
+   feedItem: any,
 }) => {
 
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
@@ -23,6 +23,8 @@ const FeedsItem = ({ feedItem }: {
    const handleModal = () => {
       setModalVisible(!modalVisible)
    }
+
+   console.log(feedItem)
 
    return (
       <SafeAreaView style={styles.container} className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`}`}>
