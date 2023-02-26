@@ -5,3 +5,4 @@ declare const AppbarBackIcon: ({ size, color }: {
 }) => JSX.Element;
 export default AppbarBackIcon;
 export { AppbarBackIcon };
+//# sourceMappingURL=AppbarBackIcon.d.ts.map

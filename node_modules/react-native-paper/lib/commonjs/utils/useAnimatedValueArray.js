@@ -12,8 +12,7 @@ function useAnimatedValueArray(initialValues) {
   const refs = React.useRef([]);
   refs.current.length = initialValues.length;
   initialValues.forEach((initialValue, i) => {
-    var _refs$current$i;
-    refs.current[i] = (_refs$current$i = refs.current[i]) !== null && _refs$current$i !== void 0 ? _refs$current$i : new _reactNative.Animated.Value(initialValue);
+    refs.current[i] = refs.current[i] ?? new _reactNative.Animated.Value(initialValue);
   });
   return refs.current;
 }

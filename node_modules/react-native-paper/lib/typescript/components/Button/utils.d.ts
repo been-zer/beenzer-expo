@@ -13,3 +13,4 @@ export declare const getButtonColors: ({ theme, mode, customButtonColor, customT
     textColor: string;
     borderWidth: number;
 };
+//# sourceMappingURL=utils.d.ts.map

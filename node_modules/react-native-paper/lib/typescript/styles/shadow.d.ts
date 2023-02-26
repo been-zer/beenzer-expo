@@ -21,3 +21,4 @@ export default function shadow(elevation?: number | Animated.Value, isV3?: boole
     shadowOpacity?: undefined;
     shadowRadius?: undefined;
 };
+//# sourceMappingURL=shadow.d.ts.map

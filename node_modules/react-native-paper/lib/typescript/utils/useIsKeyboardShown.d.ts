@@ -4,3 +4,4 @@ declare type Props = {
 };
 export default function useIsKeyboardShown({ onShow, onHide }: Props): void;
 export {};
+//# sourceMappingURL=useIsKeyboardShown.d.ts.map

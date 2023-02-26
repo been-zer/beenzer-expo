@@ -255,3 +255,4 @@ export declare const grey800 = "#424242";
 export declare const grey900 = "#212121";
 export declare const black = "#000000";
 export declare const white = "#ffffff";
+//# sourceMappingURL=colors.d.ts.map

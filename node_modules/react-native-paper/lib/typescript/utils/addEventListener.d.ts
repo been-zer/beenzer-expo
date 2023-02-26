@@ -10,3 +10,4 @@ export declare function addListener<T extends {
     addListener: (...args: any) => EmitterSubscription;
     removeEventListener: (...args: any) => void;
 }>(Module: T, ...rest: Parameters<typeof Module.addListener>): EmitterSubscription;
+//# sourceMappingURL=addEventListener.d.ts.map

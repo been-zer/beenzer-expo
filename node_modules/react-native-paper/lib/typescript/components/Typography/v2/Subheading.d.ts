@@ -25,3 +25,4 @@ export declare type Props = React.ComponentProps<typeof Text> & {
  */
 declare const Subheading: (props: Props) => JSX.Element;
 export default Subheading;
+//# sourceMappingURL=Subheading.d.ts.map

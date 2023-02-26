@@ -9,3 +9,4 @@ export declare type AdornmentStyleAdjustmentForNativeInput = {
         paddingLeft: number;
     } | {}>;
 };
+//# sourceMappingURL=types.d.ts.map

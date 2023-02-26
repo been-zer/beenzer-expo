@@ -402,3 +402,4 @@ export declare const MD3Colors: {
     error10: string;
     error0: string;
 };
+//# sourceMappingURL=tokens.d.ts.map

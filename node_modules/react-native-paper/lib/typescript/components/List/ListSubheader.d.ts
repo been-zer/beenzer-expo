@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { StyleProp, TextStyle } from 'react-native';
-import type { InternalTheme } from 'src/types';
+import type { ThemeProp } from 'src/types';
 import Text from '../Typography/Text';
 export declare type Props = React.ComponentProps<typeof Text> & {
     /**
      * @optional
      */
-    theme?: InternalTheme;
+    theme?: ThemeProp;
     /**
      * Style that is passed to Text element.
      */
@@ -30,3 +30,4 @@ declare const ListSubheader: {
     displayName: string;
 };
 export default ListSubheader;
+//# sourceMappingURL=ListSubheader.d.ts.map

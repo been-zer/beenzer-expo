@@ -4,3 +4,4 @@ export default function useLayout(): readonly [{
     width: number;
     measured: boolean;
 }, (e: LayoutChangeEvent) => void];
+//# sourceMappingURL=useLayout.d.ts.map

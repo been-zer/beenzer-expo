@@ -25,3 +25,4 @@ export declare type Props = React.ComponentProps<typeof Text> & {
  */
 declare const Headline: (props: Props) => JSX.Element;
 export default Headline;
+//# sourceMappingURL=Headline.d.ts.map

@@ -12,3 +12,4 @@ export declare const getSwitchColor: ({ theme, disabled, value, color, }: BasePr
     checkedColor: string;
 };
 export {};
+//# sourceMappingURL=utils.d.ts.map

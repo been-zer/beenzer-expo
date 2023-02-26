@@ -13,3 +13,4 @@ export default class PortalConsumer extends React.Component<Props> {
     render(): null;
 }
 export {};
+//# sourceMappingURL=PortalConsumer.d.ts.map

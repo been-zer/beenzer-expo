@@ -16,3 +16,4 @@ export default class PortalManager extends React.PureComponent<{}, State> {
     render(): JSX.Element[];
 }
 export {};
+//# sourceMappingURL=PortalManager.d.ts.map

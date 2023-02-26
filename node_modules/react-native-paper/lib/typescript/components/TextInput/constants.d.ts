@@ -28,3 +28,4 @@ export declare const MD2_OUTLINED_INPUT_OFFSET = 8;
 export declare const MD3_OUTLINED_INPUT_OFFSET = 16;
 export declare const OUTLINE_MINIMIZED_LABEL_Y_OFFSET = -6;
 export declare const MIN_DENSE_HEIGHT_OUTLINED = 48;
+//# sourceMappingURL=constants.d.ts.map

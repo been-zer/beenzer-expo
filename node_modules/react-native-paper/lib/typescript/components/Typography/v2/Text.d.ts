@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { StyleProp, TextStyle } from 'react-native';
+import { StyleProp, Text as NativeText, TextStyle } from 'react-native';
 import type { MD2Theme } from 'src/types';
-declare const _default: React.ForwardRefExoticComponent<import("react-native").TextProps & {
+declare type Props = React.ComponentProps<typeof NativeText> & {
     style?: StyleProp<TextStyle>;
     /**
      * @optional
      */
-    theme?: MD2Theme | undefined;
-} & React.RefAttributes<{}>>;
+    theme?: MD2Theme;
+};
+declare const _default: import("../../../utils/forwardRef").ForwarRefComponent<{}, Props>;
 export default _default;
+//# sourceMappingURL=Text.d.ts.map

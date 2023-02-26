@@ -42,3 +42,4 @@ export default class PortalHost extends React.Component<Props> {
     private manager;
     render(): JSX.Element;
 }
+//# sourceMappingURL=PortalHost.d.ts.map

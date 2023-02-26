@@ -19,3 +19,4 @@ export declare const accessibilityProps: {
 };
 declare const defaultIcon: ({ name, color, size, direction, allowFontScaling, }: IconProps) => JSX.Element;
 export default defaultIcon;
+//# sourceMappingURL=MaterialCommunityIcon.d.ts.map

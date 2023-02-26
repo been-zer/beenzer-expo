@@ -1,11 +1,10 @@
 export function addEventListener(Module) {
-  var _Module$addEventListe;
   for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     rest[_key - 1] = arguments[_key];
   }
   const [eventName, handler] = rest;
   let removed = false;
-  const subscription = (_Module$addEventListe = Module.addEventListener(eventName, handler)) !== null && _Module$addEventListe !== void 0 ? _Module$addEventListe : {
+  const subscription = Module.addEventListener(eventName, handler) ?? {
     remove: () => {
       var _Module$removeEventLi, _Module$remove;
       if (removed) {
@@ -19,13 +18,12 @@ export function addEventListener(Module) {
   return subscription;
 }
 export function addListener(Module) {
-  var _Module$addListener;
   for (var _len2 = arguments.length, rest = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
     rest[_key2 - 1] = arguments[_key2];
   }
   const [eventName, handler] = rest;
   let removed = false;
-  const subscription = (_Module$addListener = Module.addListener(eventName, handler)) !== null && _Module$addListener !== void 0 ? _Module$addListener : {
+  const subscription = Module.addListener(eventName, handler) ?? {
     remove: () => {
       if (removed) {
         return;

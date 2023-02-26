@@ -29,7 +29,7 @@ export function useTheme<T = MD3Theme>(overrides?: $DeepPartial<T>) {
 }
 
 export const useInternalTheme = (
-  themeOverrides?: $DeepPartial<InternalTheme>
+  themeOverrides: $DeepPartial<InternalTheme> | undefined
 ) => useAppTheme<InternalTheme>(themeOverrides);
 
 export const withInternalTheme = <Props extends { theme: InternalTheme }, C>(
@@ -47,7 +47,15 @@ export const defaultThemesByVersion = {
   },
 };
 
-export const getTheme = (isDark = false, isV3 = true) => {
+export const getTheme = <
+  Scheme extends boolean = false,
+  IsVersion3 extends boolean = true
+>(
+  isDark: Scheme = false as Scheme,
+  isV3: IsVersion3 = true as IsVersion3
+): typeof defaultThemesByVersion[IsVersion3 extends true
+  ? 3
+  : 2][Scheme extends true ? 'dark' : 'light'] => {
   const themeVersion = isV3 ? 3 : 2;
   const scheme = isDark ? 'dark' : 'light';
 

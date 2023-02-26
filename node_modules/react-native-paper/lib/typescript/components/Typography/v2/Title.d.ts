@@ -24,3 +24,4 @@ export declare type Props = React.ComponentProps<typeof Text> & {
  */
 declare const Title: (props: Props) => JSX.Element;
 export default Title;
+//# sourceMappingURL=Title.d.ts.map

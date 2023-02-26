@@ -24,3 +24,4 @@ export declare type Props = TextProps & {
  */
 declare const Paragraph: (props: Props) => JSX.Element;
 export default Paragraph;
+//# sourceMappingURL=Paragraph.d.ts.map

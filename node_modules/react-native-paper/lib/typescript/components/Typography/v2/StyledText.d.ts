@@ -10,3 +10,4 @@ declare type Props = React.ComponentProps<typeof Text> & {
 };
 declare const StyledText: ({ alpha, family, style, theme: themeOverrides, ...rest }: Props) => JSX.Element;
 export default StyledText;
+//# sourceMappingURL=StyledText.d.ts.map

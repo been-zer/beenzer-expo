@@ -81,3 +81,4 @@ export default function configureFonts(params: {
     [key: string]: MD3Type;
 };
 export {};
+//# sourceMappingURL=fonts.d.ts.map

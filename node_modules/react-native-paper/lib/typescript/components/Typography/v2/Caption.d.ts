@@ -25,3 +25,4 @@ export declare type Props = React.ComponentProps<typeof Text> & {
  */
 declare const Caption: (props: Props) => JSX.Element;
 export default Caption;
+//# sourceMappingURL=Caption.d.ts.map
