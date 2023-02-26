@@ -39,6 +39,9 @@
       "eas": {
         "projectId": "b37474c5-8142-444c-959c-d0e86ca23b53"
       }
+    },
+    "android": {
+      "package": "com.beenzerdapp.com"
     }
   }
 }
