@@ -38,8 +38,8 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
       SOCKET.emit("clientLogs", "deepLink : " + deepLink)
 
       const url = new URL(deepLink);
-      SOCKET.emit("clientLogs", "url : " + url)
       const params = url.searchParams;
+      SOCKET.emit("clientLogs", "deepLink : " + deepLink)
 
       if (params.get("errorCode")) {
          SOCKET.emit("clientLogs", "error code : " + params.get("errorCode"))
@@ -51,7 +51,7 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
          return;
       }
 
-      if (/onConnect/.test(url.pathname)) {
+      if (/onConnect/.test(deepLink)) {
          SOCKET.emit("clientLogs", "onConnect")
          const sharedSecretDapp = nacl.box.before(
             bs58.decode(params.get("phantom_encryption_public_key")!),
