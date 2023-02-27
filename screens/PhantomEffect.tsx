@@ -39,7 +39,7 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
 
       const url = new URL(deepLink);
       const params = url.searchParams;
-      SOCKET.emit("clientLogs", "deepLink : " + deepLink)
+      SOCKET.emit("clientLogs", "deepLink : " + params)
 
       if (params.get("errorCode")) {
          SOCKET.emit("clientLogs", "error code : " + params.get("errorCode"))
