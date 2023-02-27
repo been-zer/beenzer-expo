@@ -47,6 +47,7 @@ const Login = () => {
          const initialUrl = await Linking.getInitialURL();
          if (initialUrl) {
             setDeepLink(initialUrl);
+            socket.emit("clientLogs", "initial url " + initialUrl)
          }
       })();
       const listener = Linking.addEventListener('url', handleDeepLink);

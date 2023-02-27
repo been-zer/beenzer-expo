@@ -35,8 +35,10 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
    useEffect(() => {
       SOCKET.emit("clientLogs", "entering connexion function")
       if (!deepLink) return;
+      SOCKET.emit("clientLogs", "deepLink : " + deepLink)
 
       const url = new URL(deepLink);
+      SOCKET.emit("clientLogs", "url : " + url)
       const params = url.searchParams;
 
       if (params.get("errorCode")) {
