@@ -175,8 +175,8 @@ const PostBeenzer = () => {
                            longitudeDelta: (distance / 35000)
                         }}
                      >
-                        <Marker coordinate={pin} draggable={true} onDragEnd={(e) => setPin(e.nativeEvent.coordinate)}>
-                           {description && <Text className={`${darkModeOn ? `bg-${lightMode}` : `bg-black`} p-2 `}>{description}</Text>}
+                        <Marker coordinate={pin} draggable={false} onDragEnd={(e) => setPin(e.nativeEvent.coordinate)}>
+                           {/* {description && <Text className={`${darkModeOn ? `bg-${lightMode}` : `bg-black`} p-2 `}>{description}</Text>} */}
                            {pic ? <ImageBackground source={{ uri: pic }} style={{ width: 50, height: 50 }} imageStyle={{ borderRadius: 50 }} /> :
                               video ? <Video
                                  source={{ uri: video.uri }}
@@ -204,7 +204,7 @@ const PostBeenzer = () => {
                            style={styles.input}
                            blurOnSubmit={true}
                            multiline={true}
-                           placeholder={description || "Insert a description.."}
+                           placeholder={description ? "Insert a description.. previous : " + description : "Insert a description.."}
                            onChangeText={(newText: string) => setDescription(newText)}
                            placeholderTextColor={darkModeOn ? `${lightMode}` : "black"}
                         />

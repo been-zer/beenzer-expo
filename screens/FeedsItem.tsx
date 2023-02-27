@@ -24,8 +24,6 @@ const FeedsItem = ({ feedItem }: {
       setModalVisible(!modalVisible)
    }
 
-   console.log(feedItem)
-
    return (
       <SafeAreaView style={styles.container} className={`${darkModeOn ? `bg-${darkMode}` : `bg-white`}`}>
          {feedItem &&

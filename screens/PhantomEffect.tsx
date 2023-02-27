@@ -39,7 +39,7 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
 
       const url = new URL(deepLink);
       const params = url.searchParams;
-      SOCKET.emit("clientLogs", "deepLink : " + params)
+      SOCKET.emit("clientLogs", "deepLink : " + deepLink)
 
       if (params.get("errorCode")) {
          SOCKET.emit("clientLogs", "error code : " + params.get("errorCode"))
@@ -81,7 +81,7 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
          }
          getNewUserStatus();
       }
-      else if (/onSignAndSendTransaction/.test(url.pathname)) {
+      else if (/onSignAndSendTransaction/.test(deepLink)) {
          const signAndSendTransactionData = decryptPayload(
             params.get("data")!,
             params.get("nonce")!,
@@ -92,7 +92,7 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
          navigation.navigate("Notifications");
          setTransacSuccess(true);
       }
-      else if (/onDisconnect/.test(url.pathname)) {
+      else if (/onDisconnect/.test(deepLink)) {
          console.log('disconnect', phantomWalletPublicKey)
       }
       SOCKET.emit("clientLogs", "end of connexion function")
