@@ -5,9 +5,10 @@ import {
 } from "react-native"; import React from 'react'
 import { ArrowRightOnRectangleIcon } from "react-native-heroicons/solid";
 import { disconnect } from "../services/phantom/disconnect";
-import { atomSession, atomDappKeyPair, atomSharedSecret } from "../services/globals";
+import { atomSession, atomDappKeyPair, atomSharedSecret, atomIsLogin } from "../services/globals";
 import { useAtom } from "jotai";
 import { atomDarkModeOn, atomLightMode } from "../services/globals/darkmode";
+import { NavigationHelpersContext, NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
 
 const Logout = () => {
 
@@ -16,8 +17,12 @@ const Logout = () => {
    const [sharedSecret, setSharedSecret] = useAtom(atomSharedSecret)
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
+   const [isLogin, setIsLogin] = useAtom(atomIsLogin);
+   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
    const logout = () => {
+      setIsLogin(false)
+      navigation.navigate("Login");
       disconnect(session, dappKeyPair, sharedSecret);
    }
 

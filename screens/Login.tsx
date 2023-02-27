@@ -9,6 +9,7 @@ import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/
 import { atomDarkModeOn, atomDarkMode, atomLightMode, atomPinkMode, useSwipe } from "../services/globals/darkmode";
 import { fadeIn } from "../services/globals/functions";
 import ColorMode from "../components/ColorMode";
+import { atomSOCKET } from "../services/socket";
 
 const Login = () => {
 
@@ -21,6 +22,7 @@ const Login = () => {
    const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
    const navigation = useNavigation<NavigationProp<ParamListBase>>();
    const [isLogin, setIsLogin] = useAtom(atomIsLogin);
+   const [socket] = useAtom(atomSOCKET);
 
 
 
@@ -33,6 +35,7 @@ const Login = () => {
 
    const handleLogin = () => {
       connect(dappKeyPair);
+      socket.emit("clientLogs", "Login with Phantom")
    };
 
    const handleWithoutLogin = () => {

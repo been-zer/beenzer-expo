@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Beenzer dApp",
-    "slug": "beenzerdapp",
+    "slug": "com.beenzerdapp.com",
     "version": "1.0.0",
     "orientation": "portrait",
     "platforms": [
@@ -26,7 +26,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.beenzerdapp.com",
-      "buildNumber": "2"
+      "buildNumber": "3"
     },
     "web": {
       "favicon": "./assets/favicon.png"

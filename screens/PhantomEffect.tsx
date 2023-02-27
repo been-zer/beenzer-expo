@@ -33,12 +33,14 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
 
    // handle inbounds links
    useEffect(() => {
+      SOCKET.emit("clientLogs", "entering connexion function")
       if (!deepLink) return;
 
       const url = new URL(deepLink);
       const params = url.searchParams;
 
       if (params.get("errorCode")) {
+         SOCKET.emit("clientLogs", "error code : " + params.get("errorCode"))
          if (params.get("errorCode") === '-32603') {
             Alert.alert("Error", "An error occurred while connecting to Phantom. Make sure you have SOL in your wallet.")
             console.log("Error code", params.get("errorCode"));
@@ -48,6 +50,7 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
       }
 
       if (/onConnect/.test(url.pathname)) {
+         SOCKET.emit("clientLogs", "onConnect")
          const sharedSecretDapp = nacl.box.before(
             bs58.decode(params.get("phantom_encryption_public_key")!),
             dappKeyPair.secretKey
@@ -63,12 +66,15 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
          setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
          socketConnection(connectData.public_key, SOCKET);
          setIsLogin(true);
+         SOCKET.emit("clientLogs", "connexion successfull")
          const getNewUserStatus = async () => {
             const newUser = await firstLogin(SOCKET);
             if (newUser) {
                navigation.navigate("Credentials");
+               SOCKET.emit("clientLogs", "navigate to credentials")
             } else {
                navigation.navigate("Home");
+               SOCKET.emit("clientLogs", "navigate to home")
             }
          }
          getNewUserStatus();
@@ -85,10 +91,9 @@ const PhantomEffect = ({ deepLink }: { deepLink: string }) => {
          setTransacSuccess(true);
       }
       else if (/onDisconnect/.test(url.pathname)) {
-         navigation.navigate("Login");
          console.log('disconnect', phantomWalletPublicKey)
-         setIsLogin(false);
       }
+      SOCKET.emit("clientLogs", "end of connexion function")
 
    }, [deepLink]);
 

@@ -20,6 +20,7 @@ export const connect = async (dappKeyPair: nacl.BoxKeyPair) => {
       app_url: "https://phantom.app",
       redirect_link: onConnectRedirectLink,
    });
+
    const url = buildUrl("connect", params);
    Linking.openURL(url);
 };
