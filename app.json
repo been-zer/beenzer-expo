@@ -26,7 +26,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.beenzerdapp.com",
-      "buildNumber": "6",
+      "buildNumber": "7",
       "config": {
         "googleMapsApiKey": "AIzaSyDFJuBnYC42k1j9WEgNwY8_McZU2YHC-IQ"
       }
