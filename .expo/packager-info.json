@@ -1,9 +1,9 @@
 {
-  "expoServerPort": 19000,
+  "expoServerPort": null,
   "packagerPort": 19000,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://ku-u6s.beenzer-app.beenzer-expo.exp.direct",
+  "packagerNgrokUrl": "https://ku-u6s.beenzer-app.beenzer-expo.exp.direct",
+  "ngrokPid": 4329,
   "packagerPid": null,
   "webpackServerPort": null
 }

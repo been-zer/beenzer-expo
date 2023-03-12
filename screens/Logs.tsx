@@ -1,12 +1,11 @@
 import { View, Text, ScrollView, SafeAreaView, ActivityIndicator, Linking, TouchableOpacity, Vibration, Platform } from 'react-native'
 import { useState, useEffect } from 'react'
 import { atomSOCKET } from '../services/socket';
-import { atomMintLogs, atomMintingOver, atomPic, atomVideo, atomVideoBuffer, atomDescription } from '../services/globals';
+import { atomMintLogs, atomMintingOver, atomPic, atomVideo, atomVideoBuffer, atomDescription, atomProfile } from '../services/globals';
 import { useAtom } from 'jotai'
 import OpenURLButton from '../components/OpenURLButton'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
-import { useIsFocused } from '@react-navigation/native'
-import { socketAddFriend } from '../services/socket/function';
+import { socketGetLogs } from '../services/socket/function';
 
 
 const Logs = () => {
@@ -22,28 +21,45 @@ const Logs = () => {
    const [video, setVideo] = useAtom(atomVideo)
    const [videoBuffer, setVideoBuffer] = useAtom(atomVideoBuffer)
    const [description, setDescription] = useAtom(atomDescription)
-   const isFocused = useIsFocused();
+   const [profile, setProfile] = useAtom(atomProfile)
 
-   SOCKET.on("mintLogs", (data: any) => {
-      setMintingOver(false);
-      if (data === 'false') {
-         setMintLogs(prev => [...prev, 'Minting failed, something went wrong. Please try again.'])
-         setMintingOver(true);
-      }
-      else if (data !== 'true') {
-         setPic('')
-         setDescription('')
-         setVideoBuffer(null)
-         setVideo(null)
-         setMintLogs((prev) => [...prev, data])
-      } else if (data === 'true') {
-         setMintingOver(true);
-         Vibration.vibrate(1000);
-         setMintLogs(prev => [...prev, 'Minting complete. Go to your profile or to phantom to view your NFT'])
-         // setMintLogs([]);
-      }
-      console.log(data)
-   })
+   useEffect(() => {
+      const interval = setInterval(() => {
+         const getLogs = async () => {
+            try {
+               const logs = await socketGetLogs(SOCKET, profile.__pubkey__);
+               setMintLogs(logs);
+            } catch (e) {
+               console.error(e);
+            }
+         }
+         getLogs();
+      }, 5000);
+      return () => clearInterval(interval);
+   }, []);
+
+
+
+   // SOCKET.on("mintLogs", (data: any) => {
+   //    setMintingOver(false);
+   //    if (data === 'false') {
+   //       setMintLogs(prev => [...prev, 'Minting failed, something went wrong. Please try again.'])
+   //       setMintingOver(true);
+   //    }
+   //    else if (data !== 'true') {
+   //       setPic('')
+   //       setDescription('')
+   //       setVideoBuffer(null)
+   //       setVideo(null)
+   //       setMintLogs((prev) => [...prev, data])
+   //    } else if (data === 'true') {
+   //       setMintingOver(true);
+   //       Vibration.vibrate(1000);
+   //       setMintLogs(prev => [...prev, 'Minting complete. Go to your profile or to phantom to view your NFT'])
+   //       // setMintLogs([]);
+   //    }
+   //    console.log(data)
+   // })
 
 
    return (

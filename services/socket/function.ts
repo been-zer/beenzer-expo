@@ -42,6 +42,16 @@ export const socketMint = (
    return true
 };
 
+export const socketGetLogs = (socket: Socket, pubkey: string) => {
+   socket.emit("getLogs", pubkey);
+   return new Promise<any>((resolve) => {
+      socket.on("getLogsRes", (res: any) => {
+         console.log('res', res)
+         resolve(res);
+      });
+   });
+};
+
 export const videoToGifSocket = (socket: Socket, video: Buffer) => {
    socket.emit("videoToGif", video);
    return new Promise<Buffer>((resolve) => {
