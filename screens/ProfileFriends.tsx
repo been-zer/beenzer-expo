@@ -27,7 +27,7 @@ const ProfileFriends = ({ friendPubkey }: { friendPubkey: IProfile }) => {
    const [SOCKET] = useAtom(atomSOCKET);
    const isFocused = useIsFocused();
    const [active, setActive] = useAtom(atomActiveScreen)
-   const [selectedTab, setSelectedTab] = useState<string>('')
+   const [selectedTab, setSelectedTab] = useState<string>('Collection')
    const [onProfile, setOnProfile] = useState<boolean>(true)
 
 

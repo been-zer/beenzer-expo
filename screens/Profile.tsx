@@ -25,7 +25,7 @@ import ProfileBio from '../components/Profile.components/ProfileBio'
 const Profile = () => {
 
    const [profile, setProfile] = useAtom(atomProfile)
-   const [showProfileTab, setShowProfileTab] = useState<string>('Profile')
+   const [showProfileTab, setShowProfileTab] = useState<string>('Collection')
    const [showDetails, setShowDetails] = useState(false);
    const navigation = useNavigation<NavigationProp<ParamListBase>>();
    const [active, setActive] = useAtom(atomActiveScreen)
@@ -36,7 +36,7 @@ const Profile = () => {
    const [darkModeOn, setDarkModeOn] = useAtom(atomDarkModeOn);
    const [darkMode, setDarkMode] = useAtom(atomDarkMode);
    const [lightMode, setLightMode] = useAtom(atomLightMode);
-   const [selectedTab, setSelectedTab] = useState<string>('')
+   const [selectedTab, setSelectedTab] = useState<string>('Collection')
    const [onProfile, setOnProfile] = useState<boolean>(true)
    const [isLogin, setIsLogin] = useAtom(atomIsLogin);
 

@@ -6,6 +6,7 @@ import { useAtom } from 'jotai'
 import OpenURLButton from '../components/OpenURLButton'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
 import { useIsFocused } from '@react-navigation/native'
+import { socketAddFriend } from '../services/socket/function';
 
 
 const Logs = () => {
@@ -23,32 +24,26 @@ const Logs = () => {
    const [description, setDescription] = useAtom(atomDescription)
    const isFocused = useIsFocused();
 
-   useEffect(() => {
-      if (isFocused) {
-         SOCKET.on('mintLogs', (data: string) => {
-            setMintingOver(false);
-            if (data === 'false') {
-               setMintLogs(prev => [...prev, 'Minting failed, something went wrong. Please try again.'])
-               setMintingOver(true);
-            }
-            else if (data !== 'true') {
-               setPic('')
-               setDescription('')
-               setVideoBuffer(null)
-               setVideo(null)
-               setMintLogs((prev) => [...prev, data])
-            } else if (data === 'true') {
-               setMintingOver(true);
-               Vibration.vibrate(1000);
-               setMintLogs(prev => [...prev, 'Minting complete. Go to your profile or to phantom to view your NFT'])
-               // setMintLogs([]);
-            }
-            console.log(data)
-         })
-
+   SOCKET.on("mintLogs", (data: any) => {
+      setMintingOver(false);
+      if (data === 'false') {
+         setMintLogs(prev => [...prev, 'Minting failed, something went wrong. Please try again.'])
+         setMintingOver(true);
       }
-   }, [isFocused]);
-
+      else if (data !== 'true') {
+         setPic('')
+         setDescription('')
+         setVideoBuffer(null)
+         setVideo(null)
+         setMintLogs((prev) => [...prev, data])
+      } else if (data === 'true') {
+         setMintingOver(true);
+         Vibration.vibrate(1000);
+         setMintLogs(prev => [...prev, 'Minting complete. Go to your profile or to phantom to view your NFT'])
+         // setMintLogs([]);
+      }
+      console.log(data)
+   })
 
 
    return (
