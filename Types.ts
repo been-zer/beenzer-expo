@@ -20,6 +20,12 @@ export interface LocationObjectCoords {
    speed: number | null;
 }
 
+export interface ILogs {
+   _logs: string;
+   _pubkey: string;
+   _timestamp: string;
+}
+
 export interface IProfile {
    __pubkey__: string;
    _appuser: boolean;

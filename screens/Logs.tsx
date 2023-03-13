@@ -6,6 +6,8 @@ import { useAtom } from 'jotai'
 import OpenURLButton from '../components/OpenURLButton'
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
 import { socketGetLogs } from '../services/socket/function';
+import { getHoursFromTimestamp } from '../services/globals/functions'
+
 
 
 const Logs = () => {
@@ -39,42 +41,26 @@ const Logs = () => {
    }, []);
 
 
-
-   // SOCKET.on("mintLogs", (data: any) => {
-   //    setMintingOver(false);
-   //    if (data === 'false') {
-   //       setMintLogs(prev => [...prev, 'Minting failed, something went wrong. Please try again.'])
-   //       setMintingOver(true);
-   //    }
-   //    else if (data !== 'true') {
-   //       setPic('')
-   //       setDescription('')
-   //       setVideoBuffer(null)
-   //       setVideo(null)
-   //       setMintLogs((prev) => [...prev, data])
-   //    } else if (data === 'true') {
-   //       setMintingOver(true);
-   //       Vibration.vibrate(1000);
-   //       setMintLogs(prev => [...prev, 'Minting complete. Go to your profile or to phantom to view your NFT'])
-   //       // setMintLogs([]);
-   //    }
-   //    console.log(data)
-   // })
-
-
    return (
       <SafeAreaView className={`${darkModeOn ? `bg-${darkMode}` : `bg-${lightMode}`} flex-1`}>
          <View className='border border-white  rounded-xl flex-1 ml-5 mr-5'>
             <ScrollView className=' bg-zinc-800 rounded-xl' contentContainerStyle={{ flexGrow: 1 }}>
-               {mintLogs.map((log, index) => {
-                  return (
-                     <View className='p-3 mt-1 text-[#3f6212]' key={index}>
-                        <View>
-                           <Text className='mt-1 text-lg text-white text-center px-4'>✅ {log}</Text>
-                        </View>
-                     </View>
-                  )
-               })}
+               <View className='p-3 text-[#3f6212]'>
+                  <View>
+                     {mintLogs ? (
+                        mintLogs.map((el, i) => (
+                           <View key={i}>
+                              {el._timestamp ? <Text className=' text-white text-center'> {getHoursFromTimestamp(parseInt(el._timestamp))}</Text> : null}
+                              {el._logs ? <Text className='text-xl text-white text-center px-4'> {el._logs}</Text> : null}
+                              <Text className='mb-5 text-white text-center'> _________________________________</Text>
+                           </View>
+                        ))
+                     ) : (
+                        <Text className='mt-1 text-lg text-white text-center px-4'>- No logs yet</Text>
+                     )}
+                  </View>
+               </View>
+
             </ScrollView >
          </View >
          {!mintingOver && <ActivityIndicator className='mt-2' size="large" color="green" />}

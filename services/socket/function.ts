@@ -1,6 +1,6 @@
 import { PublicKey } from '@solana/web3.js'
 import { Socket } from "socket.io-client";
-import { IMessage, INFT, IProfile, UserNFT } from "../../Types";
+import { ILogs, IMessage, INFT, IProfile, UserNFT } from "../../Types";
 
 export const socketMint = (
    socket: Socket,
@@ -44,9 +44,8 @@ export const socketMint = (
 
 export const socketGetLogs = (socket: Socket, pubkey: string) => {
    socket.emit("getLogs", pubkey);
-   return new Promise<any>((resolve) => {
-      socket.on("getLogsRes", (res: any) => {
-         console.log('res', res)
+   return new Promise<ILogs[]>((resolve) => {
+      socket.on("getLogsRes", (res: ILogs[]) => {
          resolve(res);
       });
    });

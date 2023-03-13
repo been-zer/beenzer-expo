@@ -24,7 +24,7 @@ const Notifications = () => {
          {display === 'Logs' && <Logs />}
          {display === 'Notifications' &&
             <View className='flex-1 justify-center items-center'>
-               <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} text-2xl`}>No notifications yet</Text>
+               <Text className={`${darkModeOn ? `text-${lightMode}` : 'text-black'} text-2xl`}>No notifications yet (beta)</Text>
             </View>}
          <View className=' justify-center items-center'>
             <TouchableOpacity

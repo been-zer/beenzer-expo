@@ -1,7 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 import nacl from 'tweetnacl'
 import { atom } from "jotai";
-import { INFT, IProfile, ILocation, coordinates, IVideo, UserNFT } from '../../Types';
+import { INFT, IProfile, ILocation, coordinates, IVideo, UserNFT, ILogs } from '../../Types';
 import { CameraCapturedPicture } from 'expo-camera';
 
 export const atomDeepLink = atom("");
@@ -22,7 +22,7 @@ export const atomPinCity = atom<string>("");
 export const atomTransacSuccess = atom<boolean>(false);
 export const atomDataPic = atom<CameraCapturedPicture>({} as CameraCapturedPicture);
 export const atomMintingOver = atom<boolean>(true);
-export const atomMintLogs = atom<any[]>([]);
+export const atomMintLogs = atom<ILogs[]>([]);
 export const atomRegex = atom<RegExp>(new RegExp(/(\s*([\0\b\'\"\n\r\t\%\_\\]*\s*(((select\s*.+\s*from\s*.+)|(insert\s*.+\s*into\s*.+)|(update\s*.+\s*set\s*.+)|(delete\s*.+\s*from\s*.+)|(drop\s*.+)|(truncate\s*.+)|(alter\s*.+)|(exec\s*.+)|(\s*(all|any|not|and|between|in|like|or|some|contains|containsall|containskey)\s*.+[\=\>\<=\!\~]+.+)|(let\s+.+[\=]\s*.*)|(begin\s*.*\s*end)|(\s*[\/\*]+\s*.*\s*[\*\/]+)|(\s*(\-\-)\s*.*\s+)|(\s*(contains|containsall|containskey)\s+.*)))(\s*[\;]\s*)*)+)/i));
 export const atomDisplay = atom<string>("Notifications");
 export const atomUserFriends = atom<IProfile[]>([]);
