@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Animated, BackHandler, Easing, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import useEventCallback from 'use-event-callback';
+import useLatestCallback from 'use-latest-callback';
 import { useInternalTheme } from '../core/theming';
 import { addEventListener } from '../utils/addEventListener';
 import useAnimatedValue from '../utils/useAnimatedValue';
@@ -65,7 +65,7 @@ function Modal(_ref) {
   React.useEffect(() => {
     visibleRef.current = visible;
   });
-  const onDismissCallback = useEventCallback(onDismiss);
+  const onDismissCallback = useLatestCallback(onDismiss);
   const {
     scale
   } = theme.animation;

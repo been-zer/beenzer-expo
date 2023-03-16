@@ -2,7 +2,7 @@ function _extends() { _extends = Object.assign ? Object.assign.bind() : function
 import * as React from 'react';
 import { Animated, Easing, I18nManager, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import useEventCallback from 'use-event-callback';
+import useLatestCallback from 'use-latest-callback';
 import { useInternalTheme } from '../core/theming';
 import Button from './Button/Button';
 import IconButton from './IconButton/IconButton';
@@ -91,7 +91,7 @@ const Snackbar = _ref => {
   const {
     scale
   } = theme.animation;
-  const handleOnVisible = useEventCallback(() => {
+  const handleOnVisible = useLatestCallback(() => {
     // show
     if (hideTimeout.current) clearTimeout(hideTimeout.current);
     setHidden(false);
@@ -112,7 +112,7 @@ const Snackbar = _ref => {
       }
     });
   });
-  const handleOnHidden = useEventCallback(() => {
+  const handleOnHidden = useLatestCallback(() => {
     // hide
     if (hideTimeout.current) {
       clearTimeout(hideTimeout.current);

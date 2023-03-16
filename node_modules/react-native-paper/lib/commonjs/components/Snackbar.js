@@ -7,7 +7,7 @@ exports.default = void 0;
 var React = _interopRequireWildcard(require("react"));
 var _reactNative = require("react-native");
 var _reactNativeSafeAreaContext = require("react-native-safe-area-context");
-var _useEventCallback = _interopRequireDefault(require("use-event-callback"));
+var _useLatestCallback = _interopRequireDefault(require("use-latest-callback"));
 var _theming = require("../core/theming");
 var _Button = _interopRequireDefault(require("./Button/Button"));
 var _IconButton = _interopRequireDefault(require("./IconButton/IconButton"));
@@ -100,7 +100,7 @@ const Snackbar = _ref => {
   const {
     scale
   } = theme.animation;
-  const handleOnVisible = (0, _useEventCallback.default)(() => {
+  const handleOnVisible = (0, _useLatestCallback.default)(() => {
     // show
     if (hideTimeout.current) clearTimeout(hideTimeout.current);
     setHidden(false);
@@ -121,7 +121,7 @@ const Snackbar = _ref => {
       }
     });
   });
-  const handleOnHidden = (0, _useEventCallback.default)(() => {
+  const handleOnHidden = (0, _useLatestCallback.default)(() => {
     // hide
     if (hideTimeout.current) {
       clearTimeout(hideTimeout.current);

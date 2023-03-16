@@ -7,7 +7,7 @@ exports.default = void 0;
 var React = _interopRequireWildcard(require("react"));
 var _reactNative = require("react-native");
 var _reactNativeSafeAreaContext = require("react-native-safe-area-context");
-var _useEventCallback = _interopRequireDefault(require("use-event-callback"));
+var _useLatestCallback = _interopRequireDefault(require("use-latest-callback"));
 var _theming = require("../core/theming");
 var _addEventListener = require("../utils/addEventListener");
 var _useAnimatedValue = _interopRequireDefault(require("../utils/useAnimatedValue"));
@@ -74,7 +74,7 @@ function Modal(_ref) {
   React.useEffect(() => {
     visibleRef.current = visible;
   });
-  const onDismissCallback = (0, _useEventCallback.default)(onDismiss);
+  const onDismissCallback = (0, _useLatestCallback.default)(onDismiss);
   const {
     scale
   } = theme.animation;
