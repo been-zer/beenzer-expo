@@ -3,17 +3,17 @@
 Build app for both platforms:
 
 ```
-expo build
+eas build
 ```
 
 Build app for android:
 
 ```
-expo build:android
+eas build:android
 ```
 
 Build app for ios
 
 ```
-expo build:ios
+eas build:ios
 ```
