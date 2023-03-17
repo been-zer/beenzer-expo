@@ -17,3 +17,5 @@ Build app for ios
 ```
 eas build:ios
 ```
+
+Download app -> https://beenzer.app
