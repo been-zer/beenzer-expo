@@ -2,11 +2,38 @@
 
 **Location-based Social NFT Platform on Solana**
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/alexcolls/beenzer-expo)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/alexcolls/beenzer-expo)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-lightgrey.svg)](https://expo.dev)
-[![React Native](https://img.shields.io/badge/React%20Native-0.70.5-blue.svg)](https://reactnative.dev/)
-[![Expo](https://img.shields.io/badge/Expo-47.0.13-black.svg)](https://expo.dev)
+[![React Native](https://img.shields.io/badge/React%20Native-0.71.8-blue.svg)](https://reactnative.dev/)
+[![Expo](https://img.shields.io/badge/Expo-48.0.0-black.svg)](https://expo.dev)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/alexcolls/beenzer-expo/graphs/commit-activity)
+[![GitHub issues](https://img.shields.io/github/issues/alexcolls/beenzer-expo)](https://github.com/alexcolls/beenzer-expo/issues)
+[![GitHub stars](https://img.shields.io/github/stars/alexcolls/beenzer-expo?style=social)](https://github.com/alexcolls/beenzer-expo/stargazers)
+
+---
+
+## 📚 Table of Contents
+
+- [📱 About](#-about)
+- [✨ Key Features](#-key-features)
+- [📸 Screenshots](#-screenshots)
+- [🎬 Demo](#-demo)
+- [🛠️ Tech Stack](#-tech-stack)
+- [📋 Prerequisites](#-prerequisites)
+- [🚀 Installation](#-installation)
+- [📱 Usage](#-usage)
+- [📁 Project Structure](#-project-structure)
+- [📝 Available Scripts](#-available-scripts)
+- [🛣️ Roadmap](#-roadmap)
+- [🤝 Contributing](#-contributing)
+- [🐛 Troubleshooting](#-troubleshooting)
+- [📄 License](#-license)
+- [👤 Author](#-author)
+- [🙏 Acknowledgments](#-acknowledgments)
+- [🔗 Related Projects](#-related-projects)
+- [📧 Support](#-support)
 
 ---
 
@@ -48,6 +75,57 @@ Beenzer combines Web3 technology with social networking to create a unique locat
 - **Dark/Light Mode** - Toggle between themes with swipe gestures
 - **Responsive Design** - Optimized for iOS and Android
 - **Native Performance** - Built with React Native for smooth UX
+
+---
+
+## 📸 Screenshots
+
+> **Coming Soon!** Screenshots of the app will be added here.
+
+<details>
+<summary>Click to view screenshots</summary>
+
+### Login & Home
+<!-- Add screenshots here -->
+```
+[Login Screen]  [Home Map]  [Dark Mode]
+```
+
+### NFT Creation & Feed
+<!-- Add screenshots here -->
+```
+[Camera]  [Post Beenzer]  [Public Feed]
+```
+
+### Profile & Social
+<!-- Add screenshots here -->
+```
+[User Profile]  [Messages]  [Friends]
+```
+
+**Note:** To add screenshots, place images in `/assets/screenshots/` and update this section.
+
+</details>
+
+---
+
+## 🎬 Demo
+
+### Live App
+
+- **iOS (TestFlight):** _Coming Soon_
+- **Android (APK):** _Coming Soon_
+- **Web Demo:** _Coming Soon_
+
+### Video Walkthrough
+
+> **Coming Soon!** A video demonstration of the app's features will be added here.
+
+### Try It Yourself
+
+1. Clone the repository
+2. Follow the [Installation](#-installation) instructions
+3. Run on your device/emulator with `npm start`
 
 ---
 
@@ -258,9 +336,36 @@ beenzer-expo/
 
 ---
 
+## 🛣️ Roadmap
+
+### Version 2.0.0 - Major Refactor (2025)
+
+🔥 **See [REFACTOR.md](REFACTOR.md) for the complete modernization plan!**
+
+#### Highlights
+
+- ⬆️ **Dependency Upgrades**: Expo 54, React Native 0.80, React 19
+- 🏛️ **Architecture Refactor**: Improved state management, TypeScript strict mode
+- 🧪 **Testing Infrastructure**: Jest, React Native Testing Library, E2E tests
+- 🎨 **UI/UX Improvements**: NativeWind v4, accessibility enhancements
+- 🔒 **Security Updates**: Latest Solana best practices, improved wallet integration
+- 🚀 **New Features**: Offline support, push notifications, enhanced NFT features
+- 🔧 **DevOps**: GitHub Actions CI/CD, automated builds
+
+### Current Status
+
+- ✅ Version 1.1.0 - Current stable release
+- 🚧 Version 2.0.0 - In planning phase (see [REFACTOR.md](REFACTOR.md))
+
+### Feature Requests
+
+Have an idea? [Open an issue](https://github.com/alexcolls/beenzer-expo/issues/new) with the label `enhancement`.
+
+---
+
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these guidelines:
+We welcome contributions from the community! Please follow these guidelines:
 
 1. **Fork the repository**
 2. **Create a feature branch**
@@ -279,9 +384,110 @@ Contributions are welcome! Please follow these guidelines:
 
 ### Code Style
 - Follow the existing TypeScript and React Native conventions
-- Use meaningful commit messages with emojis
+- Use meaningful commit messages with emojis (see [commit conventions](https://www.conventionalcommits.org/))
 - Ensure code is properly formatted before committing
 - Add comments for complex logic
+- Write tests for new features
+
+### Development Workflow
+
+1. **Fork & Clone**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/beenzer-expo.git
+   cd beenzer-expo
+   npm install
+   ```
+
+2. **Create Branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make Changes**
+   - Write clean, documented code
+   - Add tests if applicable
+   - Update documentation
+
+4. **Test Your Changes**
+   ```bash
+   npm start
+   # Test on iOS/Android
+   ```
+
+5. **Commit & Push**
+   ```bash
+   git commit -m "✨ Add amazing feature"
+   git push origin feature/your-feature-name
+   ```
+
+6. **Open Pull Request**
+   - Describe your changes
+   - Link related issues
+   - Wait for review
+
+### Reporting Bugs
+
+Found a bug? [Open an issue](https://github.com/alexcolls/beenzer-expo/issues/new) with:
+- Clear title and description
+- Steps to reproduce
+- Expected vs actual behavior
+- Screenshots if applicable
+- Device/OS information
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+#### "Cannot connect to Phantom Wallet"
+
+**Solution:**
+- Ensure Phantom app is installed on your device
+- Check that deep linking is properly configured
+- Verify the app scheme in `app.json` matches your configuration
+
+#### "Location permission denied"
+
+**Solution:**
+- Go to device Settings > Privacy > Location Services
+- Enable location access for Beenzer
+- Restart the app
+
+#### "Build fails on iOS"
+
+**Solution:**
+```bash
+cd ios
+pod install --repo-update
+cd ..
+npm run ios
+```
+
+#### "Expo modules not found"
+
+**Solution:**
+```bash
+npm install
+px expo prebuild --clean
+npm start
+```
+
+#### "TypeScript errors after install"
+
+**Solution:**
+```bash
+rm -rf node_modules
+npm install
+npx tsc --noEmit
+```
+
+### Still Having Issues?
+
+- Check existing [GitHub Issues](https://github.com/alexcolls/beenzer-expo/issues)
+- Join our [Discussions](https://github.com/alexcolls/beenzer-expo/discussions)
+- Review the [Expo documentation](https://docs.expo.dev/)
+- Contact support (see [Support](#-support) section)
 
 ---
 
@@ -306,6 +512,20 @@ limitations under the License.
 ```
 
 See the [LICENSE](LICENSE) file for full license text.
+
+---
+
+## 📚 Changelog
+
+For a detailed history of changes, see [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## 🌟 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=alexcolls/beenzer-expo&type=Date)](https://star-history.com/#alexcolls/beenzer-expo&Date)
+
+⭐ **Star this repo if you find it helpful!** It helps us grow the community.
 
 ---
 

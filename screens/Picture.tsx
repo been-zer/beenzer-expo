@@ -5,7 +5,6 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { atomPic, atomDataPic, atomVideo, atomVideoBuffer } from '../services/globals';
 import { useAtom } from 'jotai';
 import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
-import { } from 'react-native-paper'
 import { BoltIcon, BoltSlashIcon, ArrowPathRoundedSquareIcon } from "react-native-heroicons/solid";
 import { atomDarkModeOn, atomDarkMode, atomLightMode } from '../services/globals/darkmode';
 import { Video } from 'expo-av';
