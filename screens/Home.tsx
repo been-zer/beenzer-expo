@@ -17,7 +17,6 @@ import { atomPhantomWalletPublicKey, atomActiveScreen } from '../services/global
 import { NavigationProp, ParamListBase, useNavigation, useIsFocused } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import DisplayButton from '../components/DisplayButton';
-import { } from "@react-navigation/native";
 import { atomDarkMode, atomDarkModeOn, atomLightMode } from '../services/globals/darkmode';
 
 const Home = () => {

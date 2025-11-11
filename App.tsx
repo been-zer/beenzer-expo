@@ -137,10 +137,6 @@ export default function App() {
             headerTintColor: changeDarkMode,
             animation: 'none',
           }} />
-          {/* <Stack.Screen name="Feed" component={Feed} options={{
-            headerShown: false,
-            animation: 'none',
-          }} /> */}
           <Stack.Screen name="DirectMessages"
             options={{
               headerTransparent: true,
